@@ -17,7 +17,7 @@
   "plugins": ["react", "react-hooks", "@typescript-eslint", "prettier"],
   // 원하는 규칙 추가하기
   "rules": {
-    "quotes": ["error", "single"],
+    "quotes": ["error", "double"],
     "no-duplicate-imports": "error",
     "no-console": ["warn", { "allow": ["warn", "error", "info"] }],
     "no-unused-vars": "error",
