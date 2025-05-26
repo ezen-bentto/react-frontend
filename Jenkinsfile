@@ -39,7 +39,7 @@ pipeline {
                         $class: 'AmazonWebServicesCredentialsBinding',
                         accessKeyVariable: 'AWS_ACCESS_KEY_ID',  // 액세스 키 환경 변수
                         secretKeyVariable: 'AWS_SECRET_ACCESS_KEY', // 비밀 키 환경 변수
-                        credentialsId: 'front-aws-key'  // Jenkins Credentials에서 설정한 AWS 자격 증명 ID
+                        credentialsId: '2d462ab2-99f0-451a-9b7d-7f46afd7c6bf'  // Jenkins Credentials에서 설정한 AWS 자격 증명 ID
                     ]]) {
                         sh 'aws s3 sync ./dist/ s3://$BUCKET_NAME --delete'
                     }
