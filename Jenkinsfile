@@ -2,10 +2,10 @@ pipeline {
     agent any
 
     environment {
-        AWS_REGION = credentials('region') // AWS 리전 정보
-        BUCKET_NAME = credentials('youth-bucket') // S3 버킷 이름
-        DISTRIBUTION_ID = credentials('cloud-front-id') // CloudFront 배포 ID
         DISCORD_WEBHOOK = credentials('discord-front') // 디스코드 웹훅 URL
+        AWS_REGION = credentials('region')
+        BUCKET_NAME = credentials('youth-bucket')
+        DISTRIBUTION_ID = credentials('cloud-front-id')
     }
 
     stages {
@@ -18,13 +18,13 @@ pipeline {
         stage('Install Dependencies') {
             steps {
                 script {
-                    // node_modules 폴더가 없으면 npm install을 실행
+                    // node_modules 폴더가 없으면 yarn install 실행
                     sh '''
                     if [ ! -d "node_modules" ]; then
-                        echo "node_modules 디렉토리가 없으므로 npm install을 실행합니다."
-                        npm install
+                        echo "node_modules 디렉토리가 없으므로 yarn install을 실행합니다(강제)."
+                        yarn install --legacy-peer-deps
                     else
-                        echo "node_modules 디렉토리가 이미 존재하므로 npm install을 건너뜁니다."
+                        echo "node_modules 디렉토리가 이미 존재하므로 yarn install을 건너뜁니다."
                     fi
                     '''
                 }
@@ -35,7 +35,7 @@ pipeline {
             steps {
                 script {
                     // 빌드 명령어 실행 (예: React 빌드)
-                    sh 'npm run build'
+                    sh 'yarn build'
                 }
             }
         }
