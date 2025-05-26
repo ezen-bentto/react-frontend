@@ -3,15 +3,15 @@ pipeline {
 
     environment {
         DISCORD_WEBHOOK = credentials('discord-front') // 디스코드 웹훅 URL을 환경 변수로 설정
-        AWS_REGION = credentials('region')
-        BUCKET_NAME = credentials('youth-bucket') // AWS S3 버킷을 환경 변수로 설정
-        DISTRIBUTION_ID = credentials('cloud-front-id')
+        AWS_REGION = credentials('region')  // AWS 리전 정보
+        BUCKET_NAME = credentials('youth-bucket') // AWS S3 버킷 이름
+        DISTRIBUTION_ID = credentials('cloud-front-id') // CloudFront 배포 ID
     }
 
     stages {
         stage('Checkout') {
             steps {
-                checkout scm // 최신 코드 가져오기
+                checkout scm  // 최신 코드 가져오기
             }
         }
 
@@ -35,11 +35,11 @@ pipeline {
             steps {
                 script {
                     // AWS 자격 증명 (액세스 키 및 비밀 키)을 withCredentials로 사용하여 환경 변수로 설정
-                    withCredentials([[
+                    withCredentials([[ 
                         $class: 'AmazonWebServicesCredentialsBinding',
                         accessKeyVariable: 'AWS_ACCESS_KEY_ID',  // 액세스 키 환경 변수
                         secretKeyVariable: 'AWS_SECRET_ACCESS_KEY', // 비밀 키 환경 변수
-                        credentialsId: '2d462ab2-99f0-451a-9b7d-7f46afd7c6bf'  // Jenkins Credentials에서 설정한 AWS 자격 증명 ID
+                        credentialsId: '2d462ab2-99f0-451a-9b7d-7f46afd7c6bf'  // Jenkins에서 설정한 AWS 자격 증명 ID
                     ]]) {
                         sh 'aws s3 sync ./dist/ s3://$BUCKET_NAME --delete'
                     }
@@ -50,7 +50,15 @@ pipeline {
         stage('Invalidate CloudFront Cache') {
             steps {
                 script {
-                    sh "aws cloudfront create-invalidation --distribution-id $DISTRIBUTION_ID --paths '/*'"
+                    // CloudFront 캐시 무효화
+                    withCredentials([[ 
+                        $class: 'AmazonWebServicesCredentialsBinding',
+                        accessKeyVariable: 'AWS_ACCESS_KEY_ID',
+                        secretKeyVariable: 'AWS_SECRET_ACCESS_KEY',
+                        credentialsId: '2d462ab2-99f0-451a-9b7d-7f46afd7c6bf'
+                    ]]) {
+                        sh "aws cloudfront create-invalidation --distribution-id $DISTRIBUTION_ID --paths '/*'"
+                    }
                 }
             }
         }
