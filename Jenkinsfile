@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     environment {
-        DISCORD_WEBHOOK = credentials('discord-webhook') // 디스코드 웹훅 URL을 환경 변수로 설정
+        DISCORD_WEBHOOK = credentials('discord-front') // 디스코드 웹훅 URL을 환경 변수로 설정
         AWS_REGION = credentials('region')
         BUCKET_NAME = credentials('youth-bucket') // AWS S3 버킷을 환경 변수로 설정
         DISTRIBUTION_ID = credentials('cloud-front-id')
