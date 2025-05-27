@@ -1,4 +1,6 @@
-# React + TypeScript + Vite..
+# 청바지 리액트 마이그레이션 프로젝트
+
+# React + TypeScript + Vite
 
 This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
 
