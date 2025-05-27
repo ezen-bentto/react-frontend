@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     environment {
-        DISCORD_WEBHOOK = credentials('discord-front') // 디스코드 웹훅 URL을 환경 변수로 설정
+        DISCORD_WEBHOOK = credentials('discord-front') // 디스코드 웹훅 URL을 환경 변수로 설정설정
         AWS_REGION = credentials('region')  // AWS 리전 정보
         BUCKET_NAME = credentials('youth-bucket') // AWS S3 버킷 이름
         DISTRIBUTION_ID = credentials('cloud-front-id') // CloudFront 배포 ID
@@ -34,7 +34,7 @@ pipeline {
         stage('Deploy to S3') {
             steps {
                 script {
-                    // AWS 자격 증명 (액세스 키 및 비밀 키)을 withCredentials로 사용하여 환경 변수로 설정
+                    // AWS 자격 증명을 withCredentials로 사용하여 환경 변수로 설정
                     withCredentials([[ 
                         $class: 'AmazonWebServicesCredentialsBinding',
                         accessKeyVariable: 'AWS_ACCESS_KEY_ID',  // 액세스 키 환경 변수
