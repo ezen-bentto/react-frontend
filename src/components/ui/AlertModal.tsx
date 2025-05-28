@@ -1,11 +1,14 @@
-interface ModalProps extends React.DialogHTMLAttributes<HTMLDialogElement> {
+// src/components/ui/AlertModal.tsx
+import React from "react";
+import { modal, type ModalVariants } from "@/components/style/alertModal";
+
+interface AlertModalProps extends React.DialogHTMLAttributes<HTMLDialogElement>, ModalVariants {
   className?: string;
   children: React.ReactNode;
 }
 
-const AlertModal = ({ className, children, ...props }: ModalProps) => {
-  const baseClass = "modal";
-  const combinedClass = `${baseClass} ${className}`.trim();
+const AlertModal = ({ className, size, intent, children, ...props }: AlertModalProps) => {
+  const combinedClass = `${modal({ size, intent })} ${className ?? ""}`.trim();
 
   return (
     <>

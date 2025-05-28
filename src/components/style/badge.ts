@@ -1,11 +1,11 @@
-// button.ts
 import { cva, type VariantProps } from "class-variance-authority";
 
-export const button = cva("rounded px-4 py-2 font-semibold", {
+export const badge = cva("badge p-4 font-semibold", {
   variants: {
     intent: {
-      primary: "bg-blue-500 text-white",
-      secondary: "bg-gray-200 text-black",
+      primary: "bg-white text-my-primary",
+      sky: "bg-my-sky text-black",
+      orange: "bg-my-orange text-white",
     },
     size: {
       sm: "text-sm",
@@ -19,4 +19,4 @@ export const button = cva("rounded px-4 py-2 font-semibold", {
 });
 
 // 타입 자동 추출
-export type ButtonVariants = VariantProps<typeof button>;
+export type BadgeVariants = VariantProps<typeof badge>;
