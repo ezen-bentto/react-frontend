@@ -3,7 +3,7 @@ interface BtnProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   children: React.ReactNode;
 }
 
-const Button = ({ className, children, ...props }: BtnProps) => {
+const ButtonTmp = ({ className, children, ...props }: BtnProps) => {
   const baseClass = "btn btn-soft";
   const combinedClass = `${baseClass} ${className}`.trim();
 
@@ -14,4 +14,4 @@ const Button = ({ className, children, ...props }: BtnProps) => {
   );
 };
 
-export default Button;
+export default ButtonTmp;
