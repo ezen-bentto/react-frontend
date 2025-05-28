@@ -2,10 +2,11 @@ import Button from "@/components/ui/Button";
 import Badge from "@/components/ui/Badge";
 import AlertModal from "@/components/ui/AlertModal";
 import Card from "@/components/ui/Card";
+import ListItem from "@/components/ui/ListItem";
 
 const Home = () => {
   return (
-    <div className="flex justify-center flex-col items-center gap-4">
+    <div className="flex justify-center flex-col items-center gap-4 p-8 max-w-7xl m-auto">
       <h1>홈 페이지</h1>
       <Button intent="primary" size="lg">
         btn
@@ -56,6 +57,33 @@ const Home = () => {
           size={"lg"}
         />
       </div>
+
+      <hr />
+      <ul className="list bg-base-100 rounded-box shadow-md w-full">
+        <ListItem
+          description="이거슨 설명"
+          title="이런 저런 아주 멋진일 하실 참여자를 모집합니다."
+          writer="김독자"
+          intent={"primary"}
+          size={"md"}
+        />
+        <ListItem
+          description="이거슨 설명"
+          title="이런 저런 아주 멋진일 하실 참여자를 모집합니다."
+          writer="김독자"
+          intent={"primary"}
+          size={"md"}
+        />
+        <ListItem
+          description="이거슨 설명"
+          title="이런 저런 아주 멋진일 하실 참여자를 모집합니다."
+          writer="김독자"
+          intent={"primary"}
+          size={"md"}
+        />
+      </ul>
+
+      <hr />
     </div>
   );
 };
