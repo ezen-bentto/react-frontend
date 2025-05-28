@@ -1,6 +1,6 @@
 # 청바지 리액트 마이그레이션 프로젝트
 
-test
+test2
 
 # React + TypeScript + Vite
 
