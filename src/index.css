@@ -1,8 +1,1 @@
 @import "tailwindcss";
-@plugin "daisyui";
-
-@theme {
-  --color-my-primary: #26424a;
-  --color-my-sky: #a4d7ee;
-  --color-my-orange: #fc8d09;
-}
