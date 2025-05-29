@@ -13,7 +13,7 @@ interface CardProps extends CardVariants {
 
 const Card = ({ id, dday, img, title, text, size, intent, className }: CardProps) => {
   const combinedClass =
-    `text-my-primary relative ${card({ size, intent })} ${className ?? ""}`.trim();
+    `text-brand-primary relative ${card({ size, intent })} ${className ?? ""}`.trim();
 
   return (
     <Link to={`/contest/${id}`}>

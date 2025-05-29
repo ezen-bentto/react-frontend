@@ -9,7 +9,7 @@ export const card = cva("card bg-base-100 shadow-sm", {
     },
     intent: {
       neutral: "bg-base-100",
-      primary: "bg-white border border-my-primary",
+      primary: "bg-white border border-brand-primary",
       warning: "bg-my-orange text-white",
     },
   },

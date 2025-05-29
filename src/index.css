@@ -2,7 +2,7 @@
 @plugin "daisyui";
 
 @theme {
-  --color-my-primary: #26424a;
-  --color-my-sky: #a4d7ee;
-  --color-my-orange: #fc8d09;
+  --color-brand-primary: #26424a;
+  --color-accent-sky: #a4d7ee;
+  --color-accent-orange: #fc8d09;
 }

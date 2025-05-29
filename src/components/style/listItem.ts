@@ -8,7 +8,7 @@ export const listItem = cva("list-row items-center gap-4 p-4", {
     },
     intent: {
       default: "",
-      primary: "bg-white text-my-primary",
+      primary: "bg-white text-brand-primary",
     },
   },
   defaultVariants: {

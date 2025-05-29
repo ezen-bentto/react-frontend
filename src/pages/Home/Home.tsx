@@ -6,6 +6,7 @@ import ListItem from "@/components/ui/ListItem";
 import LoginForm from "@/components/ui/LoginForm";
 import NameField from "@/components/ui/NameField";
 import SelectInput from "@/components/ui/SelectInput";
+import Pagination from "@/components/ui/Pagination";
 
 const Home = () => {
   return (
@@ -100,9 +101,19 @@ const Home = () => {
       <hr />
       <h2>정렬</h2>
       <SelectInput
-        options={["Crimson", "Amber", "Velvet"]}
+        options={["최신순", "인기순", "마감순"]}
         placeholder="Pick a color"
         intent="outline"
+        size="lg"
+      />
+
+      <hr />
+      <h2>페이지네이션</h2>
+      <Pagination
+        currentPage={22}
+        onPrevious={() => {}}
+        onNext={() => {}}
+        intent="primary"
         size="lg"
       />
     </div>

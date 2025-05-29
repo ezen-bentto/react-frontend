@@ -10,7 +10,7 @@ export const modal = cva("modal", {
       full: "w-full h-full",
     },
     intent: {
-      info: "bg-white text-my-primary",
+      info: "bg-white text-brand-primary",
       warning: "bg-yellow-100 text-yellow-800",
       danger: "bg-red-100 text-red-800",
     },

@@ -13,7 +13,7 @@ const AlertModal = ({ className, size, intent, children, ...props }: AlertModalP
   return (
     <>
       <button
-        className="btn text-my-primary"
+        className="btn text-brand-primary"
         onClick={() => {
           const modal = document.getElementById("my_modal_1");
           if (modal instanceof HTMLDialogElement) {
