@@ -3,11 +3,15 @@ import Badge from "@/components/ui/Badge";
 import AlertModal from "@/components/ui/AlertModal";
 import Card from "@/components/ui/Card";
 import ListItem from "@/components/ui/ListItem";
+import LoginForm from "@/components/ui/LoginForm";
+import NameField from "@/components/ui/NameField";
+import SelectInput from "@/components/ui/SelectInput";
 
 const Home = () => {
   return (
     <div className="flex justify-center flex-col items-center gap-4 p-8 max-w-7xl m-auto">
       <h1>홈 페이지</h1>
+      <h2>버튼들</h2>
       <Button intent="primary" size="lg">
         btn
       </Button>
@@ -19,6 +23,7 @@ const Home = () => {
       </Button>
 
       <hr />
+      <h2>뱃지</h2>
       <Badge intent="orange" size="lg">
         D-999
       </Badge>
@@ -27,7 +32,7 @@ const Home = () => {
       <AlertModal>안냥</AlertModal>
 
       <hr />
-
+      <h2>카드</h2>
       <div className="flex gap-8">
         <Card
           id={23}
@@ -59,6 +64,7 @@ const Home = () => {
       </div>
 
       <hr />
+      <h2>리스트</h2>
       <ul className="list bg-base-100 rounded-box shadow-md w-full">
         <ListItem
           description="이거슨 설명"
@@ -84,6 +90,21 @@ const Home = () => {
       </ul>
 
       <hr />
+
+      <h2>로그인 폼</h2>
+      <LoginForm />
+      <hr />
+      <h2>입력값</h2>
+      <NameField />
+
+      <hr />
+      <h2>정렬</h2>
+      <SelectInput
+        options={["Crimson", "Amber", "Velvet"]}
+        placeholder="Pick a color"
+        intent="outline"
+        size="lg"
+      />
     </div>
   );
 };
