@@ -6,15 +6,9 @@ type SelectInputProps = {
   placeholder?: string;
 } & SelectVariants;
 
-const SelectInput = ({
-  options,
-  placeholder = "Pick an option",
-  intent,
-  size,
-}: SelectInputProps) => {
+const SelectInput = ({ options, intent, size }: SelectInputProps) => {
   return (
-    <select defaultValue={placeholder} className={select({ intent, size })}>
-      <option disabled>{placeholder}</option>
+    <select className={select({ intent, size })}>
       {options.map(option => (
         <option key={option}>{option}</option>
       ))}

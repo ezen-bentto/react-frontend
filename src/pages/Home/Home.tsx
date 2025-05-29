@@ -7,10 +7,11 @@ import LoginForm from "@/components/ui/LoginForm";
 import NameField from "@/components/ui/NameField";
 import SelectInput from "@/components/ui/SelectInput";
 import Pagination from "@/components/ui/Pagination";
+import SearchInput from "@/components/ui/SearchInput";
 
 const Home = () => {
   return (
-    <div className="flex justify-center flex-col items-center gap-4 p-8 max-w-7xl m-auto">
+    <div className="flex justify-center flex-col  items-center gap-4 p-8 max-w-7xl m-auto">
       <h1>홈 페이지</h1>
       <h2>버튼들</h2>
       <Button intent="primary" size="lg">
@@ -34,7 +35,7 @@ const Home = () => {
 
       <hr />
       <h2>카드</h2>
-      <div className="flex gap-8">
+      <div className="flex flex-col sm:flex-row gap-8 ">
         <Card
           id={23}
           dday="D-999"
@@ -66,27 +67,27 @@ const Home = () => {
 
       <hr />
       <h2>리스트</h2>
-      <ul className="list bg-base-100 rounded-box shadow-md w-full">
+      <ul className="list bg-base-100 rounded-box w-full shadow-md ">
         <ListItem
           description="이거슨 설명"
           title="이런 저런 아주 멋진일 하실 참여자를 모집합니다."
           writer="김독자"
           intent={"primary"}
-          size={"md"}
+          size={"lg"}
         />
         <ListItem
           description="이거슨 설명"
           title="이런 저런 아주 멋진일 하실 참여자를 모집합니다."
           writer="김독자"
           intent={"primary"}
-          size={"md"}
+          size={"lg"}
         />
         <ListItem
           description="이거슨 설명"
           title="이런 저런 아주 멋진일 하실 참여자를 모집합니다."
           writer="김독자"
           intent={"primary"}
-          size={"md"}
+          size={"lg"}
         />
       </ul>
 
@@ -97,6 +98,7 @@ const Home = () => {
       <hr />
       <h2>입력값</h2>
       <NameField />
+      <SearchInput />
 
       <hr />
       <h2>정렬</h2>

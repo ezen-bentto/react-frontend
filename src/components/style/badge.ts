@@ -3,9 +3,9 @@ import { cva, type VariantProps } from "class-variance-authority";
 export const badge = cva("badge p-4 font-semibold", {
   variants: {
     intent: {
-      primary: "bg-white text-brand-primary",
-      sky: "bg-my-sky text-black",
-      orange: "bg-my-orange text-white",
+      primary: "bg-white text-brand-primary border-brand-primary",
+      sky: "bg-accent-sky text-black border-accent-sky",
+      orange: "bg-accent-orange text-white border-accent-orange",
     },
     size: {
       sm: "text-sm",

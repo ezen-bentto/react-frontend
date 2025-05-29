@@ -5,18 +5,18 @@ export const select = cva("select", {
   variants: {
     intent: {
       default: "",
-      primary: "bg-primary text-white",
-      outline: "select-bordered",
+      primary: "bg-brand-primary text-white",
+      outline: "select-bordered text-brand-primary border-brand-primary outline-brand-primary ",
     },
     size: {
-      sm: "select-sm",
+      sm: "select-sm ",
       md: "select-md",
-      lg: "select-lg",
+      lg: "select-lg w-auto",
     },
   },
   defaultVariants: {
     intent: "default",
-    size: "md",
+    size: "sm",
   },
 });
 

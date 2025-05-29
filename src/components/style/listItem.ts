@@ -1,10 +1,11 @@
 import { cva, type VariantProps } from "class-variance-authority";
 
-export const listItem = cva("list-row items-center gap-4 p-4", {
+export const listItem = cva("items-center flex flex-col gap-4 p-4", {
   variants: {
     size: {
-      sm: "text-sm",
-      md: "text-base",
+      sm: "max-w-xs text-sm",
+      md: "max-w-sm text-base",
+      lg: "max-w-full text-xl",
     },
     intent: {
       default: "",
@@ -18,3 +19,5 @@ export const listItem = cva("list-row items-center gap-4 p-4", {
 });
 
 export type ListItemVariants = VariantProps<typeof listItem>;
+
+//    // 28rem (448px)

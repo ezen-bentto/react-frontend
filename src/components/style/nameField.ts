@@ -1,11 +1,11 @@
 // style/nameField.ts
 import { cva } from "class-variance-authority";
 
-export const fieldset = cva("fieldset");
+export const fieldset = cva("fieldset w-full max-w-xl");
 
-export const legend = cva("fieldset-legend");
+export const legend = cva("fieldset-legend text-brand-primary");
 
-export const input = cva("input", {
+export const input = cva("input w-full max-w-xl text-brand-primary", {
   variants: {
     status: {
       normal: "",

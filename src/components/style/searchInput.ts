@@ -1,9 +1,9 @@
 // style/searchInput.ts
 import { cva, type VariantProps } from "class-variance-authority";
 
-export const searchLabel = cva("input flex items-center gap-2");
+export const searchLabel = cva("input flex items-center gap-2 w-full max-w-xl");
 
-export const searchInput = cva("w-full bg-transparent outline-none", {
+export const searchInput = cva("w-full bg-transparent outline-none w-full max-w-xl", {
   variants: {
     size: {
       sm: "text-sm",
