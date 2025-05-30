@@ -23,9 +23,9 @@ const AlertModal = ({ className, size, intent, children, ...props }: AlertModalP
       >
         눌러봥
       </button>
-      <dialog id="my_modal_1 " className={combinedClass} {...props}>
-        <div className="modal-box text-lg">
-          <h3 className="text-lg font-bold">Hello!</h3>
+      <dialog id="my_modal_1" className={combinedClass} {...props}>
+        <div className="modal-box text-2xl">
+          <h3 className="text-4xl font-bold">Hello!</h3>
           <p className="py-4">{children}</p>
           <div className="modal-action">
             <form method="dialog">
