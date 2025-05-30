@@ -1,1 +1,8 @@
 @import "tailwindcss";
+@plugin "daisyui";
+
+@theme {
+  --color-brand-primary: #26424a;
+  --color-accent-sky: #a4d7ee;
+  --color-accent-orange: #fc8d09;
+}

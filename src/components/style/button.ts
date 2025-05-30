@@ -1,11 +1,12 @@
 // button.ts
 import { cva, type VariantProps } from "class-variance-authority";
 
-export const button = cva("rounded px-4 py-2 font-semibold", {
+export const button = cva("btn btn-soft p-4 py-2 font-semibold", {
   variants: {
     intent: {
-      primary: "bg-blue-500 text-white",
-      secondary: "bg-gray-200 text-black",
+      primary: "bg-brand-primary text-white",
+      sky: "bg-accent-sky text-black",
+      orange: "bg-accent-orange text-white",
     },
     size: {
       sm: "text-sm",

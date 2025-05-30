@@ -1,19 +1,7 @@
-interface BadgeProps extends React.HTMLAttributes<HTMLElement> {
-  className?: string;
-  children: React.ReactNode;
-}
+import { badge, type BadgeVariants } from "../style/badge";
 
-const Badge = ({ className, children, ...props }: BadgeProps) => {
-  const baseClass = "badge badge-warning p-4";
-  const combinedClass = `${baseClass} ${className}`.trim();
-
-  return (
-    <>
-      <button className={combinedClass} {...props}>
-        {children}
-      </button>
-    </>
-  );
+const Badge = ({ intent, size, children }: BadgeVariants & { children: React.ReactNode }) => {
+  return <button className={badge({ intent, size })}>{children}</button>;
 };
 
 export default Badge;

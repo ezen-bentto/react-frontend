@@ -1,17 +1,8 @@
-interface BtnProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
-  className?: string;
-  children: React.ReactNode;
-}
+// Button.tsx
+import { button, type ButtonVariants } from "../style/button";
 
-const ButtonTmp = ({ className, children, ...props }: BtnProps) => {
-  const baseClass = "btn btn-soft";
-  const combinedClass = `${baseClass} ${className}`.trim();
-
-  return (
-    <button className={combinedClass} {...props}>
-      {children}
-    </button>
-  );
+const Button = ({ intent, size, children }: ButtonVariants & { children: React.ReactNode }) => {
+  return <button className={button({ intent, size })}>{children}</button>;
 };
 
-export default ButtonTmp;
+export default Button;
