@@ -13,7 +13,7 @@ export const listItem = cva("items-center flex flex-col gap-4 p-4", {
     },
   },
   defaultVariants: {
-    size: "md",
+    size: "lg",
     intent: "default",
   },
 });

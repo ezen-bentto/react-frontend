@@ -8,6 +8,7 @@ import Pagination from "@/components/ui/Pagination";
 import SearchInput from "@/components/ui/SearchInput";
 import Input from "@/components/ui/input";
 import Avatar from "@/components/ui/Avatar";
+import CommentItem from "@/components/ui/Comment";
 
 const Home = () => {
   return (
@@ -110,6 +111,18 @@ const Home = () => {
         alt="아바타"
         shape="circle"
         size="lg"
+      />
+
+      <hr />
+      <h2>댓글</h2>
+      <CommentItem
+        content="이거 머에여?"
+        imgSrc="https://img.daisyui.com/images/profile/demo/gordon@192.webp"
+        writeDate="2025-05-03"
+        writer="김독자"
+        intent={"default"}
+        size={"lg"}
+        className={""}
       />
     </div>
   );

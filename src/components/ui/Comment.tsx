@@ -21,18 +21,20 @@ const CommentItem = ({
   const combinedClass = `${comment({ size, intent })} ${className ?? ""}`.trim();
 
   return (
-    <li className={combinedClass}>
-      <div className="w-full overflow-hidden">
-        <Avatar src={imgSrc} shape="circle" size="xl" alt={writer} />
+    <li className={`${combinedClass}`}>
+      <div className="">
+        <Avatar src={imgSrc} shape="circle" size="md" alt={writer} />
       </div>
 
       <div className="flex justify-between w-full">
-        <div className="flex flex-col justify-between">
-          <p className="list-col-wrap text-base flex-1">{content}</p>
+        <div className="flex flex-col w-full justify-between">
+          <div className="text-xs uppercase font-semibold opacity-60">{writer}</div>
+          <p className="list-col-wrap flex-1 text-xl">{content}</p>
           <div className="text-xs uppercase font-semibold opacity-60">{writeDate}</div>
         </div>
         <div className="flex justify-end">
-          <button className="btn btn-ghost"></button>
+          <button className="btn btn-ghost">수정</button>
+          <button className="btn btn-ghost">삭제</button>
         </div>
       </div>
     </li>
