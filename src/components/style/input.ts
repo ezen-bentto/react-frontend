@@ -17,5 +17,3 @@ export const input = cva("input w-full max-w-xl text-brand-primary text-lg", {
     status: "normal",
   },
 });
-
-export const optionalLabel = cva("label text-sm text-gray-500");

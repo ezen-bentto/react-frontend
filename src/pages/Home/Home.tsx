@@ -3,11 +3,10 @@ import Badge from "@/components/ui/Badge";
 import AlertModal from "@/components/ui/AlertModal";
 import Card from "@/components/ui/Card";
 import ListItem from "@/components/ui/ListItem";
-import LoginForm from "@/components/ui/LoginForm";
-import NameField from "@/components/ui/NameField";
 import SelectInput from "@/components/ui/SelectInput";
 import Pagination from "@/components/ui/Pagination";
 import SearchInput from "@/components/ui/SearchInput";
+import Input from "@/components/ui/input";
 
 const Home = () => {
   return (
@@ -80,11 +79,9 @@ const Home = () => {
 
       <hr />
 
-      <h2>로그인 폼</h2>
-      <LoginForm />
       <hr />
       <h2>입력값</h2>
-      <NameField />
+      <Input legendText="적어라 너의 이름을" />
       <SearchInput />
 
       <hr />
