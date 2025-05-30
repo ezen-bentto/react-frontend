@@ -1,6 +1,6 @@
 import { cva, type VariantProps } from "class-variance-authority";
 
-export const card = cva("card bg-base-100 shadow-sm", {
+export const card = cva("card bg-base-100 shadow-sm ", {
   variants: {
     size: {
       sm: "max-w-xs", // max-width: 20rem (320px)

@@ -11,7 +11,7 @@ import SearchInput from "@/components/ui/SearchInput";
 
 const Home = () => {
   return (
-    <div className="flex justify-center flex-col  items-center gap-4 p-8 max-w-7xl m-auto">
+    <div className="flex justify-center flex-col  items-center gap-4">
       <h1>홈 페이지</h1>
       <h2>버튼들</h2>
       <Button intent="primary" size="lg">
@@ -74,20 +74,7 @@ const Home = () => {
           writer="김독자"
           intent={"primary"}
           size={"lg"}
-        />
-        <ListItem
-          description="이거슨 설명"
-          title="이런 저런 아주 멋진일 하실 참여자를 모집합니다."
-          writer="김독자"
-          intent={"primary"}
-          size={"lg"}
-        />
-        <ListItem
-          description="이거슨 설명"
-          title="이런 저런 아주 멋진일 하실 참여자를 모집합니다."
-          writer="김독자"
-          intent={"primary"}
-          size={"lg"}
+          comment={66}
         />
       </ul>
 
