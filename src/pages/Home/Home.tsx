@@ -7,6 +7,7 @@ import SelectInput from "@/components/ui/SelectInput";
 import Pagination from "@/components/ui/Pagination";
 import SearchInput from "@/components/ui/SearchInput";
 import Input from "@/components/ui/input";
+import Avatar from "@/components/ui/Avatar";
 
 const Home = () => {
   return (
@@ -100,6 +101,14 @@ const Home = () => {
         onPrevious={() => {}}
         onNext={() => {}}
         intent="primary"
+        size="lg"
+      />
+
+      <hr />
+      <Avatar
+        src="https://img.daisyui.com/images/profile/demo/gordon@192.webp"
+        alt="아바타"
+        shape="circle"
         size="lg"
       />
     </div>
