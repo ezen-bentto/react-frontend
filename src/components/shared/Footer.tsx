@@ -1,4 +1,20 @@
 import { footerWrapper, footerSection, footerLink, footerCopy } from "../style/footer";
+/**
+ * footer 컴포넌트
+ * 웹 최하단에 위치하는 컴포넌트
+ * 정적인 컴포넌트라 모바일, 사이즈변화에 따른 변동 없음
+ *
+ * @function Footer.tsx
+ * @date 2025/05/31
+ * @history
+ * -------------------------------------------------------
+ *           변경일             작성자             변경내용
+ * -------------------------------------------------------
+ *
+ *        2025/05/31           이철욱               신규작성
+ * @param 매개변수
+ *
+ */
 
 const Footer = () => {
   return (

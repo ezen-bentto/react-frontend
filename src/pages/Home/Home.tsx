@@ -1,14 +1,14 @@
-import Button from "@/components/ui/Button";
-import Badge from "@/components/ui/Badge";
-import AlertModal from "@/components/ui/AlertModal";
-import Card from "@/components/ui/Card";
-import ListItem from "@/components/ui/ListItem";
-import SelectInput from "@/components/ui/SelectInput";
-import Pagination from "@/components/ui/Pagination";
-import SearchInput from "@/components/ui/SearchInput";
-import Avatar from "@/components/ui/Avatar";
-import CommentItem from "@/components/ui/Comment";
-import Input from "@/components/ui/Input";
+import Button from "@/components/shared/Button";
+import Badge from "@/components/shared/Badge";
+import AlertModal from "@/components/shared/AlertModal";
+import Card from "@/components/shared/Card";
+import ListItem from "@/components/shared/ListItem";
+import SelectInput from "@/components/shared/SelectInput";
+import Pagination from "@/components/shared/Pagination";
+import SearchInput from "@/components/shared/SearchInput";
+import Avatar from "@/components/shared/Avatar";
+import CommentItem from "@/components/shared/Comment";
+import Input from "@/components/shared/Input";
 
 const Home = () => {
   return (
@@ -78,6 +78,7 @@ const Home = () => {
           intent={"primary"}
           size={"lg"}
           comment={66}
+          likes={5454}
         />
       </ul>
 

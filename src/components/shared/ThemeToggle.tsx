@@ -1,6 +1,22 @@
 import { useThemeStore } from "@/store/themeStore";
 import { themeToggleVariants } from "../style/themeToggle";
 
+/**
+ *
+ * ThemeToggle 컴포넌트
+ * 다크 모드와 라이트 모드를 토글하는 스위치 UI 컴포넌트
+ * 현재 테마 상태를 읽고, 변경 함수로 테마를 토글함
+ *
+ * @function ThemeToggle.tsx
+ * @date 2025/06/01
+ * @history
+ * -------------------------------------------------------
+ *           변경일             작성자             변경내용
+ * -------------------------------------------------------
+ *        2025/06/01           이철욱             신규작성
+ *
+ */
+
 export const ThemeToggle = () => {
   const { theme, toggleTheme } = useThemeStore();
 

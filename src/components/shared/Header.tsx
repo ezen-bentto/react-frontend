@@ -12,6 +12,28 @@ import { Link } from "react-router-dom";
 import { ThemeToggle } from "./ThemeToggle";
 import { useThemeStore } from "@/store/themeStore";
 
+/**
+ *
+ * header 컴포넌트
+ * 웹 최상단에 위치하는 컴포넌트
+ * 모바일이면 중앙 nav 메뉴가 사라지고 햄버거 버튼이 활성화된다.
+ * 다크모드 버튼 활성화를 시킬 수 있는 toggle 버튼이 있다.
+ * 현재는 쓰이지 않지만 스크롤 위치에 따라 header 가 투명화되는 기능이 있다.
+ *
+ *
+ * @function Header.tsx
+ * @date 2025/05/31
+ * @history
+ * -------------------------------------------------------
+ *           변경일             작성자             변경내용
+ * -------------------------------------------------------
+ *
+ *        2025/05/31           이철욱               신규작성
+ *
+ * @param opacityEffect 높이에 따른 header 컴포넌트 투명화 매개변수다.
+ * 바닐라 프로젝트 초창기에 구현하였으나 디자인상 불필요하여 현재는 쓰이지 않는다.
+ */
+
 interface HeaderMenu {
   name: string;
   src: string;
@@ -36,6 +58,7 @@ export const Header = ({ opacityEffect = false }: HeaderProps) => {
   const { initTheme } = useThemeStore();
   const items = headerMenus.map(item => ({ ...item, id: uuidv4() }));
 
+  // opacityEffect 가 활성화될 경우 쓰이는 useEffect
   useEffect(() => {
     if (!opacityEffect) {
       setIsScrolled(true);
@@ -49,6 +72,7 @@ export const Header = ({ opacityEffect = false }: HeaderProps) => {
     return () => window.removeEventListener("scroll", onScroll);
   }, [opacityEffect]);
 
+  // 로그아웃시 localstorage 삭제
   const handleLogout = () => {
     localStorage.removeItem("isLoggedIn");
     localStorage.removeItem("loginProvider");
@@ -57,6 +81,7 @@ export const Header = ({ opacityEffect = false }: HeaderProps) => {
     window.location.href = "/pages/main/main.html";
   };
 
+  // 사용자가 설정한 테마값
   useEffect(() => {
     initTheme();
   }, []);
