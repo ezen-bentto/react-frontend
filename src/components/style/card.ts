@@ -1,6 +1,6 @@
 import { cva, type VariantProps } from "class-variance-authority";
 
-export const card = cva("card bg-base-100 shadow-sm ", {
+export const card = cva("card shadow-sm box-border overflow-hidden", {
   variants: {
     size: {
       sm: "max-w-xs", // max-width: 20rem (320px)
@@ -8,8 +8,8 @@ export const card = cva("card bg-base-100 shadow-sm ", {
       lg: "max-w-md", // 28rem (448px)
     },
     intent: {
-      neutral: "bg-base-100",
-      primary: "bg-white border border-brand-primary text-white",
+      neutral: "theme-text theme-bg",
+      primary: "bg-white border ",
       warning: "bg-my-orange text-white",
     },
   },

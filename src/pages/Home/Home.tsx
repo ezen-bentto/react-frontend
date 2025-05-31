@@ -1,17 +1,21 @@
-import Button from "@/components/ui/Button";
-import Badge from "@/components/ui/Badge";
-import AlertModal from "@/components/ui/AlertModal";
-import Card from "@/components/ui/Card";
-import ListItem from "@/components/ui/ListItem";
-import SelectInput from "@/components/ui/SelectInput";
-import Pagination from "@/components/ui/Pagination";
-import SearchInput from "@/components/ui/SearchInput";
-import Input from "@/components/ui/input";
+import Button from "@/components/shared/Button";
+import Badge from "@/components/shared/Badge";
+import AlertModal from "@/components/shared/AlertModal";
+import Card from "@/components/shared/Card";
+import ListItem from "@/components/shared/ListItem";
+import SelectInput from "@/components/shared/SelectInput";
+import Pagination from "@/components/shared/Pagination";
+import SearchInput from "@/components/shared/SearchInput";
+import Avatar from "@/components/shared/Avatar";
+import CommentItem from "@/components/shared/Comment";
+import Input from "@/components/shared/Input";
 
 const Home = () => {
   return (
-    <div className="flex justify-center flex-col  items-center gap-4">
+    <div className="flex justify-center flex-col mt-20  items-center gap-4">
       <h1>홈 페이지</h1>
+
+      <hr />
       <h2>버튼들</h2>
       <Button intent="primary" size="lg">
         btn
@@ -74,6 +78,7 @@ const Home = () => {
           intent={"primary"}
           size={"lg"}
           comment={66}
+          likes={5454}
         />
       </ul>
 
@@ -81,7 +86,10 @@ const Home = () => {
 
       <hr />
       <h2>입력값</h2>
-      <Input legendText="적어라 너의 이름을" />
+      <Input legendText="기본 상태일때" />
+      <Input legendText="react-hook-form 성공 띄울때?" status="success" />
+      <Input legendText="react-hook-form 에러 띄울때?" status="error" />
+      <br />
       <SearchInput />
 
       <hr />
@@ -89,7 +97,7 @@ const Home = () => {
       <SelectInput
         options={["최신순", "인기순", "마감순"]}
         placeholder="Pick a color"
-        intent="outline"
+        intent="default"
         size="lg"
       />
 
@@ -101,6 +109,26 @@ const Home = () => {
         onNext={() => {}}
         intent="primary"
         size="lg"
+      />
+
+      <hr />
+      <Avatar
+        src="https://img.daisyui.com/images/profile/demo/gordon@192.webp"
+        alt="아바타"
+        shape="circle"
+        size="lg"
+      />
+
+      <hr />
+      <h2>댓글</h2>
+      <CommentItem
+        content="이거 머에여?"
+        imgSrc="https://img.daisyui.com/images/profile/demo/gordon@192.webp"
+        writeDate="2025-05-03"
+        writer="김독자"
+        intent={"default"}
+        size={"lg"}
+        className={""}
       />
     </div>
   );

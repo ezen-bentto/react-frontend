@@ -1,8 +1,37 @@
 @import "tailwindcss";
 @plugin "daisyui";
 
+/* Tailwind 커스텀 테마 */
 @theme {
-  --color-brand-primary: #26424a;
+  --color-brand-primary: #26414a;
   --color-accent-sky: #a4d7ee;
   --color-accent-orange: #fc8d09;
+  --color-theme-dark: #2b2b2b;
 }
+
+/* theme 변경에 따른 text 색 변경 */
+.theme-text {
+  @apply !text-brand-primary dark:!text-white;
+}
+
+/* theme 변경에 따른 input 배경색, placeholder 변경 */
+.theme-input {
+  @apply dark:!bg-gray-500 placeholder:text-gray-400;
+}
+
+/* theme 변경에 따른 배경색 변경 */
+.theme-bg {
+  @apply dark:bg-theme-dark bg-white transition-colors duration-300;
+}
+
+/* flex 기본 */
+.flex-default {
+  @apply flex items-center justify-between;
+}
+
+/* border 기본 */
+.box-border {
+  @apply border border-gray-200 dark:border-gray-400 rounded-lg;
+}
+
+@custom-variant dark (&:where(.dark, .dark *));

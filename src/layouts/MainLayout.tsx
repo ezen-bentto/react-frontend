@@ -1,10 +1,11 @@
-import Footer from "@/components/ui/Footer";
+import Footer from "@/components/shared/Footer";
+import { Header } from "@/components/shared/Header";
 import { Outlet } from "react-router-dom";
 
 const MainLayout = () => {
   return (
-    <div>
-      <header>헤더</header>
+    <div className="theme-text theme-bg">
+      <Header />
       <main className="px-6 py-4 max-w-[1400px] mx-auto">
         <Outlet />
       </main>
