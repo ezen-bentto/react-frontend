@@ -6,30 +6,13 @@ import ListItem from "@/components/ui/ListItem";
 import SelectInput from "@/components/ui/SelectInput";
 import Pagination from "@/components/ui/Pagination";
 import SearchInput from "@/components/ui/SearchInput";
-import Input from "@/components/ui/input";
 import Avatar from "@/components/ui/Avatar";
 import CommentItem from "@/components/ui/Comment";
-// import { useThemeStore } from "@/store/themeStore";
-// import { useEffect } from "react";
+import Input from "@/components/ui/Input";
 
 const Home = () => {
-  // const theme = useThemeStore(s => s.theme);
-  // const setTheme = useThemeStore(s => s.setTheme);
-
-  // const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-  //   const checked = e.target.checked;
-  //   setTheme(checked ? "dark" : "light");
-  // };
-
-  // // DaisyUI는 input의 checked 상태를 기반으로 swap-on/off 처리하므로, 상태를 반영
-  // useEffect(() => {
-  //   const el = document.querySelector<HTMLInputElement>("input.theme-controller");
-  //   if (el) {
-  //     el.checked = theme === "dark";
-  //   }
-  // }, [theme]);
   return (
-    <div className="flex justify-center flex-col mt-40  items-center gap-4">
+    <div className="flex justify-center flex-col mt-20  items-center gap-4">
       <h1>홈 페이지</h1>
 
       <hr />
@@ -102,7 +85,10 @@ const Home = () => {
 
       <hr />
       <h2>입력값</h2>
-      <Input legendText="적어라 너의 이름을" />
+      <Input legendText="기본 상태일때" />
+      <Input legendText="react-hook-form 성공 띄울때?" status="success" />
+      <Input legendText="react-hook-form 에러 띄울때?" status="error" />
+      <br />
       <SearchInput />
 
       <hr />
@@ -110,7 +96,7 @@ const Home = () => {
       <SelectInput
         options={["최신순", "인기순", "마감순"]}
         placeholder="Pick a color"
-        intent="outline"
+        intent="default"
         size="lg"
       />
 

@@ -15,7 +15,7 @@ const Footer = () => {
 
       <div className={footerSection({ spacing: "bottom" })}>
         <div className="text-center md:text-left">
-          <a className={footerLink()} href="#">
+          <a className={footerLink({ highlight: true })} href="#">
             이용약관
           </a>
           |
@@ -23,7 +23,7 @@ const Footer = () => {
             개인정보처리방침
           </a>
           |
-          <a className={footerLink()} href="#">
+          <a className={footerLink({ highlight: true })} href="#">
             오픈API소개
           </a>
         </div>

@@ -8,4 +8,24 @@
   --color-theme-dark: #2b2b2b;
 }
 
+.theme-text {
+  @apply !text-brand-primary dark:!text-white;
+}
+
+.theme-input {
+  @apply dark:!bg-gray-500 placeholder:text-gray-400;
+}
+
+.theme-bg {
+  @apply dark:bg-theme-dark bg-white transition-colors duration-300;
+}
+
+.flex-default {
+  @apply flex items-center justify-between;
+}
+
+.box-border {
+  @apply border border-gray-200 dark:border-gray-400 rounded-lg;
+}
+
 @custom-variant dark (&:where(.dark, .dark *));

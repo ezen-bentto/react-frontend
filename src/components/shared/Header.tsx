@@ -76,7 +76,7 @@ export const Header = ({ opacityEffect = false }: HeaderProps) => {
           ))}
         </nav>
 
-        <nav className="hidden items-center md:flex gap-4 text-sm text-gray-500">
+        <nav className="hidden items-center md:flex gap-4 text-sm ">
           {!isLoggedIn ? (
             <>
               <Link to={"/login"} className={headerLinkHover()}>

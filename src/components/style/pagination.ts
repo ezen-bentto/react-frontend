@@ -7,7 +7,7 @@ export const joinButton = cva("join-item btn", {
   variants: {
     intent: {
       default: "",
-      primary: "btn-brand-primary",
+      primary: "theme-bg theme-text border-gray-200",
       ghost: "btn-ghost",
     },
     size: {

@@ -4,9 +4,8 @@ import { cva, type VariantProps } from "class-variance-authority";
 export const select = cva("select", {
   variants: {
     intent: {
-      default: "",
-      primary: "bg-brand-primary text-white",
-      outline: "select-bordered text-brand-primary border-brand-primary outline-brand-primary ",
+      default: "theme-bg theme-text box-border outline-none!",
+      outline: "select-bordered theme-bg theme-text box-border outline-brand-primary ",
     },
     size: {
       sm: "select-sm ",

@@ -26,7 +26,7 @@ const CommentItem = ({
         <Avatar src={imgSrc} shape="circle" size="md" alt={writer} />
       </div>
 
-      <div className="flex justify-between w-full">
+      <div className="flex-default w-full">
         <div className="flex flex-col w-full justify-between">
           <div className="text-xs uppercase font-semibold opacity-60">{writer}</div>
           <p className="list-col-wrap flex-1 text-xl">{content}</p>

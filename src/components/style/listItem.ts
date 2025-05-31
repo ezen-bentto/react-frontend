@@ -1,6 +1,6 @@
 import { cva, type VariantProps } from "class-variance-authority";
 
-export const listItem = cva("items-center flex flex-col gap-4 p-4", {
+export const listItem = cva("flex-default flex-col gap-4 p-4 theme-text theme-bg box-border", {
   variants: {
     size: {
       sm: "max-w-xs text-sm",
