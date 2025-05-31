@@ -1,6 +1,6 @@
 import { cva } from "class-variance-authority";
 
-export const footerWrapper = cva("bg-brand-primary text-white text-lg mt-auto py-8 w-full");
+export const footerWrapper = cva("bg-brand-primary text-white text-base mt-auto py-8 w-full");
 
 export const footerSection = cva("w-full max-w-screen-xl mx-auto px-8", {
   variants: {

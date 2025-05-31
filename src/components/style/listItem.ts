@@ -19,5 +19,3 @@ export const listItem = cva("items-center flex flex-col gap-4 p-4", {
 });
 
 export type ListItemVariants = VariantProps<typeof listItem>;
-
-//    // 28rem (448px)
