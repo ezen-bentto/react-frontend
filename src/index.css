@@ -2,7 +2,10 @@
 @plugin "daisyui";
 
 @theme {
-  --color-brand-primary: #26424a;
+  --color-brand-primary: #26414a;
   --color-accent-sky: #a4d7ee;
   --color-accent-orange: #fc8d09;
+  --color-theme-dark: #2b2b2b;
 }
+
+@custom-variant dark (&:where(.dark, .dark *));

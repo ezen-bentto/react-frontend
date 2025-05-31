@@ -1,20 +1,22 @@
-// src/variants/header.ts
 import { cva } from "class-variance-authority";
 
-export const headerVariants = cva("w-full fixed top-0 z-[9999] transition-colors duration-300", {
-  variants: {
-    scrolled: {
-      true: "bg-white shadow",
-      false: "bg-white/10",
+export const headerVariants = cva(
+  "dark:text-white dark:bg-theme-dark  text-brand-primary bg-white w-full fixed top-0 z-[9999] transition-colors duration-300",
+  {
+    variants: {
+      scrolled: {
+        true: "bg-white shadow",
+        false: "bg-white/10",
+      },
     },
-  },
-  defaultVariants: {
-    scrolled: false,
-  },
-});
+    defaultVariants: {
+      scrolled: false,
+    },
+  }
+);
 
 export const hedaerWrap = cva(
-  "max-w-[1400px] mx-auto px-8 py-7 flex items-center justify-between font-sans text-brand-primary",
+  "max-w-[1400px] mx-auto px-8 py-7 flex items-center justify-between font-sans ",
   { variants: {} }
 );
 
