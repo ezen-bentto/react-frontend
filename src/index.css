@@ -1,6 +1,11 @@
 @import "tailwindcss";
 @plugin "daisyui";
 
+/* 반응형 */
+body {
+  min-width: 360px;
+}
+
 /* Tailwind 커스텀 테마 */
 @theme {
   --color-brand-primary: #26414a;
@@ -21,7 +26,7 @@
 
 /* theme 변경에 따른 배경색 변경 */
 .theme-bg {
-  @apply dark:bg-theme-dark bg-white transition-colors duration-300;
+  @apply transition-colors duration-300 bg-white dark:bg-theme-dark;
 }
 
 /* flex 기본 */
@@ -31,7 +36,7 @@
 
 /* border 기본 */
 .box-border {
-  @apply border border-gray-200 dark:border-gray-400 rounded-lg;
+  @apply border border-gray-200 rounded-lg dark:border-gray-400;
 }
 
 @custom-variant dark (&:where(.dark, .dark *));

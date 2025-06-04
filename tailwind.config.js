@@ -14,6 +14,13 @@ export default defineConfig({
           sky: "#a4d7ee",
           orange: "#fc8d09",
         },
+        extend: {
+          screens: {
+            mobile: "360px",
+            tablet: "640px",
+            desktop: "1400px", // max-width: 1400px
+          },
+        },
       },
     ],
   },
