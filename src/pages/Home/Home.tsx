@@ -12,7 +12,7 @@ import Input from "@/components/shared/Input";
 
 const Home = () => {
   return (
-    <div className="flex justify-center flex-col mt-20  items-center gap-4">
+    <div className="flex flex-col items-center justify-center gap-4 mt-20">
       <h1>홈 페이지</h1>
 
       <hr />
@@ -38,7 +38,7 @@ const Home = () => {
 
       <hr />
       <h2>카드</h2>
-      <div className="flex flex-col sm:flex-row gap-8 ">
+      <div className="flex flex-col gap-8 sm:flex-row ">
         <Card
           id={23}
           dday="D-999"
@@ -70,7 +70,7 @@ const Home = () => {
 
       <hr />
       <h2>리스트</h2>
-      <ul className="list bg-base-100 rounded-box w-full shadow-md ">
+      <ul className="w-full shadow-md list bg-base-100 rounded-box ">
         <ListItem
           description="이거슨 설명"
           title="이런 저런 아주 멋진일 하실 참여자를 모집합니다."
@@ -97,8 +97,10 @@ const Home = () => {
       <SelectInput
         options={["최신순", "인기순", "마감순"]}
         placeholder="Pick a color"
+        defaultValue="최신순"
+        // onChange={(v) => setSort(v)}
         intent="default"
-        size="lg"
+        size="md"
       />
 
       <hr />
