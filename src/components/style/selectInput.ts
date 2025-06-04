@@ -7,7 +7,7 @@ export const selectWrapper = cva("custom-select", {
       outline: "border border-blue-500 text-blue-700 bg-white",
     },
     size: {
-      sm: "w-30 text-sm h-8 px-2",
+      sm: "w-25 text-sm h-8 px-2",
       md: "w-40 text-base h-10 px-3",
     },
   },
