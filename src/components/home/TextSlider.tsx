@@ -8,10 +8,10 @@ interface props {
 
 const TextSlider = ({ slides, activeIndex }: { slides: props[]; activeIndex: number }) => {
   return (
-    <div className="absolute max-w-[1400px] inset-0 flex-default m-auto px-50">
+    <div className="absolute max-w-[1400px] inset-0 flex-default m-auto px-[20%]">
       <div key={activeIndex} className="text-white animate-fadeSlide w-full flex  flex-col">
-        <p className="text-xl">{slides[activeIndex].duration}</p>
-        <h2 className="text-4xl font-bold leading-snug whitespace-pre-line">
+        <p className="text-sm md:text-xl">{slides[activeIndex].duration}</p>
+        <h2 className="text-sm md:text-4xl font-bold leading-snug whitespace-pre-line">
           {slides[activeIndex].title}
         </h2>
         <p className="text-sm mt-2">{slides[activeIndex].summary}</p>

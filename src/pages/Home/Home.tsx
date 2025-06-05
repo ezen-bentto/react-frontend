@@ -1,4 +1,7 @@
+import ContestSlider from "@/components/home/ContestSlider";
 import MainBanner from "../../components/home/MainBanner";
+import CommunityList from "@/components/home/CommunityList";
+import Policy from "../Policy/Policy";
 
 const Home = () => {
   return (
@@ -8,14 +11,16 @@ const Home = () => {
         <h2 className="sr-only">메인 슬라이더</h2>
         <MainBanner />
       </div>
-      <div className="main-contents mt-180">
-        {/* 통합검색 넣을까 말까 */}
-        {/* 공모전 */}
-        <div className="">공모전이랍니다~</div>
-        {/* 청년정책 */}
-        <div className="">청년정책이랍니다~</div>
-        {/* 커뮤니티 */}
-        <div className="">커뮤니티이랍니다~</div>
+      <div className="main-contents mt-20">
+        <section>
+          <ContestSlider />
+        </section>
+        <section>
+          <Policy />
+        </section>
+        <section>
+          <CommunityList />
+        </section>
       </div>
     </div>
   );
