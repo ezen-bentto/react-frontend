@@ -12,9 +12,8 @@ const Home = () => {
         <MainBanner />
       </div>
       <div className="main-contents mt-20">
-        <section>
-          <ContestSlider />
-        </section>
+        <ContestSlider />
+
         <section>
           <Policy />
         </section>
