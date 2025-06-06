@@ -13,13 +13,6 @@ const Home = () => {
       </div>
       <div className="main-contents mt-20">
         <ContestSlider />
-
-        <section>
-          <Policy />
-        </section>
-        <section>
-          <CommunityList />
-        </section>
       </div>
     </div>
   );

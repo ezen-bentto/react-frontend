@@ -1,16 +1,14 @@
-// style/selectInput.ts
 import { cva, type VariantProps } from "class-variance-authority";
 
-export const select = cva("select", {
+export const selectWrapper = cva("custom-select", {
   variants: {
     intent: {
-      default: "theme-bg theme-text box-border outline-none!",
-      outline: "select-bordered theme-bg theme-text box-border outline-brand-primary ",
+      default: "w-bg-white text-gray-800 border border-gray-300",
+      outline: "border border-blue-500 text-blue-700 bg-white",
     },
     size: {
-      sm: "select-sm ",
-      md: "select-md",
-      lg: "select-lg w-auto",
+      sm: "w-25 text-sm h-8 px-2",
+      md: "w-40 text-base h-10 px-3",
     },
   },
   defaultVariants: {
@@ -19,4 +17,4 @@ export const select = cva("select", {
   },
 });
 
-export type SelectVariants = VariantProps<typeof select>;
+export type SelectVariants = VariantProps<typeof selectWrapper>;
