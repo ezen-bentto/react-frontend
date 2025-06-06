@@ -1,7 +1,5 @@
 import ContestSlider from "@/components/home/ContestSlider";
 import MainBanner from "../../components/home/MainBanner";
-import CommunityList from "@/components/home/CommunityList";
-import Policy from "../Policy/Policy";
 
 const Home = () => {
   return (
