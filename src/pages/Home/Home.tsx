@@ -9,7 +9,7 @@ const Home = () => {
         <h2 className="sr-only">메인 슬라이더</h2>
         <MainBanner />
       </div>
-      <div className="main-contents mt-20">
+      <div className="main-contents mt-20 w-full">
         <ContestSlider />
       </div>
     </div>

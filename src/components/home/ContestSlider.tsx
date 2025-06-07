@@ -12,9 +12,9 @@ const ContestSlider = () => {
   const items = [0, 0, 0, 0, 0, 0];
 
   return (
-    <div className="w-full max-w-screen-xl mx-auto overflow-hidden">
+    <div className="w-full max-w-[1400px] mx-auto overflow-hidden">
       <div className="flex-default py-4">
-        <Title linkSrc="/contest" titleText="이런 공모전 어때요" className="" />
+        <Title linkSrc="/contest" titleText="이런 공모전 어때요" />
         <SwiperNavBtn />
       </div>
       <Swiper
