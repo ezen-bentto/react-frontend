@@ -1,7 +1,7 @@
 import { Routes, Route } from "react-router-dom";
 import Home from "@/pages/Home/Home";
 import NotFound from "@/pages/NotFound";
-import Policy from "@/pages/Policy/Policy"
+import Policy from "@/pages/Policy/Policy";
 import Stats from "@/pages/Stats/Stats";
 import MainLayout from "@/layouts/MainLayout";
 import CommunityWrite from "@/pages/Community/CommunityWrite";
@@ -18,7 +18,6 @@ const AppRouter = () => {
         <Route path="/community/write" element={<CommunityWrite />} />
         <Route path="/community/detail" element={<CommunityDetail />} />
 
-
         {/*
         [ 예제: 게시글 목록 및 게시글 상세 페이지 라우터 설정 ]
          ** 게시글 라우터 설정 방법 ** 
@@ -27,7 +26,6 @@ const AppRouter = () => {
          ** 동적 라우터 설정 방법 ** 
          <Route path="/posts/:postId" element={<PostDetail />} />
         */}
-
       </Route>
     </Routes>
   );

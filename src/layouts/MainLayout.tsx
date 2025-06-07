@@ -4,7 +4,7 @@ import { Outlet } from "react-router-dom";
 
 const MainLayout = () => {
   return (
-    <div className="theme-text theme-bg">
+    <div className="theme-text theme-bg w-full overflow-hidden">
       <Header />
       <main className="px-6 py-4 max-w-[1400px] mx-auto">
         <Outlet />
