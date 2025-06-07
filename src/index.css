@@ -53,16 +53,3 @@ body {
 }
 
 @custom-variant dark (&:where(.dark, .dark *));
-
-
-/* MainBanner.css */
-
-
-.slick-next::after, .slick-prev::after {
-  width: 2rem !important;         /* 버튼 너비 */
-  height: 2rem !important;        /* 버튼 높이 */
-}
-
-.slick-next{
-  right: 1.5rem !important;
-}

@@ -33,7 +33,7 @@ const ContestSlider = () => {
         }}
       >
         {items.map((_, i) => (
-          <SwiperSlide key={i} className="!h-auto">
+          <SwiperSlide key={i}>
             <Card
               dday="20"
               id={i}
@@ -42,7 +42,6 @@ const ContestSlider = () => {
               title={`공모전 ${i + 1}`}
               intent="neutral"
               size="sm"
-              className="w-full h-full"
             />
           </SwiperSlide>
         ))}

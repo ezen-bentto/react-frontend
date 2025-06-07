@@ -27,6 +27,6 @@ export const useMainSlides = () =>
   useQuery({
     queryKey: ["mainSlides"],
     queryFn: fetchSlides,
-    staleTime: 1000 * 60 * 5, 
-    gcTime :  1000 * 60 * 20, // 20q분?
+    staleTime: 1000 * 60 * 5,
+    gcTime: 1000 * 60 * 20, // 20q분?
   });
