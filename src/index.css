@@ -52,4 +52,8 @@ body {
   @apply border border-gray-200 rounded-lg dark:border-gray-400;
 }
 
+.box-border-black {
+  @apply border border-brand-primary rounded-lg dark:border-gray-400;
+}
+
 @custom-variant dark (&:where(.dark, .dark *));

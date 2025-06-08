@@ -17,7 +17,7 @@ const MainBanner = () => {
         image: "../../../public/images/contest-1.png",
         bgColor: "bg-[#074B72]",
         duration: "2025.06.04 ~ 2025.06.24",
-        title: "농촌만들기 아이디어 공모전 \n2025년 제 10회 \n대학생이 간다",
+        title: "농촌만들기 \n아이디어 공모전 \n2025년 제 10회 \n대학생이 간다",
         summary: "안녕하세요 반가워요",
       },
       {
@@ -53,7 +53,7 @@ const MainBanner = () => {
     >
       {items.map(item => (
         <SwiperSlide key={item.id}>
-          <div className={`w-full h-[80vh] overflow-hidden px-[10%] flex-default ${item.bgColor}`}>
+          <div className={`w-full h-[60vh] overflow-hidden px-[10%] flex-default ${item.bgColor}`}>
             <div className="w-full max-w-[1400px] flex-default md:flex-row flex-col gap-4">
               <img
                 className="order-1 md:order-2 w-auto md:w-1/2"
