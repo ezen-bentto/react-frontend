@@ -1,7 +1,8 @@
 import ContestSlider from "@/components/home/ContestSlider";
 import MainBanner from "../../components/home/MainBanner";
-import Card from "@/components/shared/Card";
 import ListItem from "@/components/shared/ListItem";
+import Title from "@/components/shared/Title";
+import PolicySider from "@/components/home/PolicySider";
 
 const Home = () => {
   return (
@@ -15,9 +16,10 @@ const Home = () => {
         <ContestSlider />
       </section>
       <section className="main-policy w-full">
-        <Card dday="20" text="테스트 정책 text" title="텍스트정책 제목" id={2} />
+        <PolicySider />
       </section>
-      <section className="main-community w-full">
+      <section className="main-community w-full flex justify-start flex-col gap-4">
+        <Title linkSrc="/community" titleText="인기글" />
         <ListItem
           type="community"
           linkSrc="/"
@@ -29,18 +31,7 @@ const Home = () => {
           intent={"default"}
           size={"lg"}
           endDate={"2025-06-30"}
-        />
-        <ListItem
-          type="policy"
-          region="전국"
-          linkSrc="/"
-          comment={2}
-          description="테스트"
-          likes={123}
-          title="테스트 제목"
-          writer="작성자"
-          intent={"default"}
-          size={"md"}
+          category="공모전"
         />
       </section>
     </div>

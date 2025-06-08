@@ -32,6 +32,7 @@ import countDate from "@/utils/countDate";
  * @param linkSrc a 태그 href
  * @param region policy 지역
  * @param endDate community 공모전 종료 날짜
+ * @param category 카테고리
  */
 
 interface ListItemProps extends ListItemVariants {
@@ -45,6 +46,7 @@ interface ListItemProps extends ListItemVariants {
   linkSrc: string;
   region?: string;
   endDate?: string;
+  category?: string;
 }
 
 const ListItem = ({
@@ -60,6 +62,7 @@ const ListItem = ({
   linkSrc,
   region,
   endDate,
+  category,
 }: ListItemProps) => {
   const combinedClass = `${listItem({ size, intent })} ${className ?? ""}`.trim();
 
@@ -69,7 +72,7 @@ const ListItem = ({
         <div className="w-full flex-default">
           <div className="flex-default gap-2">
             <Badge size={"sm"} intent={"primary"}>
-              건설
+              {category}
             </Badge>
             {type === "policy" && (
               <div className="flex-default gap-2">
@@ -96,8 +99,8 @@ const ListItem = ({
         </div>
 
         <div className="flex-default w-full">
-          <div className="flex-default flex-col ">
-            <p className="list-col-wrap text-base flex-1">{description}</p>
+          <div className="w-full">
+            <p className="list-col-wrap text-base flex-1 truncate">{description}</p>
             {type === "community" && (
               <div className="text-xs uppercase font-semibold opacity-60">{writer}</div>
             )}
