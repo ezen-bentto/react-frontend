@@ -1,26 +1,25 @@
 import React from "react";
 
 interface PopularContestCardProps {
-  href: string;
+  href: number;
   imgSrc: string;
-  altText: string;
   region: string;
   title: string;
-  summary: string[];
+  participants: string;
+  summary: string;
 }
 
 const PopularContestCard: React.FC<PopularContestCardProps> = ({
   href,
   imgSrc,
-  altText,
   region,
   title,
   summary,
 }) => {
   return (
     <li className="shadow-md min-w-[300px] max-w-[calc(50%-16px)] p-6" data-aos="flip-left">
-      <a href={href} className="flex gap-4 no-underline">
-        <img src={imgSrc} alt={altText} className="flex-1 w-1/2 object-cover aspect-[5/7]" />
+      <a href={`/constet/${href}`} className="flex gap-4 no-underline">
+        <img src={imgSrc} alt={title} className="flex-1 w-1/2 object-cover aspect-[5/7]" />
         <div className="flex-1 flex flex-col justify-start">
           <div className="flex flex-col flex-[0.5]">
             <div className="ml-1 text-lg font-bold text-orange-500">{region}</div>
@@ -29,11 +28,7 @@ const PopularContestCard: React.FC<PopularContestCardProps> = ({
             </div>
           </div>
           <div className="flex flex-col items-start gap-2 py-4 flex-1">
-            {summary.map((line, idx) => (
-              <p key={idx} className="text-sm">
-                {line}
-              </p>
-            ))}
+            <p className="text-sm">{summary}</p>
           </div>
         </div>
       </a>

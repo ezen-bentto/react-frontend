@@ -10,7 +10,7 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import countDate from "@/utils/countDate";
 
-interface ContestItem {
+export interface ContestItem {
   id: number;
   writer_id: number;
   title: string;
