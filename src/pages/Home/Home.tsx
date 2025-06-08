@@ -1,8 +1,8 @@
 import ContestSlider from "@/components/home/ContestSlider";
 import MainBanner from "../../components/home/MainBanner";
 import ListItem from "@/components/shared/ListItem";
-import Title from "@/components/shared/Title";
 import PolicySider from "@/components/home/PolicySider";
+import PopularContestList from "@/components/home/PopularContestList";
 
 const Home = () => {
   return (
@@ -12,14 +12,16 @@ const Home = () => {
         <h2 className="sr-only">메인 슬라이더</h2>
         <MainBanner />
       </section>
-      <section className="main-contents mt-20 w-full">
-        <ContestSlider />
-      </section>
       <section className="main-policy w-full">
         <PolicySider />
       </section>
+      <section>
+        <PopularContestList />
+      </section>
+      <section className="main-contents mt-20 w-full">
+        <ContestSlider />
+      </section>
       <section className="main-community w-full flex justify-start flex-col gap-4">
-        <Title linkSrc="/community" titleText="인기글" />
         <ListItem
           type="community"
           linkSrc="/"

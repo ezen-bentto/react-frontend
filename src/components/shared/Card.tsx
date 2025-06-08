@@ -1,6 +1,5 @@
 import { Link } from "react-router-dom";
 import { card, type CardVariants } from "../style/card";
-import { CommentOutlined } from "@ant-design/icons";
 import Badge from "./Badge";
 
 /**
@@ -35,11 +34,10 @@ interface CardProps extends CardVariants {
   img?: string;
   title: string;
   text: string;
-  commentCnt?: number;
   className?: string;
 }
 
-const Card = ({ id, dday, img, title, text, size, intent, commentCnt, className }: CardProps) => {
+const Card = ({ id, dday, img, title, text, size, intent, className }: CardProps) => {
   const combinedClass =
     `relative w-full h-full ${card({ size, intent })} ${className ?? ""}`.trim(); // 👉 w-full, h-full 강제
 
@@ -49,26 +47,22 @@ const Card = ({ id, dday, img, title, text, size, intent, commentCnt, className 
         <div className="p-4 flex justify-end absolute w-full">
           <Badge intent="orange">D-{dday}</Badge>
         </div>
-        {img ? (
-          <figure>
+        <figure>
+          {img ? (
             <img src={img} alt={title} className="aspect-[4/3] w-full object-cover object-top" />
-          </figure>
-        ) : (
-          <></>
-        )}
+          ) : (
+            <img
+              src={"대체이미지"}
+              alt={title}
+              className="aspect-[4/3] w-full object-cover object-top"
+            />
+          )}
+        </figure>
 
-        <div className="card-body">
-          <h2 className="card-title">{title}</h2>
+        <div className="card-body w-full">
+          <h2 className="font-black text-xl truncate">{title}</h2>
           <div className="flex-default">
-            <p>{text}</p>
-            {commentCnt ? (
-              <div className="flex-default gap-2">
-                <CommentOutlined />
-                <p>30?</p>
-              </div>
-            ) : (
-              <></>
-            )}
+            <p className="truncate">{text}</p>
           </div>
         </div>
       </div>
