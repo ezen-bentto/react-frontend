@@ -1,4 +1,3 @@
-
 const CommunityList = () => {
   return (
     <div className="">
