@@ -4,7 +4,7 @@ export const badge = cva("badge p-4 font-semibold", {
   variants: {
     intent: {
       primary: "bg-brand-primary text-white border-brand-primary ",
-      default: "bg-gray-200 text-brand-primary border-gray-200",
+      default: "bg-gray-50 text-brand-primary border-gray-200",
       orange: "bg-accent-orange text-white border-accent-orange",
     },
     size: {

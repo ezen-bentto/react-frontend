@@ -23,7 +23,7 @@ function PopularContestList() {
   return (
     <div className="flex-default flex-col w-full">
       <Title linkSrc="/contest" titleText="주목받는 공모전" />
-      <ul className="flex-default flex-wrap gap-8 w-full">
+      <ul className="flex items-center md:justify-between justify-center flex-wrap gap-y-8 md:gap-8 w-full">
         {items.map(item => (
           <PopularContestCard
             href={item.id}
