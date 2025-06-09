@@ -3,11 +3,11 @@ import { useNavigate } from "react-router-dom";
 const SignUpTypeSelect = () => {
   const navigate = useNavigate();
 
-  const handleSelect = (type: "personal" | "business") => {
+  const handleSelect = (type: "personal" | "company") => {
     if (type === "personal") {
       navigate("/signup/personal");
     } else {
-      navigate("/signup/business");
+      navigate("/signup/company");
     }
   };
 
@@ -22,7 +22,7 @@ const SignUpTypeSelect = () => {
           개인 회원
         </button>
         <button
-          onClick={() => handleSelect("business")}
+          onClick={() => handleSelect("company")}
           className="px-6 py-3 bg-green-500 text-white rounded-lg"
         >
           기업 회원

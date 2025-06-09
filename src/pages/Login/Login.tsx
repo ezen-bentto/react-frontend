@@ -6,8 +6,6 @@ const LoginPage = () => {
 
   const handleLogin = (e: FormEvent) => {
     e.preventDefault();
-    // TODO: 로그인 API 연동
-    console.log({ email, password });
   };
 
   return (
@@ -32,7 +30,10 @@ const LoginPage = () => {
         placeholder="••••••"
       />
 
-      <button type="submit" className="w-full py-2 bg-blue-600 text-white rounded hover:bg-blue-700">
+      <button
+        type="submit"
+        className="w-full py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+      >
         로그인
       </button>
     </form>
