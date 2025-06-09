@@ -1,7 +1,7 @@
 import ContestSlider from "@/components/home/ContestSlider";
 import MainBanner from "../../components/home/MainBanner";
-import Card from "@/components/shared/Card";
-import ListItem from "@/components/shared/ListItem";
+import Fillter from "@/components/shared/Fillter";
+import { filterData } from "@/constants/filterData";
 
 const Home = () => {
   return (
@@ -14,33 +14,12 @@ const Home = () => {
       <section className="main-contents mt-20 w-full">
         <ContestSlider />
       </section>
-      <section className="main-policy w-full">
-        <Card dday="20" text="테스트 정책 text" title="텍스트정책 제목" id={2} />
-      </section>
+
       <section className="main-community w-full">
-        <ListItem
-          type="community"
-          linkSrc="/"
-          comment={2}
-          description="테스트"
-          likes={123}
-          title="테스트 제목"
-          writer="작성자"
-          intent={"default"}
-          size={"lg"}
-          endDate={"2025-06-30"}
-        />
-        <ListItem
-          type="policy"
-          region="전국"
-          linkSrc="/"
-          comment={2}
-          description="테스트"
-          likes={123}
-          title="테스트 제목"
-          writer="작성자"
-          intent={"default"}
-          size={"md"}
+        <Fillter
+          filters={filterData}
+          onFilterChange={(group, value) => console.info(group, value)}
+          onSearchSubmit={() => {}}
         />
       </section>
     </div>

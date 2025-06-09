@@ -19,8 +19,23 @@ import { button, type ButtonVariants } from "../style/button";
  * @param children 버튼 안에 들어갈 텍스트 또는 요소
  */
 
-const Button = ({ intent, size, children }: ButtonVariants & { children: React.ReactNode }) => {
-  return <button className={button({ intent, size })}>{children}</button>;
+interface ButtonProps extends ButtonVariants {
+  type: "button" | "submit";
+  onClickFnc: () => void;
+}
+
+const Button = ({
+  intent,
+  type,
+  size,
+  children,
+  onClickFnc,
+}: ButtonProps & { children: React.ReactNode }) => {
+  return (
+    <button type={type} className={button({ intent, size })} onClick={() => onClickFnc()}>
+      {children}
+    </button>
+  );
 };
 
 export default Button;

@@ -1,4 +1,3 @@
-
 const Policy = () => {
   return (
     <div className="">
