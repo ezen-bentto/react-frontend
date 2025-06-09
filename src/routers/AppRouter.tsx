@@ -6,6 +6,9 @@ import Stats from "@/pages/Stats/Stats";
 import MainLayout from "@/layouts/MainLayout";
 import CommunityWrite from "@/pages/Community/CommunityWrite";
 import CommunityDetail from "@/pages/Community/CommunityDetail";
+import Login from "@/pages/Login/Login";
+import SignUp from "@/pages/SignUp/Signup";
+import MyPage from "@/pages/MyPage/MyPage";
 
 const AppRouter = () => {
   return (
@@ -17,6 +20,9 @@ const AppRouter = () => {
         <Route path="/stats" element={<Stats />} />
         <Route path="/community/write" element={<CommunityWrite />} />
         <Route path="/community/detail" element={<CommunityDetail />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/signUp" element={<SignUp />} />
+        <Route path="/myPage" element={<MyPage />} />
 
         {/*
         [ 예제: 게시글 목록 및 게시글 상세 페이지 라우터 설정 ]
