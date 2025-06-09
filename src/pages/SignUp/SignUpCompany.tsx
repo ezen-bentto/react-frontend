@@ -59,7 +59,7 @@ const SignUpCompany = () => {
   };
 
   return (
-    <div>
+    <div className="pt-20">
       <div className="flex justify-center items-center min-h-screen px-4 py-8">
         <div className="w-full max-w-md bg-white dark:bg-gray-800 shadow-xl rounded-2xl p-8 transition-colors duration-200">
           <h2 className="text-3xl font-bold text-center mb-2 text-gray-900 dark:text-white">
