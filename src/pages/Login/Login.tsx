@@ -1,21 +1,88 @@
-import { useState } from "react";
+// src/components/Login.tsx
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
 
 const Login = () => {
   const navigate = useNavigate();
   const [tab, setTab] = useState<"personal" | "company">("personal");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
 
-  const handleLogin = (e: React.FormEvent) => {
+  const API_BASE_URL = "http://localhost:8080/api";
+
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const token = params.get("token");
+    const refresh = params.get("refresh");
+    const error = params.get("error");
+
+    if (token && refresh) {
+      localStorage.setItem("accessToken", token);
+      localStorage.setItem("refreshToken", refresh);
+      alert("로그인 성공!");
+      navigate("/");
+    } else if (error) {
+      setErrorMessage(
+        error === "kakao_login_failed" ? "카카오 로그인에 실패했습니다." : "로그인에 실패했습니다."
+      );
+    }
+  }, [navigate]);
+
+  const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
+    // e: React.FormEvent<HTMLFormElement>으로 타입 명시
     e.preventDefault();
-    // 로그인 처리 로직
-    console.log("로그인 처리:", { email, password, type: tab });
+    setErrorMessage("");
+
+    try {
+      const response = await axios.post(`${API_BASE_URL}/auth/login/company`, {
+        email,
+        password,
+      });
+
+      if (response.data.success) {
+        localStorage.setItem("accessToken", response.data.data.accessToken);
+        localStorage.setItem("refreshToken", response.data.data.refreshToken);
+        alert("로그인 성공!");
+        navigate("/");
+      } else {
+        setErrorMessage(response.data.message || "로그인 실패");
+      }
+    } catch (error: unknown) {
+      // error: unknown으로 변경 후 instanceof AxiosError로 체크
+      if (axios.isAxiosError(error)) {
+        console.error("기업 로그인 에러:", error.response?.data || error.message);
+        setErrorMessage(error.response?.data?.message || "로그인 중 오류가 발생했습니다.");
+      } else {
+        console.error("알 수 없는 에러:", error);
+        setErrorMessage("알 수 없는 오류가 발생했습니다.");
+      }
+    }
   };
 
-  const handleSocialLogin = (provider: string) => {
-    // 소셜 로그인 처리 로직
-    console.log(`${provider} 소셜 로그인 처리`);
+  const handleSocialLogin = async (provider: string) => {
+    if (provider === "카카오") {
+      try {
+        const response = await axios.get(`${API_BASE_URL}/auth/kakao/login-url`);
+        if (response.data.success && response.data.data.loginUrl) {
+          window.location.href = response.data.data.loginUrl;
+        } else {
+          setErrorMessage("카카오 로그인 URL을 가져오지 못했습니다.");
+        }
+      } catch (error: unknown) {
+        // error: unknown으로 변경 후 instanceof AxiosError로 체크
+        if (axios.isAxiosError(error)) {
+          console.error("카카오 로그인 URL 요청 에러:", error.response?.data || error.message);
+          setErrorMessage("카카오 로그인 연동 중 오류가 발생했습니다.");
+        } else {
+          console.error("알 수 없는 에러:", error);
+          setErrorMessage("알 수 없는 오류가 발생했습니다.");
+        }
+      }
+    } else {
+      alert(`${provider} 소셜 로그인은 아직 구현 중입니다.`);
+    }
   };
 
   return (
@@ -26,7 +93,6 @@ const Login = () => {
             로그인
           </h2>
 
-          {/* 탭 */}
           <div className="flex bg-gray-100 dark:bg-gray-700 rounded-lg p-1 mb-6 transition-colors duration-200">
             <button
               type="button"
@@ -52,7 +118,8 @@ const Login = () => {
             </button>
           </div>
 
-          {/* 개인회원 로그인 (소셜 로그인) */}
+          {errorMessage && <p className="text-red-500 text-center mb-4">{errorMessage}</p>}
+
           {tab === "personal" && (
             <div className="flex flex-col gap-3">
               <button
@@ -80,7 +147,7 @@ const Login = () => {
                 계정이 없으신가요?{" "}
                 <button
                   type="button"
-                  onClick={() => navigate("/signup")}
+                  onClick={() => navigate("/signup/personal")}
                   className="text-blue-600 dark:text-blue-400 hover:underline font-medium"
                 >
                   회원가입
@@ -89,7 +156,6 @@ const Login = () => {
             </div>
           )}
 
-          {/* 기업회원 로그인 */}
           {tab === "company" && (
             <form onSubmit={handleLogin} className="flex flex-col gap-4">
               <div className="mb-4">
@@ -120,7 +186,7 @@ const Login = () => {
               </div>
               <button
                 type="submit"
-                className="w-full px-6 py-3 text-lg font-semibold rounded-lg transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 bg-blue-600 hover:bg-blue-700 text-white focus:ring-blue-500 mt-2"
+                className="w-full px-6 py-3 text-lg font-semibold rounded-lg transition-all duration-200 focus:outline-none focus:ring-2 focus:focus:ring-offset-2 bg-blue-600 hover:bg-blue-700 text-white focus:ring-blue-500 mt-2"
               >
                 로그인
               </button>
@@ -128,7 +194,7 @@ const Login = () => {
                 계정이 없으신가요?{" "}
                 <button
                   type="button"
-                  onClick={() => navigate("/signup")}
+                  onClick={() => navigate("/signup/company")}
                   className="text-blue-600 dark:text-blue-400 hover:underline font-medium"
                 >
                   회원가입

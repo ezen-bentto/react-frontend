@@ -1,5 +1,7 @@
+// src/components/SignUpCompany.tsx
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
 
 interface SignUpForm {
   email: string;
@@ -19,12 +21,16 @@ const SignUpCompany = () => {
     phoneNumber: "",
   });
   const [passwordMatch, setPasswordMatch] = useState<boolean | null>(null);
+  const [errorMessage, setErrorMessage] = useState("");
+  const [successMessage, setSuccessMessage] = useState("");
+
+  const API_BASE_URL = "http://localhost:8080/api";
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    // e: React.ChangeEvent<HTMLInputElement>으로 타입 명시
     const { name, value } = e.target;
     setForm({ ...form, [name]: value });
 
-    // 비밀번호 확인 검사
     if (name === "confirmPassword" || name === "password") {
       const pwd = name === "password" ? value : form.password;
       const confirmPwd = name === "confirmPassword" ? value : form.confirmPassword;
@@ -37,16 +43,43 @@ const SignUpCompany = () => {
     }
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    // e: React.FormEvent<HTMLFormElement>으로 타입 명시
     e.preventDefault();
+    setErrorMessage("");
+    setSuccessMessage("");
 
     if (form.password !== form.confirmPassword) {
-      alert("비밀번호가 일치하지 않습니다.");
+      setErrorMessage("비밀번호가 일치하지 않습니다.");
       return;
     }
 
-    // 기업 회원가입 처리 로직
-    console.log("기업 회원가입 처리:", form);
+    try {
+      const response = await axios.post(`${API_BASE_URL}/auth/signup/company`, {
+        email: form.email,
+        password: form.password,
+        companyName: form.companyName,
+        phoneNumber: form.phoneNumber,
+      });
+
+      if (response.data.success) {
+        setSuccessMessage(response.data.message || "회원가입이 완료되었습니다.");
+        setTimeout(() => {
+          navigate("/login");
+        }, 2000);
+      } else {
+        setErrorMessage(response.data.message || "회원가입 실패");
+      }
+    } catch (error: unknown) {
+      // error: unknown으로 변경 후 instanceof AxiosError로 체크
+      if (axios.isAxiosError(error)) {
+        console.error("기업 회원가입 에러:", error.response?.data || error.message);
+        setErrorMessage(error.response?.data?.message || "회원가입 중 오류가 발생했습니다.");
+      } else {
+        console.error("알 수 없는 에러:", error);
+        setErrorMessage("알 수 없는 오류가 발생했습니다.");
+      }
+    }
   };
 
   const getInputStyle = (isError = false, isSuccess = false) => {
@@ -68,6 +101,9 @@ const SignUpCompany = () => {
           <p className="text-center text-gray-600 dark:text-gray-400 mb-8">
             기업 정보를 입력해주세요
           </p>
+
+          {errorMessage && <p className="text-red-500 text-center mb-4">{errorMessage}</p>}
+          {successMessage && <p className="text-green-600 text-center mb-4">{successMessage}</p>}
 
           <form onSubmit={handleSubmit} className="flex flex-col gap-4">
             <div className="mb-4">
