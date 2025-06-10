@@ -19,6 +19,7 @@ import countDate from "@/utils/countDate";
  *
  *        2025/05/31           이철욱               신규작성
  *        2025/06/08           이철욱               매개변수 추가 및 type 에 따른 컴포넌트 변화
+ *        2025/06/10           김혜미               커뮤니티 매개변수 추가
  *
  * @param title 항목 제목
  * @param writer 작성자
@@ -32,7 +33,32 @@ import countDate from "@/utils/countDate";
  * @param linkSrc a 태그 href
  * @param region policy 지역
  * @param endDate community 공모전 종료 날짜
+ * @param division 공모전 분류
+ * @param communityType 커뮤니티 분류(공모전, 스터디, 자유)
  */
+
+
+const getDivisionLabel = (division: number): string => {
+  const divisionMap: Record<number, string> = {
+    1: "포스터/웹툰/콘텐츠",
+    2: "사진/영상/UCC",
+    3: "아이디어/기획",
+    4: "IT/학술/논문",
+    5: "네이밍/슬로건",
+    6: "스포츠/음악",
+    7: "미술/디자인/건축",
+  };
+  return divisionMap[division] || "기타";
+};
+
+const getCommunityTypeLabel = (communityType: string): string => {
+  const communityTypeMap: Record<string, string> = {
+    "1": "공모전",
+    "2": "스터디",
+    "3": "자유"
+  };
+  return communityTypeMap[communityType] || "공모전";
+};
 
 interface ListItemProps extends ListItemVariants {
   type: "community" | "policy";
@@ -45,6 +71,8 @@ interface ListItemProps extends ListItemVariants {
   linkSrc: string;
   region?: string;
   endDate?: string;
+  division?: number;
+  communityType?: string;
 }
 
 const ListItem = ({
@@ -60,6 +88,8 @@ const ListItem = ({
   linkSrc,
   region,
   endDate,
+  division,
+  communityType,
 }: ListItemProps) => {
   const combinedClass = `${listItem({ size, intent })} ${className ?? ""}`.trim();
 
@@ -68,9 +98,11 @@ const ListItem = ({
       <Link to={linkSrc} className="flex-default flex-col gap-2 p-4 w-full">
         <div className="w-full flex-default">
           <div className="flex-default gap-2">
-            <Badge size={"sm"} intent={"primary"}>
-              건설
-            </Badge>
+            {(type === "policy" || (type === "community" && communityType === "1")) && (
+              <Badge size="sm" intent="primary">
+                {division !== undefined ? getDivisionLabel(division) : "기타"}
+              </Badge>
+            )}
             {type === "policy" && (
               <div className="flex-default gap-2">
                 <Badge intent={"orange"} size={"sm"}>
@@ -79,10 +111,11 @@ const ListItem = ({
               </div>
             )}
           </div>
-          {type === "community" && (
+          {type === "community" && communityType !== "3" && (
             <div className="flex-default gap-2">
               <Badge intent={"default"} size={"sm"}>
-                공모전
+                {communityType !== undefined ? getCommunityTypeLabel(communityType) : "기타"}
+
               </Badge>
               <Badge intent={"orange"} size={"sm"}>
                 D-{countDate(endDate ? endDate : "error")}

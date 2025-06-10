@@ -8,11 +8,15 @@ const CommunityList = () => {
     const [posts, setPosts] = useState<CommunityItem[]>([]);
     const [loading, setLoading] = useState(true);
     const navigate = useNavigate();
+    const urlParams = new URLSearchParams(window.location.search);
+    const communityType = urlParams.get("communityType") || "1";
+    // eslint-disable-next-line no-console
+    console.log("communityType" + communityType);
 
     useEffect(() => {
         const loadList = async () => {
             try {
-                const data = await fetchCommunityList("1", 1, 10);
+                const data = await fetchCommunityList(`${communityType}`, 1, 10);
                 setPosts(data.list);
             } catch (err) {
                 console.error("커뮤니티 목록 조회 실패:", err);
@@ -22,7 +26,7 @@ const CommunityList = () => {
         };
 
         loadList();
-    }, []);
+    }, [communityType]);
 
 
     // 위로가기 핸들러

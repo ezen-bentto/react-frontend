@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import {
   hamBtn,
   headerLinkHover,
@@ -29,6 +29,7 @@ import { useThemeStore } from "@/store/themeStore";
  * -------------------------------------------------------
  *
  *        2025/05/31           이철욱               신규작성
+ *        2025/06/10           김혜미               커뮤니티 메뉴 분리
  *
  * @param opacityEffect 높이에 따른 header 컴포넌트 투명화 매개변수다.
  * 바닐라 프로젝트 초창기에 구현하였으나 디자인상 불필요하여 현재는 쓰이지 않는다.
@@ -38,14 +39,25 @@ interface HeaderMenu {
   name: string;
   src: string;
   id: string;
+  subMenus?: { name: string; src: string }[];
 }
 
 const headerMenus: HeaderMenu[] = [
   { name: "공모전", src: "/contest", id: "" },
   { name: "청년정책", src: "/policy", id: "" },
   { name: "통계", src: "#", id: "" },
-  { name: "커뮤니티", src: "/community", id: "" },
+  {
+    name: "커뮤니티",
+    src: "#",
+    id: "",
+    subMenus: [
+      { name: "공모전", src: "/community/list?communityType=1" },
+      { name: "스터디", src: "/community/list?communityType=2" },
+      { name: "자유", src: "/community/list?communityType=3" }
+    ]
+  },
 ];
+
 
 interface HeaderProps {
   opacityEffect?: boolean;
@@ -55,8 +67,14 @@ export const Header = ({ opacityEffect = false }: HeaderProps) => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileOpen, setIsMobileOpen] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState<boolean>(!!localStorage.getItem("isLoggedIn"));
+  const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
   const { initTheme } = useThemeStore();
-  const items = headerMenus.map(item => ({ ...item, id: uuidv4() }));
+
+  // UUID 생성을 useMemo로 최적화하여 리렌더링 시에도 동일한 ID 유지
+  const items = useMemo(() =>
+    headerMenus.map(item => ({ ...item, id: uuidv4() })),
+    []
+  );
 
   // opacityEffect 가 활성화될 경우 쓰이는 useEffect
   useEffect(() => {
@@ -95,9 +113,58 @@ export const Header = ({ opacityEffect = false }: HeaderProps) => {
 
         <nav className="hidden md:flex gap-6 flex-1 justify-center text-base font-bold">
           {items.map(item => (
-            <Link key={item.id} to={item.src} className={headerLinkHover({ highlight: true })}>
-              {item.name}
-            </Link>
+            <div
+              key={item.id}
+              className="relative group"
+              onMouseEnter={() => {
+                if (item.subMenus) {
+                  setActiveDropdown(item.id);
+                }
+              }}
+              onMouseLeave={() => {
+                setActiveDropdown(null);
+              }}
+            >
+              {item.subMenus ? (
+                <div className={`${headerLinkHover({ highlight: true })} cursor-pointer`}>
+                  {item.name}
+                </div>
+              ) : (
+                <Link to={item.src} className={headerLinkHover({ highlight: true })}>
+                  {item.name}
+                </Link>
+              )}
+
+              {/* 드롭다운 메뉴 */}
+              {item.subMenus && (
+                <div
+                  className={`absolute top-full left-0 bg-white border border-gray-200 rounded-md shadow-xl min-w-[140px] z-[9999] py-1 ${activeDropdown === item.id ? "block" : "hidden"
+                    }`}
+                  style={{
+                    backgroundColor: "white",
+                    border: "1px solid #e5e7eb",
+                    boxShadow: "0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)"
+                  }}
+                  onMouseEnter={() => {
+                    setActiveDropdown(item.id);
+                  }}
+                  onMouseLeave={() => {
+                    setActiveDropdown(null);
+                  }}
+                >
+                  {item.subMenus.map((subItem, index) => (
+                    <Link
+                      key={index}
+                      to={subItem.src}
+                      className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors duration-150"
+                      onClick={() => setActiveDropdown(null)}
+                    >
+                      {subItem.name}
+                    </Link>
+                  ))}
+                </div>
+              )}
+            </div>
           ))}
         </nav>
 
@@ -155,9 +222,28 @@ export const Header = ({ opacityEffect = false }: HeaderProps) => {
             </>
           )}
           {items.map(item => (
-            <Link key={item.id} to={item.src} className={headerLinkHover({ highlight: true })}>
-              {item.name}
-            </Link>
+            <div key={item.id}>
+              {item.subMenus ? (
+                <>
+                  <div className={`${headerLinkHover({ highlight: true })} cursor-default`}>
+                    {item.name}
+                  </div>
+                  {item.subMenus.map((subItem, index) => (
+                    <Link
+                      key={index}
+                      to={subItem.src}
+                      className={`${headerLinkHover()} pl-4 text-sm`}
+                    >
+                      └ {subItem.name}
+                    </Link>
+                  ))}
+                </>
+              ) : (
+                <Link to={item.src} className={headerLinkHover({ highlight: true })}>
+                  {item.name}
+                </Link>
+              )}
+            </div>
           ))}
         </div>
       )}
