@@ -107,7 +107,7 @@ export const Header = ({ opacityEffect = false }: HeaderProps) => {
               <Link to={"/login"} className={headerLinkHover()}>
                 로그인
               </Link>
-              <Link to={"/join"} className={headerLinkHover()}>
+              <Link to={"/signup"} className={headerLinkHover()}>
                 회원가입
               </Link>
             </>
@@ -140,7 +140,7 @@ export const Header = ({ opacityEffect = false }: HeaderProps) => {
               <Link to={"/login"} className={headerLinkHover()}>
                 로그인
               </Link>
-              <Link to={"/join"} className={headerLinkHover()}>
+              <Link to={"/signup"} className={headerLinkHover()}>
                 회원가입
               </Link>
             </>

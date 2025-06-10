@@ -7,7 +7,11 @@ import MainLayout from "@/layouts/MainLayout";
 import CommunityWrite from "@/pages/Community/CommunityWrite";
 import CommunityContent from "@/pages/Community/CommunityContent";
 import CommunityList from "@/pages/Community/CommunityList";
-
+import Login from "@/pages/Login/Login";
+import MyPage from "@/pages/MyPage/MyPage";
+import SignUpTypeSelect from "@/pages/SignUp/SignUpTypeSelect";
+import SignUpPersonal from "@/pages/SignUp/SignUpPersonal";
+import SignUpCompany from "@/pages/SignUp/SignUpCompany";
 
 const AppRouter = () => {
   return (
@@ -20,7 +24,11 @@ const AppRouter = () => {
         <Route path="/community/write" element={<CommunityWrite />} />
         <Route path="/community/content/:communityId" element={<CommunityContent />} />
         <Route path="/community/list" element={<CommunityList />} />
-
+        <Route path="/login" element={<Login />} />
+        <Route path="/mypage" element={<MyPage />} />
+        <Route path="/signup" element={<SignUpTypeSelect />} />
+        <Route path="/signup/personal" element={<SignUpPersonal />} />
+        <Route path="/signup/company" element={<SignUpCompany />} />
 
         {/*
         [ 예제: 게시글 목록 및 게시글 상세 페이지 라우터 설정 ]

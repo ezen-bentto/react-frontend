@@ -40,7 +40,7 @@ const SearchInput = ({ size }: { size?: SearchInputVariants["size"] }) => {
           <path d="m21 21-4.3-4.3"></path>
         </g>
       </svg>
-      <input type="search" required placeholder="Search" className={searchInput({ size })} />
+      <input type="search" placeholder="검색어를 입력해주세요" className={searchInput({ size })} />
     </label>
   );
 };
