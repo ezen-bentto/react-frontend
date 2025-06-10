@@ -96,10 +96,10 @@ const ListItem = ({
         </div>
 
         <div className="flex-default w-full">
-          <div className="flex-default flex-col ">
+          <div className="flex justify-start items-center flex-col ">
             <p className="list-col-wrap text-base flex-1">{description}</p>
             {type === "community" && (
-              <div className="text-xs uppercase font-semibold opacity-60">{writer}</div>
+              <div className="text-xs uppercase font-semibold opacity-60 w-full">{writer}</div>
             )}
           </div>
 
