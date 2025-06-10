@@ -1,10 +1,9 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import ListItem from "@/components/shared/ListItem";
 import { fetchCommunityList, type CommunityItem } from "@/api/community/list";
 import { useNavigate } from "react-router-dom";
 
 const CommunityList = () => {
-
     const [posts, setPosts] = useState<CommunityItem[]>([]);
     const [loading, setLoading] = useState(true);
     const navigate = useNavigate();
@@ -28,7 +27,6 @@ const CommunityList = () => {
         loadList();
     }, [communityType]);
 
-
     // 위로가기 핸들러
     const handleScrollToTop = () => {
         window.scrollTo({ top: 0, behavior: "smooth" });
@@ -38,7 +36,6 @@ const CommunityList = () => {
     const goToWritePage = () => {
         navigate("/community/write");
     };
-
 
     return (
         <main className="bg-white pt-28">
@@ -58,7 +55,7 @@ const CommunityList = () => {
                                     "네이밍/슬로건",
                                     "스포츠/음악",
                                     "미술/디자인/건축",
-                                ].map((item) => (
+                                ].map(item => (
                                     <li key={item}>
                                         <a href="#" className="bg-gray-200 px-3 py-1 rounded">
                                             {item}
@@ -89,7 +86,7 @@ const CommunityList = () => {
                         <div>
                             <strong className="text-lg">정렬</strong>
                             <ul className="flex flex-wrap gap-2 mt-2">
-                                {["최신순", "인기순", "스크랩순", "종료임박순"].map((item) => (
+                                {["최신순", "인기순", "스크랩순", "종료임박순"].map(item => (
                                     <li key={item}>
                                         <a href="#" className="bg-gray-200 px-3 py-1 rounded">
                                             {item}
@@ -106,9 +103,7 @@ const CommunityList = () => {
                                 placeholder="검색어를 입력해주세요"
                                 className="w-full h-10 pl-4 pr-10 rounded bg-gray-100"
                             />
-                            <span className="absolute right-3 top-1/2 -translate-y-1/2">
-                                🔍
-                            </span>
+                            <span className="absolute right-3 top-1/2 -translate-y-1/2">🔍</span>
                         </div>
                     </div>
                 </section>
@@ -121,7 +116,7 @@ const CommunityList = () => {
                     ) : posts.length === 0 ? (
                         <p>게시글이 없습니다.</p>
                     ) : (
-                        posts.map((post) => (
+                        posts.map(post => (
                             <ListItem
                                 key={post.community_id}
                                 type="community"
@@ -134,6 +129,8 @@ const CommunityList = () => {
                                 endDate={post.recruit_end_date ?? undefined}
                                 size="lg"
                                 intent="primary"
+                                division={post.category_type ?? 0}
+                                communityType={post.community_type}
                             />
                         ))
                     )}
@@ -143,7 +140,8 @@ const CommunityList = () => {
                 <div className="fixed bottom-4 right-4 flex flex-col gap-2 z-50">
                     <button
                         onClick={goToWritePage}
-                        className="w-14 h-14 bg-orange-400 rounded-full flex items-center justify-center cursor-pointer">
+                        className="w-14 h-14 bg-orange-400 rounded-full flex items-center justify-center cursor-pointer"
+                    >
                         <img
                             src="/assets/icons/iconizer-iconmonstr-pencil-lined.svg"
                             alt="글작성"
@@ -152,7 +150,8 @@ const CommunityList = () => {
                     </button>
                     <button
                         onClick={handleScrollToTop}
-                        className="w-14 h-14 bg-gray-800 rounded-full flex items-center justify-center cursor-pointer">
+                        className="w-14 h-14 bg-gray-800 rounded-full flex items-center justify-center cursor-pointer"
+                    >
                         <img
                             src="/assets/icons/iconmonstr-arrow-66-240.png"
                             alt="위로 가기"
@@ -161,7 +160,7 @@ const CommunityList = () => {
                     </button>
                 </div>
             </div>
-        </main >
+        </main>
     );
 };
 
