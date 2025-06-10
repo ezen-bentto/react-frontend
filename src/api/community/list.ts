@@ -26,7 +26,7 @@ export interface CommunityListResponse {
 
 // TODO : 접속화면에 따라 communityType 값 바뀜
 export const fetchCommunityList = async (
-    communityType = "1",
+    communityType: string,
     page = 1,
     size = 10
 ): Promise<CommunityListResponse> => {
