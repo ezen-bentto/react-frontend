@@ -192,11 +192,11 @@ const CommunityWrite = () => {
 
                   {/* 버튼은 라벨 아래로 정렬되도록 분리 */}
                   <div className="flex justify-end gap-2 mt-2">
-                    <Button type="button" intent="primary" size="lg" onClick={() => handleRemoveRole(idx)}>
+                    <Button type="button" intent="primary" size="lg" onClickFnc={() => handleRemoveRole(idx)}>
                       삭제
                     </Button>
                     {idx === formData.recruitments.length - 1 && (
-                      <Button type="button" intent="primary" size="lg" onClick={handleAddRole}>
+                      <Button type="button" intent="primary" size="lg" onClickFnc={handleAddRole}>
                         추가
                       </Button>
                     )}
@@ -225,8 +225,9 @@ const CommunityWrite = () => {
               />
             </div>
             <div className="flex justify-end gap-2 py-8">
-              <Button intent="primary" size="lg">취소</Button>
-              <Button intent="primary" size="lg" type="button" onClick={handleSubmit}>등록</Button>
+              {/* 취소 : 커뮤니티 목록 이동 처리 */}
+              <Button intent="primary" size="lg" type="button" onClickFnc={handleSubmit}>취소</Button>
+              <Button intent="primary" size="lg" type="submit" onClickFnc={handleSubmit}>등록</Button>
             </div>
           </section>
         </div>
