@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { topBtn } from "../style/topBtn";
+import { fixedCircleBtn } from "../style/fixedCircleBtn";
 import { UpOutlined } from "@ant-design/icons";
 
 /**
@@ -41,7 +41,7 @@ const TopButton = () => {
     <button
       onClick={handleClick}
       aria-label="Scroll to top"
-      className={topBtn({ hidden: !visible })}
+      className={fixedCircleBtn({ hidden: !visible, color: "top" })}
     >
       <UpOutlined className="text-4xl !text-white " />
       <div className=""></div>

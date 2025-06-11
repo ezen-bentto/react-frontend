@@ -2,6 +2,7 @@ import ContestSlider from "@/components/home/ContestSlider";
 import MainBanner from "../../components/home/MainBanner";
 import Fillter from "@/components/shared/Fillter";
 import { filterData } from "@/constants/filterData";
+import WriteButton from "@/components/shared/WriteButton";
 
 const Home = () => {
   return (
@@ -22,6 +23,7 @@ const Home = () => {
           onSearchSubmit={() => {}}
         />
       </section>
+      <WriteButton />
     </div>
   );
 };
