@@ -39,6 +39,7 @@ const Home = () => {
           size={"lg"}
           endDate={"2025-06-30"}
           region=""
+          communityType="1"
         />
       </section>
       <section className="main-community w-full">

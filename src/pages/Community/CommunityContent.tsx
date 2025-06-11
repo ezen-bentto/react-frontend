@@ -12,7 +12,7 @@ const mockComments = [
     writeDate: "2025.01.22 08:31",
     content: "프론트엔드 기술은 어떤걸 사용하시나요?",
     imgSrc: "/assets/icons/iconmonstr-user-circle-thin.svg",
-  }
+  },
 ];
 
 const CommunityContent = () => {
@@ -48,7 +48,6 @@ const CommunityContent = () => {
       console.error("삭제 실패:", error);
       alert("삭제 중 오류가 발생했습니다.");
       // modal로 ?
-
     }
   };
 
@@ -69,9 +68,7 @@ const CommunityContent = () => {
               <span className="px-2 py-1 border rounded bg-gray-800 text-white text-sm truncate">
                 IT/학술/논문
               </span>
-              <span className="text-xl font-bold truncate">
-                {community.title || "제목 없음"}
-              </span>
+              <span className="text-xl font-bold truncate">{community.title || "제목 없음"}</span>
             </div>
             <div className="flex justify-end gap-4 text-sm">
               <span>{community.nickname}</span>
@@ -141,7 +138,7 @@ const CommunityContent = () => {
                 <span className="font-bold">모집 상세</span>
                 <div className="flex gap-8 flex-wrap">
                   <div className="flex flex-col gap-2 text-sm">
-                    {recruitment_detail_list.map((detail) => (
+                    {recruitment_detail_list.map(detail => (
                       <div key={detail.recruitment_detail_id}>
                         <span className="font-bold mr-2">{detail.role}</span>
                         <span>{detail.count}명</span>
@@ -167,7 +164,7 @@ const CommunityContent = () => {
           <span className="text-sm">댓글 {mockComments.length}개</span>
 
           <ul className="my-4 flex flex-col gap-4">
-            {mockComments.map((comment) => (
+            {mockComments.map(comment => (
               <CommentItem
                 key={comment.id}
                 writer={comment.writer}
@@ -183,21 +180,13 @@ const CommunityContent = () => {
 
           {/* 댓글 작성 폼 */}
           <form className="flex py-4 gap-4 items-start">
-            <Avatar
-              src="/assets/icons/iconmonstr-user-circle-thin.svg"
-              size="md"
-              shape="circle"
-            />
+            <Avatar src="/assets/icons/iconmonstr-user-circle-thin.svg" size="md" shape="circle" />
             <div className="flex-1">
               <div className="border border-gray-200 mb-4 rounded">
                 <div className="px-2 py-1 border-b">
                   <span className="font-bold text-sm">김닉네임</span>
                 </div>
-                <input
-                  type="text"
-                  placeholder="내용을 입력해주세요."
-                  className="w-full p-2"
-                />
+                <input type="text" placeholder="내용을 입력해주세요." className="w-full p-2" />
               </div>
               <div className="flex justify-end gap-2">
                 <button type="button" className="w-16 h-8 rounded bg-gray-200">
@@ -221,7 +210,10 @@ const CommunityContent = () => {
             <form method="dialog">
               <button className="btn">아니요</button>
             </form>
-            <button className="btn bg-orange-500 text-white hover:bg-orange-600 text-white" onClick={handleDelete}>
+            <button
+              className="btn bg-orange-500 text-white hover:bg-orange-600 text-white"
+              onClick={handleDelete}
+            >
               예
             </button>
           </div>

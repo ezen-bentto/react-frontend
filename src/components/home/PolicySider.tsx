@@ -71,7 +71,6 @@ const PolicySider = () => {
                 intent={"default"}
                 size={"md"}
                 region={item.region}
-                category={item.category}
               />
             </SwiperSlide>
           ))}

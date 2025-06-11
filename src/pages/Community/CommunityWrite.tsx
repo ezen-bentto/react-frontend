@@ -56,11 +56,11 @@ const CommunityWrite = () => {
         selectedOption === "3"
           ? undefined
           : formData.recruitments
-            .filter((r) => r.role.trim()) // 역할이 비어있는 건 제거
-            .map((r) => ({
-              role: r.role,
-              count: Number(r.count),
-            })),
+              .filter(r => r.role.trim()) // 역할이 비어있는 건 제거
+              .map(r => ({
+                role: r.role,
+                count: Number(r.count),
+              })),
     };
 
     try {
@@ -79,14 +79,35 @@ const CommunityWrite = () => {
           <section>
             <div className="font-bold text-xl py-2">기본 정보를 입력해주세요.</div>
             <div className="border-t-2 border-gray-200 py-4">
-              <input type="radio" id="option1" name="option" value="1" className="w-8"
-                onChange={() => setSelectedOption("1")} checked={selectedOption === "1"} />
+              <input
+                type="radio"
+                id="option1"
+                name="option"
+                value="1"
+                className="w-8"
+                onChange={() => setSelectedOption("1")}
+                checked={selectedOption === "1"}
+              />
               <label htmlFor="option1">공모전</label>
-              <input type="radio" id="option2" name="option" value="2" className="w-8 ml-4"
-                onChange={() => setSelectedOption("2")} checked={selectedOption === "2"} />
+              <input
+                type="radio"
+                id="option2"
+                name="option"
+                value="2"
+                className="w-8 ml-4"
+                onChange={() => setSelectedOption("2")}
+                checked={selectedOption === "2"}
+              />
               <label htmlFor="option2">스터디</label>
-              <input type="radio" id="option3" name="option" value="3" className="w-8 ml-4"
-                onChange={() => setSelectedOption("3")} checked={selectedOption === "3"} />
+              <input
+                type="radio"
+                id="option3"
+                name="option"
+                value="3"
+                className="w-8 ml-4"
+                onChange={() => setSelectedOption("3")}
+                checked={selectedOption === "3"}
+              />
               <label htmlFor="option3">자유</label>
             </div>
 
@@ -125,15 +146,23 @@ const CommunityWrite = () => {
               <div className="flex gap-20 pt-2">
                 <div className="flex flex-col w-full">
                   <label className="pb-2 font-bold">시작일</label>
-                  <input type="date" name="startDate" value={formData.startDate}
+                  <input
+                    type="date"
+                    name="startDate"
+                    value={formData.startDate}
                     onChange={handleFormChange}
-                    className="max-w-[25rem] h-8 pl-2 border border-gray-300 rounded" />
+                    className="max-w-[25rem] h-8 pl-2 border border-gray-300 rounded"
+                  />
                 </div>
                 <div className="flex flex-col w-full">
                   <label className="pb-2 font-bold">종료일</label>
-                  <input type="date" name="endDate" value={formData.endDate}
+                  <input
+                    type="date"
+                    name="endDate"
+                    value={formData.endDate}
                     onChange={handleFormChange}
-                    className="max-w-[25rem] h-8 pl-2 border border-gray-300 rounded" />
+                    className="max-w-[25rem] h-8 pl-2 border border-gray-300 rounded"
+                  />
                 </div>
               </div>
             )}
@@ -146,15 +175,23 @@ const CommunityWrite = () => {
               <div className="flex gap-20 border-t-2 border-gray-200 pt-2 pb-4">
                 <div className="flex flex-col w-full py-2">
                   <label className="pb-2 font-bold">모집 종료일</label>
-                  <input type="date" name="recruitEndDate" value={formData.recruitEndDate}
+                  <input
+                    type="date"
+                    name="recruitEndDate"
+                    value={formData.recruitEndDate}
                     onChange={handleFormChange}
-                    className="max-w-[25rem] h-8 pl-2 border border-gray-300 rounded" />
+                    className="max-w-[25rem] h-8 pl-2 border border-gray-300 rounded"
+                  />
                 </div>
                 <div className="flex flex-col w-full">
                   <label className="pb-2 font-bold">모집 연령</label>
-                  <input type="text" name="ageGroup" value={formData.ageGroup}
+                  <input
+                    type="text"
+                    name="ageGroup"
+                    value={formData.ageGroup}
                     onChange={handleFormChange}
-                    className="max-w-[25rem] h-8 pl-2 border border-gray-300 rounded" />
+                    className="max-w-[25rem] h-8 pl-2 border border-gray-300 rounded"
+                  />
                 </div>
               </div>
 
@@ -174,7 +211,7 @@ const CommunityWrite = () => {
                         type="text"
                         placeholder="역할을 입력해주세요."
                         value={r.role}
-                        onChange={(e) => handleRecruitmentChange(idx, "role", e.target.value)}
+                        onChange={e => handleRecruitmentChange(idx, "role", e.target.value)}
                         className="h-10 pl-2 border border-gray-300 rounded text-sm w-full max-w-[25rem]"
                       />
                     </div>
@@ -184,7 +221,7 @@ const CommunityWrite = () => {
                         placeholder="인원을 입력해주세요."
                         min={1}
                         value={r.count}
-                        onChange={(e) => handleRecruitmentChange(idx, "count", e.target.value)}
+                        onChange={e => handleRecruitmentChange(idx, "count", e.target.value)}
                         className="h-10 pl-2 border border-gray-300 rounded text-sm w-full max-w-[25rem]"
                       />
                     </div>
@@ -192,7 +229,12 @@ const CommunityWrite = () => {
 
                   {/* 버튼은 라벨 아래로 정렬되도록 분리 */}
                   <div className="flex justify-end gap-2 mt-2">
-                    <Button type="button" intent="primary" size="lg" onClickFnc={() => handleRemoveRole(idx)}>
+                    <Button
+                      type="button"
+                      intent="primary"
+                      size="lg"
+                      onClickFnc={() => handleRemoveRole(idx)}
+                    >
                       삭제
                     </Button>
                     {idx === formData.recruitments.length - 1 && (
@@ -210,15 +252,19 @@ const CommunityWrite = () => {
           <section>
             <div className="flex flex-col mb-4">
               <label className="pb-2 font-bold">제목</label>
-              <input type="text" name="title" value={formData.title}
+              <input
+                type="text"
+                name="title"
+                value={formData.title}
                 onChange={handleFormChange}
                 placeholder="제목을 입력해주세요"
-                className="h-8 pl-2 border border-gray-300 rounded" />
+                className="h-8 pl-2 border border-gray-300 rounded"
+              />
             </div>
             <div className="mb-10">
               <ReactQuill
                 value={formData.content}
-                onChange={(value) => setFormData(prev => ({ ...prev, content: value }))}
+                onChange={value => setFormData(prev => ({ ...prev, content: value }))}
                 theme="snow"
                 className="h-[300px]"
                 placeholder="내용을 입력해주세요"
@@ -226,8 +272,12 @@ const CommunityWrite = () => {
             </div>
             <div className="flex justify-end gap-2 py-8">
               {/* 취소 : 커뮤니티 목록 이동 처리 */}
-              <Button intent="primary" size="lg" type="button" onClickFnc={handleSubmit}>취소</Button>
-              <Button intent="primary" size="lg" type="submit" onClickFnc={handleSubmit}>등록</Button>
+              <Button intent="primary" size="lg" type="button" onClickFnc={handleSubmit}>
+                취소
+              </Button>
+              <Button intent="primary" size="lg" type="submit" onClickFnc={handleSubmit}>
+                등록
+              </Button>
             </div>
           </section>
         </div>
