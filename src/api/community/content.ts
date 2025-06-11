@@ -1,11 +1,13 @@
 import axios from "axios";
 
+// 모집 상세 응답 타입
 export interface RecruitmentDetail {
   recruitment_detail_id: number;
   role: string;
   count: number;
 }
 
+// 커뮤니티 상세 응답 타입
 export interface CommunityDetail {
   community_id: number;
   community_type: string;
@@ -23,9 +25,23 @@ export interface CommunityDetail {
   recruitment_detail_list: RecruitmentDetail[];
 }
 
+/**
+ *
+ * 커뮤니티 상세 내용 조회
+ *
+ * @function fetchCommunityDetail
+ * @date 2025/06/11
+ * @history
+ * -------------------------------------------------------
+ *           변경일             작성자             변경내용
+ * -------------------------------------------------------
+ *
+ *        2025/06/11           김혜미               신규작성  
+ * @param communityId
+ */
 export const fetchCommunityDetail = async (communityId: number): Promise<CommunityDetail> => {
-  const response = await axios.get<{ data: CommunityDetail }>(
-    `${import.meta.env.VITE_API_URL}/api/community/getDetail?communityId=${communityId}`
-  );
-  return response.data.data;
+    const response = await axios.get<{ data: CommunityDetail }>(
+        `${import.meta.env.VITE_API_URL}/api/community/getDetail?communityId=${communityId}`
+    );
+    return response.data.data;
 };

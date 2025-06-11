@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
-import ListItem from "@/components/shared/ListItem";
 import { fetchCommunityList, type CommunityItem } from "@/api/community/list";
 import { useNavigate } from "react-router-dom";
+import ListItem from "@/components/shared/ListItem";
 
 const CommunityList = () => {
   const [posts, setPosts] = useState<CommunityItem[]>([]);
@@ -9,8 +9,6 @@ const CommunityList = () => {
   const navigate = useNavigate();
   const urlParams = new URLSearchParams(window.location.search);
   const communityType = urlParams.get("communityType") || "1";
-  // eslint-disable-next-line no-console
-  console.log("communityType" + communityType);
 
   useEffect(() => {
     const loadList = async () => {

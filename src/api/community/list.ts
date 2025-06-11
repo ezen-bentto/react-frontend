@@ -24,7 +24,22 @@ export interface CommunityListResponse {
   totalCount: number;
 }
 
-// TODO : 접속화면에 따라 communityType 값 바뀜
+/**
+ *
+ * 커뮤니티 목록 조회
+ *
+ * @function fetchCommunityList
+ * @date 2025/06/11
+ * @history
+ * -------------------------------------------------------
+ *           변경일             작성자             변경내용
+ * -------------------------------------------------------
+ *
+ *        2025/06/11           김혜미               신규작성  
+ * @param communityType
+ * @param page
+ * @param size
+ */
 export const fetchCommunityList = async (
   communityType: string,
   page = 1,
