@@ -31,7 +31,7 @@ export interface CommunityRegisterPayload {
  *           변경일             작성자             변경내용
  * -------------------------------------------------------
  *
- *        2025/06/11           김혜미               신규작성  
+ *        2025/06/11           김혜미               신규작성
  * @param CommunityRegisterPayload
  */
 export const registerCommunity = async (payload: CommunityRegisterPayload) => {

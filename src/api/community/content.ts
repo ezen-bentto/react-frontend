@@ -36,12 +36,12 @@ export interface CommunityDetail {
  *           변경일             작성자             변경내용
  * -------------------------------------------------------
  *
- *        2025/06/11           김혜미               신규작성  
+ *        2025/06/11           김혜미               신규작성
  * @param communityId
  */
 export const fetchCommunityDetail = async (communityId: number): Promise<CommunityDetail> => {
-    const response = await axios.get<{ data: CommunityDetail }>(
-        `${import.meta.env.VITE_API_URL}/api/community/getDetail?communityId=${communityId}`
-    );
-    return response.data.data;
+  const response = await axios.get<{ data: CommunityDetail }>(
+    `${import.meta.env.VITE_API_URL}/api/community/getDetail?communityId=${communityId}`
+  );
+  return response.data.data;
 };
