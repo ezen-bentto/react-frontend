@@ -19,6 +19,7 @@ import countDate from "@/utils/countDate";
  *
  *        2025/05/31           이철욱               신규작성
  *        2025/06/08           이철욱               매개변수 추가 및 type 에 따른 컴포넌트 변화
+ *        2025/06/10           김혜미               커뮤니티 매개변수 추가
  *
  * @param title 항목 제목
  * @param writer 작성자
@@ -32,7 +33,6 @@ import countDate from "@/utils/countDate";
  * @param linkSrc a 태그 href
  * @param region policy 지역
  * @param endDate community 공모전 종료 날짜
- * @param category 카테고리
  */
 
 interface ListItemProps extends ListItemVariants {
@@ -46,7 +46,6 @@ interface ListItemProps extends ListItemVariants {
   linkSrc: string;
   region?: string;
   endDate?: string;
-  category?: string;
 }
 
 const ListItem = ({
@@ -62,7 +61,6 @@ const ListItem = ({
   linkSrc,
   region,
   endDate,
-  category,
 }: ListItemProps) => {
   const combinedClass = `${listItem({ size, intent })} ${className ?? ""}`.trim();
 
@@ -72,7 +70,7 @@ const ListItem = ({
         <div className="w-full flex-default">
           <div className="flex-default gap-2">
             <Badge size={"sm"} intent={"primary"}>
-              {category}
+              건설
             </Badge>
             {type === "policy" && (
               <div className="flex-default gap-2">
@@ -82,10 +80,10 @@ const ListItem = ({
               </div>
             )}
           </div>
-          {type === "community" && (
+          {type === "community" && communityType !== "3" && (
             <div className="flex-default gap-2">
               <Badge intent={"default"} size={"sm"}>
-                공모전
+                {communityType !== undefined ? getCommunityTypeLabel(communityType) : "기타"}
               </Badge>
               <Badge intent={"orange"} size={"sm"}>
                 D-{countDate(endDate ? endDate : "error")}
@@ -99,10 +97,10 @@ const ListItem = ({
         </div>
 
         <div className="flex-default w-full">
-          <div className="w-full">
-            <p className="list-col-wrap text-base flex-1 truncate">{description}</p>
+          <div className="flex-default flex-col ">
+            <p className="list-col-wrap text-base flex-1">{description}</p>
             {type === "community" && (
-              <div className="text-xs uppercase font-semibold opacity-60">{writer}</div>
+              <div className="text-xs uppercase font-semibold opacity-60 w-full">{writer}</div>
             )}
           </div>
 

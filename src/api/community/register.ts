@@ -1,9 +1,8 @@
-// src/api/community.ts
 import axios from "axios";
 
 export interface RecruitmentDetail {
   role: string;
-  count: string;
+  count: number;
 }
 
 export interface CommunityRegisterPayload {
@@ -14,7 +13,7 @@ export interface CommunityRegisterPayload {
   recruitEndDate?: string | null;
   categoryType?: string | number | null;
   ageGroup?: string | null;
-  title?: string;
+  title: string;
   content: string;
   recruitments?: RecruitmentDetail[];
 }
@@ -39,7 +38,7 @@ export const registerCommunity = async (payload: CommunityRegisterPayload) => {
   };
 
   const response = await axios.post(
-    "https://api.youthfulness.today/api/community/register",
+    `${import.meta.env.VITE_API_URL}/api/community/register`,
     transformedPayload
   );
   return response.data;

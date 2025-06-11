@@ -7,7 +7,7 @@ export const button = cva(
     variants: {
       intent: {
         primary: "bg-gray-200",
-        sky: "bg-accent-sky",
+        fillter: "theme-bg dark:text-white",
         orange: "bg-accent-orange text-white",
       },
       size: {

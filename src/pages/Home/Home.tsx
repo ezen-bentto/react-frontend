@@ -1,9 +1,12 @@
 import ContestSlider from "@/components/home/ContestSlider";
 import MainBanner from "../../components/home/MainBanner";
-import ListItem from "@/components/shared/ListItem";
-import PolicySider from "@/components/home/PolicySider";
-import PopularContestList from "@/components/home/PopularContestList";
 
+import Fillter from "@/components/shared/Fillter";
+import { filterData } from "@/constants/filterData";
+import WriteButton from "@/components/shared/WriteButton";
+import PopularContestList from "@/components/home/PopularContestList";
+import PolicySider from "@/components/home/PolicySider";
+import ListItem from "@/components/shared/ListItem";
 const Home = () => {
   return (
     <div className="flex justify-center flex-col mt-19 md:mt-20  items-center gap-4">
@@ -19,6 +22,7 @@ const Home = () => {
       <section className="main-contents mt-20 w-full">
         <ContestSlider />
       </section>
+
       <section className="main-policy w-full">
         <PolicySider />
       </section>
@@ -34,9 +38,17 @@ const Home = () => {
           intent={"default"}
           size={"lg"}
           endDate={"2025-06-30"}
-          category="공모전"
+          region=""
         />
       </section>
+      <section className="main-community w-full">
+        <Fillter
+          filters={filterData}
+          onFilterChange={(group, value) => console.info(group, value)}
+          onSearchSubmit={() => {}}
+        />
+      </section>
+      <WriteButton />
     </div>
   );
 };
