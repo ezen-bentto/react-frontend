@@ -26,13 +26,18 @@ function PopularContestList() {
       <ul className="flex items-center md:justify-between justify-center flex-wrap gap-y-8 md:gap-8 w-full">
         {items.map(item => (
           <PopularContestCard
-            href={item.id}
-            title={item.title}
-            region={item.organizer}
-            imgSrc={item.img}
-            summary={item.benefits}
-            key={item.id}
+            id={item.id}
+            benefits={item.benefits}
+            contest_tag={item.contest_tag}
+            start_date={item.start_date}
+            end_date={item.end_date}
+            img={item.img}
+            organizer={item.organizer}
             participants={item.participants}
+            prize={item.prize}
+            title={item.title}
+            key={item.id}
+            views="0"
           />
         ))}
       </ul>
