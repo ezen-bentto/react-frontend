@@ -130,7 +130,14 @@ const ListItem = ({
 
         <div className="flex-default w-full">
           <div className="flex-default flex-col ">
-            <p className="list-col-wrap text-base flex-1">{description}</p>
+            {type === "community" ? (
+              <p
+                className="list-col-wrap text-base flex-1"
+                dangerouslySetInnerHTML={{ __html: description }}
+              />
+            ) : (
+              <p className="list-col-wrap text-base flex-1">{description}</p>
+            )}
             {type === "community" && (
               <div className="text-xs uppercase font-semibold opacity-60">{writer}</div>
             )}
