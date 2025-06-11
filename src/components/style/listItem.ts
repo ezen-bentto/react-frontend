@@ -1,6 +1,6 @@
 import { cva, type VariantProps } from "class-variance-authority";
 
-export const listItem = cva("flex theme-text theme-bg box-border-black", {
+export const listItem = cva("w-full flex theme-text theme-bg box-border-black", {
   variants: {
     size: {
       sm: "max-w-xs text-sm",
