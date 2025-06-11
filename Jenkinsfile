@@ -2,10 +2,10 @@ pipeline {
     agent any
 
     environment {
-        DISCORD_WEBHOOK = credentials('discord-front') // 디스코드 웹훅 URL을 환경 변수로 설정설정
-        AWS_REGION = credentials('region')  // AWS 리전 정보
-        BUCKET_NAME = credentials('youth-bucket') // AWS S3 버킷 이름
-        DISTRIBUTION_ID = credentials('cloud-front-id') // CloudFront 배포 ID
+        DISCORD_WEBHOOK = credentials('discord-front')          // 디스코드 웹훅
+        AWS_REGION = credentials('region')                      // AWS 리전
+        BUCKET_NAME = credentials('youth-bucket')              // S3 버킷 이름
+        DISTRIBUTION_ID = credentials('cloud-front-id')        // CloudFront 배포 ID
     }
 
     stages {
@@ -23,6 +23,16 @@ pipeline {
             }
         }
 
+        stage('Generate .env.production') {
+            steps {
+                withCredentials([string(credentialsId: 'backend-url', variable: 'BACKEND_URL')]) {
+                    writeFile file: '.env.production', text: """
+VITE_API_URL=$BACKEND_URL
+"""
+                }
+            }
+        }
+
         stage('Build') {
             steps {
                 script {
@@ -34,12 +44,11 @@ pipeline {
         stage('Deploy to S3') {
             steps {
                 script {
-                    // AWS 자격 증명을 withCredentials로 사용하여 환경 변수로 설정
-                    withCredentials([[ 
+                    withCredentials([[
                         $class: 'AmazonWebServicesCredentialsBinding',
-                        accessKeyVariable: 'AWS_ACCESS_KEY_ID',  // 액세스 키 환경 변수
-                        secretKeyVariable: 'AWS_SECRET_ACCESS_KEY', // 비밀 키 환경 변수
-                        credentialsId: '2d462ab2-99f0-451a-9b7d-7f46afd7c6bf'  // Jenkins에서 설정한 AWS 자격 증명 ID
+                        accessKeyVariable: 'AWS_ACCESS_KEY_ID',
+                        secretKeyVariable: 'AWS_SECRET_ACCESS_KEY',
+                        credentialsId: '2d462ab2-99f0-451a-9b7d-7f46afd7c6bf'
                     ]]) {
                         sh 'aws s3 sync ./dist/ s3://$BUCKET_NAME --delete'
                     }
@@ -50,8 +59,7 @@ pipeline {
         stage('Invalidate CloudFront Cache') {
             steps {
                 script {
-                    // CloudFront 캐시 무효화
-                    withCredentials([[ 
+                    withCredentials([[
                         $class: 'AmazonWebServicesCredentialsBinding',
                         accessKeyVariable: 'AWS_ACCESS_KEY_ID',
                         secretKeyVariable: 'AWS_SECRET_ACCESS_KEY',
