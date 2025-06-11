@@ -2,27 +2,27 @@ import axios from "axios";
 
 // 모집 상세 응답 타입
 export interface RecruitmentDetail {
-    recruitment_detail_id: number;
-    role: string;
-    count: number;
+  recruitment_detail_id: number;
+  role: string;
+  count: number;
 }
 
 // 커뮤니티 상세 응답 타입
 export interface CommunityDetail {
-    community_id: number;
-    community_type: string;
-    category_type: number;
-    contest_id: number;
-    start_date: string;
-    end_date: string;
-    recruit_end_date: string;
-    age_group: string;
-    nickname: string;
-    title: string;
-    content: string;
-    author_id: number;
-    reg_date: string;
-    recruitment_detail_list: RecruitmentDetail[];
+  community_id: number;
+  community_type: string;
+  category_type: number;
+  contest_id: number;
+  start_date: string;
+  end_date: string;
+  recruit_end_date: string;
+  age_group: string;
+  nickname: string;
+  title: string;
+  content: string;
+  author_id: number;
+  reg_date: string;
+  recruitment_detail_list: RecruitmentDetail[];
 }
 
 /**

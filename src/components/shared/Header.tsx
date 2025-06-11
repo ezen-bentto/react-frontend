@@ -53,11 +53,10 @@ const headerMenus: HeaderMenu[] = [
     subMenus: [
       { name: "공모전", src: "/community/list?communityType=1" },
       { name: "스터디", src: "/community/list?communityType=2" },
-      { name: "자유", src: "/community/list?communityType=3" }
-    ]
+      { name: "자유", src: "/community/list?communityType=3" },
+    ],
   },
 ];
-
 
 interface HeaderProps {
   opacityEffect?: boolean;
@@ -71,10 +70,7 @@ export const Header = ({ opacityEffect = false }: HeaderProps) => {
   const { initTheme } = useThemeStore();
 
   // UUID 생성을 useMemo로 최적화하여 리렌더링 시에도 동일한 ID 유지
-  const items = useMemo(() =>
-    headerMenus.map(item => ({ ...item, id: uuidv4() })),
-    []
-  );
+  const items = useMemo(() => headerMenus.map(item => ({ ...item, id: uuidv4() })), []);
 
   // opacityEffect 가 활성화될 경우 쓰이는 useEffect
   useEffect(() => {
@@ -138,12 +134,14 @@ export const Header = ({ opacityEffect = false }: HeaderProps) => {
               {/* 드롭다운 메뉴 */}
               {item.subMenus && (
                 <div
-                  className={`absolute top-full left-0 bg-white border border-gray-200 rounded-md shadow-xl min-w-[140px] z-[9999] py-1 ${activeDropdown === item.id ? "block" : "hidden"
-                    }`}
+                  className={`absolute top-full left-0 bg-white border border-gray-200 rounded-md shadow-xl min-w-[140px] z-[9999] py-1 ${
+                    activeDropdown === item.id ? "block" : "hidden"
+                  }`}
                   style={{
                     backgroundColor: "white",
                     border: "1px solid #e5e7eb",
-                    boxShadow: "0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)"
+                    boxShadow:
+                      "0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)",
                   }}
                   onMouseEnter={() => {
                     setActiveDropdown(item.id);

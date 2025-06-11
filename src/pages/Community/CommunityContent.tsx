@@ -43,9 +43,7 @@ const CommunityContent = () => {
       const res = await deleteComment({ commentId });
 
       if (res.affectedRows > 0) {
-        setComments((prev) =>
-          prev.filter((comment) => comment.comment_id !== commentId)
-        );
+        setComments(prev => prev.filter(comment => comment.comment_id !== commentId));
       } else {
         alert("댓글 삭제에 실패했습니다.");
       }
@@ -105,7 +103,7 @@ const CommunityContent = () => {
     try {
       const commentData: CommentRegisterRequest = {
         content: commentContent.trim(),
-        postId: Number(communityId)
+        postId: Number(communityId),
       };
 
       await registerComment(commentData);
@@ -130,13 +128,16 @@ const CommunityContent = () => {
   // 날짜 포맷팅
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
-    return date.toLocaleDateString("ko-KR", {
-      year: "numeric",
-      month: "2-digit",
-      day: "2-digit",
-      hour: "2-digit",
-      minute: "2-digit"
-    }).replace(/\. /g, ".").replace(",", "");
+    return date
+      .toLocaleDateString("ko-KR", {
+        year: "numeric",
+        month: "2-digit",
+        day: "2-digit",
+        hour: "2-digit",
+        minute: "2-digit",
+      })
+      .replace(/\. /g, ".")
+      .replace(",", "");
   };
 
   // 커뮤니티 삭제 처리
@@ -147,7 +148,7 @@ const CommunityContent = () => {
       // 삭제 성공 모달 표시
       setDeleteModalState({
         type: "success",
-        message: "삭제가 완료되었습니다."
+        message: "삭제가 완료되었습니다.",
       });
 
       // 성공 모달 표시
@@ -161,14 +162,13 @@ const CommunityContent = () => {
         const communityType = community?.community_type === "1" ? "contest" : "etc";
         navigate(`/community/list?type=${communityType}`);
       }, 2000);
-
     } catch (error) {
       console.error("삭제 실패:", error);
 
       // 삭제 실패 모달 표시
       setDeleteModalState({
         type: "error",
-        message: "삭제 중 오류가 발생했습니다."
+        message: "삭제 중 오류가 발생했습니다.",
       });
 
       const errorModal = document.getElementById("result_modal");
@@ -181,7 +181,7 @@ const CommunityContent = () => {
   const showDeleteConfirmModal = () => {
     setDeleteModalState({
       type: "confirm",
-      message: "정말 삭제하시겠습니까?\n삭제 후에는 복구할 수 없습니다."
+      message: "정말 삭제하시겠습니까?\n삭제 후에는 복구할 수 없습니다.",
     });
 
     const modal = document.getElementById("delete_modal");
@@ -250,9 +250,7 @@ const CommunityContent = () => {
               <span className="px-2 py-1 border rounded bg-gray-800 text-white text-sm truncate">
                 IT/학술/논문
               </span>
-              <span className="text-xl font-bold truncate">
-                {community.title || "제목 없음"}
-              </span>
+              <span className="text-xl font-bold truncate">{community.title || "제목 없음"}</span>
             </div>
             <div className="flex justify-end gap-4 text-sm">
               <span>{community.nickname}</span>
@@ -267,10 +265,7 @@ const CommunityContent = () => {
             {/* 상단 우측 버튼 */}
             <div className="flex justify-end text-xs text-gray-500 gap-2">
               <button className="cursor-pointer">수정</button>
-              <button
-                className="cursor-pointer"
-                onClick={showDeleteConfirmModal}
-              >
+              <button className="cursor-pointer" onClick={showDeleteConfirmModal}>
                 삭제
               </button>
             </div>
@@ -318,7 +313,7 @@ const CommunityContent = () => {
                   <span className="font-bold">모집 상세</span>
                   <div className="flex gap-8 flex-wrap">
                     <div className="flex flex-col gap-2 text-sm">
-                      {recruitment_detail_list.map((detail) => (
+                      {recruitment_detail_list.map(detail => (
                         <div key={detail.recruitment_detail_id}>
                           <span className="font-bold mr-2">{detail.role}</span>
                           <span>{detail.count}명</span>
@@ -347,40 +342,41 @@ const CommunityContent = () => {
 
             {/* 기존 댓글 목록 */}
             <div className="space-y-1">
-              {comments && comments.map((comment) => (
-                <div key={comment.comment_id} className="flex gap-3 p-2 rounded-lg">
-                  <Avatar
-                    src="/assets/icons/iconmonstr-user-circle-thin.svg"
-                    size="md"
-                    shape="circle"
-                  />
-                  <div className="flex-1">
-                    <div className="flex items-center justify-between mb-2">
-                      <div className="flex items-center gap-2">
-                        <span className="font-semibold text-gray-900">{comment.nickname}</span>
-                        <span className="text-sm text-gray-500">{formatDate(comment.reg_date)}</span>
+              {comments &&
+                comments.map(comment => (
+                  <div key={comment.comment_id} className="flex gap-3 p-2 rounded-lg">
+                    <Avatar
+                      src="/assets/icons/iconmonstr-user-circle-thin.svg"
+                      size="md"
+                      shape="circle"
+                    />
+                    <div className="flex-1">
+                      <div className="flex items-center justify-between mb-2">
+                        <div className="flex items-center gap-2">
+                          <span className="font-semibold text-gray-900">{comment.nickname}</span>
+                          <span className="text-sm text-gray-500">
+                            {formatDate(comment.reg_date)}
+                          </span>
+                        </div>
+                        <div className="flex justify-end text-xs text-gray-500 gap-2">
+                          <button className="cursor-pointer">수정</button>
+                          <button
+                            className="cursor-pointer"
+                            onClick={() => handleCommentDelete(Number(comment.comment_id))}
+                          >
+                            삭제
+                          </button>
+                        </div>
                       </div>
-                      <div className="flex justify-end text-xs text-gray-500 gap-2">
-                        <button className="cursor-pointer">수정</button>
-                        <button
-                          className="cursor-pointer"
-                          onClick={() => handleCommentDelete(Number(comment.comment_id))}
-                        >
-                          삭제
-                        </button>
-                      </div>
+                      <p className="text-gray-700 leading-relaxed">
+                        {comment.del_yn === "Y" ? "삭제된 댓글입니다." : comment.content}
+                      </p>
                     </div>
-                    <p className="text-gray-700 leading-relaxed">
-                      {comment.del_yn === "Y" ? "삭제된 댓글입니다." : comment.content}
-                    </p>
                   </div>
-                </div>
-              ))}
+                ))}
 
               {comments?.length === 0 && (
-                <div className="text-center py-8 text-gray-500">
-                  첫 번째 댓글을 작성해보세요!
-                </div>
+                <div className="text-center py-8 text-gray-500">첫 번째 댓글을 작성해보세요!</div>
               )}
             </div>
           </div>
@@ -400,7 +396,7 @@ const CommunityContent = () => {
                 <div className="mb-3">
                   <textarea
                     value={commentContent}
-                    onChange={(e) => setCommentContent(e.target.value)}
+                    onChange={e => setCommentContent(e.target.value)}
                     placeholder="댓글을 입력해주세요..."
                     className="w-full p-3 border border-gray-300 rounded-lg resize-none focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                     rows={3}
@@ -418,12 +414,7 @@ const CommunityContent = () => {
                     >
                       취소
                     </Button>
-                    <Button
-                      type="submit"
-                      intent="orange"
-                      size="sm"
-                      onClickFnc={() => { }}
-                    >
+                    <Button type="submit" intent="orange" size="sm" onClickFnc={() => {}}>
                       {isSubmitting ? "등록중..." : "등록"}
                     </Button>
                   </div>
@@ -432,18 +423,15 @@ const CommunityContent = () => {
             </form>
           </div>
         </section>
-      </div >
+      </div>
 
       {/* 삭제 확인 모달 */}
-      < dialog id="delete_modal" className="modal" >
+      <dialog id="delete_modal" className="modal">
         <div className="modal-box">
           <h3 className="font-bold text-lg">삭제 확인</h3>
           <p className="py-4 whitespace-pre-line">{deleteModalState.message}</p>
           <div className="modal-action">
-            <button
-              className="btn"
-              onClick={() => closeModal("delete_modal")}
-            >
+            <button className="btn" onClick={() => closeModal("delete_modal")}>
               아니요
             </button>
             <button
@@ -457,13 +445,16 @@ const CommunityContent = () => {
             </button>
           </div>
         </div>
-      </dialog >
+      </dialog>
 
       {/* 결과 안내 모달 (성공/실패) */}
-      < dialog id="result_modal" className="modal" >
+      <dialog id="result_modal" className="modal">
         <div className="modal-box">
-          <h3 className={`font-bold text-lg ${deleteModalState.type === "success" ? "text-green-600" : "text-red-600"
-            }`}>
+          <h3
+            className={`font-bold text-lg ${
+              deleteModalState.type === "success" ? "text-green-600" : "text-red-600"
+            }`}
+          >
             {deleteModalState.type === "success" ? "삭제 완료" : "삭제 실패"}
           </h3>
           <p className="py-4">{deleteModalState.message}</p>
@@ -472,10 +463,11 @@ const CommunityContent = () => {
           )}
           <div className="modal-action">
             <button
-              className={`btn ${deleteModalState.type === "success"
-                ? "bg-green-500 hover:bg-green-600 text-white"
-                : "bg-red-500 hover:bg-red-600 text-white"
-                }`}
+              className={`btn ${
+                deleteModalState.type === "success"
+                  ? "bg-green-500 hover:bg-green-600 text-white"
+                  : "bg-red-500 hover:bg-red-600 text-white"
+              }`}
               onClick={() => {
                 closeModal("result_modal");
                 if (deleteModalState.type === "error") {
@@ -488,8 +480,8 @@ const CommunityContent = () => {
             </button>
           </div>
         </div>
-      </dialog >
-    </main >
+      </dialog>
+    </main>
   );
 };
 

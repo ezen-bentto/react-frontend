@@ -129,12 +129,12 @@ const CommunityWrite = () => {
         return;
       }
 
-      if (!formData.recruitments.some((r) => r.role.trim())) {
+      if (!formData.recruitments.some(r => r.role.trim())) {
         alert("모집 역할을 하나 이상 입력해주세요.");
         return;
       }
 
-      if (formData.recruitments.some((r) => Number(r.count) <= 0)) {
+      if (formData.recruitments.some(r => Number(r.count) <= 0)) {
         alert("모집 인원은 1명 이상이어야 합니다.");
         return;
       }
@@ -157,7 +157,7 @@ const CommunityWrite = () => {
       return;
     }
 
-    const clean = (val: string) => val.trim() === "" ? null : val;
+    const clean = (val: string) => (val.trim() === "" ? null : val);
 
     const payload: CommunityRegisterPayload = {
       ...formData,
@@ -174,11 +174,11 @@ const CommunityWrite = () => {
         selectedOption === "3"
           ? undefined
           : formData.recruitments
-            .filter(r => r.role.trim())
-            .map(r => ({
-              role: r.role.trim(),
-              count: Number(r.count),
-            })),
+              .filter(r => r.role.trim())
+              .map(r => ({
+                role: r.role.trim(),
+                count: Number(r.count),
+              })),
     };
 
     try {
@@ -242,7 +242,7 @@ const CommunityWrite = () => {
                   <div className="pb-2 font-bold text-black">분야</div>
                   <div
                     className="block max-w-[25rem] h-8 leading-8 pl-2 border border-gray-300 rounded text-sm cursor-pointer"
-                    onClick={(e) => {
+                    onClick={e => {
                       e.preventDefault();
                       e.stopPropagation();
                       setIsCategoryDropdownOpen(!isCategoryDropdownOpen);
@@ -255,11 +255,11 @@ const CommunityWrite = () => {
                   {isCategoryDropdownOpen && (
                     <ul className="absolute left-0 h-40 max-w-[25rem] w-full border border-gray-300 rounded p-2 z-50 overflow-y-scroll text-sm bg-white shadow-lg">
                       {categories && categories.length > 0 ? (
-                        categories.map((category) => (
+                        categories.map(category => (
                           <li
                             key={category.category_id}
                             className="hover:bg-gray-100 p-1 cursor-pointer"
-                            onClick={(e) => {
+                            onClick={e => {
                               e.preventDefault();
                               e.stopPropagation();
                               handleCategorySelect(category);
@@ -421,10 +421,15 @@ const CommunityWrite = () => {
             </div>
             <div className="flex justify-end gap-2 py-8">
               {/* 취소 : 커뮤니티 목록 이동 처리 */}
-              <Button intent="primary" size="lg" type="button" onClickFnc={() => navigate(`/community/list?communityType=${selectedOption}`)}>
+              <Button
+                intent="primary"
+                size="lg"
+                type="button"
+                onClickFnc={() => navigate(`/community/list?communityType=${selectedOption}`)}
+              >
                 취소
               </Button>
-              <Button intent="primary" size="lg" type="submit" onClickFnc={() => { }}>
+              <Button intent="primary" size="lg" type="submit" onClickFnc={() => {}}>
                 등록
               </Button>
             </div>
@@ -437,10 +442,7 @@ const CommunityWrite = () => {
         <div className="modal-box">
           <h3 className="font-bold text-lg">등록이 완료되었습니다</h3>
           <div className="modal-action">
-            <button
-              className="btn"
-              onClick={handleModalConfirm}
-            >
+            <button className="btn" onClick={handleModalConfirm}>
               확인
             </button>
           </div>

@@ -16,7 +16,7 @@ import { badge, type BadgeVariants } from "../style/badge";
  *
  *        2025/05/31           이철욱               신규작성
  *
- * @param intent 뱃지의 색상 의도 (예: primary, sky, orange 등)
+ * @param intent 뱃지의 색상 의도 (예: primary, defalut, orange 등)
  * @param size 뱃지의 크기 옵션 (예: sm, lg 등)
  * @param children 뱃지 내부에 표시할 텍스트 또는 요소
  */

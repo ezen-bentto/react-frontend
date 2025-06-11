@@ -37,7 +37,6 @@ import countDate from "@/utils/countDate";
  * @param communityType 커뮤니티 분류(공모전, 스터디, 자유)
  */
 
-
 const getDivisionLabel = (division: number): string => {
   const divisionMap: Record<number, string> = {
     1: "포스터/웹툰/콘텐츠",
@@ -55,7 +54,7 @@ const getCommunityTypeLabel = (communityType: string): string => {
   const communityTypeMap: Record<string, string> = {
     "1": "공모전",
     "2": "스터디",
-    "3": "자유"
+    "3": "자유",
   };
   return communityTypeMap[communityType] || "공모전";
 };
@@ -115,7 +114,6 @@ const ListItem = ({
             <div className="flex-default gap-2">
               <Badge intent={"default"} size={"sm"}>
                 {communityType !== undefined ? getCommunityTypeLabel(communityType) : "기타"}
-
               </Badge>
               <Badge intent={"orange"} size={"sm"}>
                 D-{countDate(endDate ? endDate : "error")}
