@@ -34,6 +34,8 @@ interface CardProps extends CardVariants {
   img?: string;
   title: string;
   text: string;
+  size: string;
+  intent: string;
   className?: string;
 }
 
