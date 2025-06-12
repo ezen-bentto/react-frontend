@@ -35,7 +35,7 @@ export interface CommunityListResponse {
  *           변경일             작성자             변경내용
  * -------------------------------------------------------
  *
- *        2025/06/11           김혜미               신규작성  
+ *        2025/06/11           김혜미               신규작성
  * @param communityType
  * @param page
  * @param size

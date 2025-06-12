@@ -2,14 +2,14 @@ import axios from "axios";
 
 // 댓글 등록 요청 타입
 export interface CommentRegisterRequest {
-    content: string;
-    postId: number;
+  content: string;
+  postId: number;
 }
 
 // 댓글 등록 응답 타입
 export interface CommentResponse {
-    insertId?: number;
-    affectedRows: number;
+  insertId?: number;
+  affectedRows: number;
 }
 
 /**
@@ -23,17 +23,15 @@ export interface CommentResponse {
  *           변경일             작성자             변경내용
  * -------------------------------------------------------
  *
- *        2025/06/11           김혜미               신규작성  
+ *        2025/06/11           김혜미               신규작성
  * @param CommentRegisterRequest
  */
-export const registerComment = async (
-    data: CommentRegisterRequest
-): Promise<CommentResponse> => {
-    try {
-        const response = await axios.post(`${import.meta.env.VITE_API_URL}/api/comment/register`, data);
-        return response.data;
-    } catch (error) {
-        console.error("댓글 등록 실패:", error);
-        throw new Error("댓글 등록 중 오류가 발생했습니다.");
-    }
+export const registerComment = async (data: CommentRegisterRequest): Promise<CommentResponse> => {
+  try {
+    const response = await axios.post(`${import.meta.env.VITE_API_URL}/api/comment/register`, data);
+    return response.data;
+  } catch (error) {
+    console.error("댓글 등록 실패:", error);
+    throw new Error("댓글 등록 중 오류가 발생했습니다.");
+  }
 };
