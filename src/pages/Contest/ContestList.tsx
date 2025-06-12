@@ -3,9 +3,11 @@ import Fillter from "@/components/shared/Fillter";
 import Pagination from "@/components/shared/Pagination";
 import Title from "@/components/shared/Title";
 import { contestFilterData } from "@/constants/ContestFilterData";
-import { useContestStore } from "@/store/contest/useContest";
+
+import { useContestStore } from "@/features/contest/store";
 
 import countDate from "@/utils/countDate";
+
 import { useEffect, useState } from "react";
 
 const ContestList = () => {
@@ -14,17 +16,17 @@ const ContestList = () => {
   const [age, setAge] = useState<string[]>([]);
   const [organizerType, setOrganizerType] = useState<string[]>([]);
   const [filteredContests, setFilteredContests] = useState(popularContests);
+
   const [currentPage, setCurrentpage] = useState(1);
   const itemsPerPage = 16;
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
   const currentItem = filteredContests.slice(indexOfFirstItem, indexOfLastItem);
-
   // const [items, setItems] = useState<Contest[]>([]);
 
   // const fetchData = async () => {
   //   try {
-  //     const data = await featchContestlist();
+  //     const data = await fetchContestList();
   //     console.info(data);
   //     setItems(data);
   //   } catch (e) {
