@@ -8,12 +8,10 @@ export default function Policy() {
       <section></section>
       <section>
         <div>
-        <PolicyList />
+          <PolicyList />
         </div>
         {/* pagenation */}
-        <div>
-
-        </div>
+        <div></div>
       </section>
     </div>
   );

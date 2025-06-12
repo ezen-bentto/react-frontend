@@ -101,10 +101,12 @@ const ListItem = ({
       <Link to={linkSrc} className="flex-col w-full gap-2 p-4 flex-default">
         <div className="w-full flex-default">
           <div className="gap-2 flex-default">
-            {((type === "policy") && (<Badge size="sm" intent="primary">
+            {type === "policy" && (
+              <Badge size="sm" intent="primary">
                 {category !== undefined ? category : "기타"}
-              </Badge>))}
-            {(type === "community" && communityType === "1") && (
+              </Badge>
+            )}
+            {type === "community" && communityType === "1" && (
               <Badge size="sm" intent="primary">
                 {division !== undefined ? getDivisionLabel(division) : "기타"}
               </Badge>
