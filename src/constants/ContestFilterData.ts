@@ -1,6 +1,6 @@
 import type { FilterGroup } from "@/components/shared/Fillter";
 
-export const filterData: FilterGroup[] = [
+export const contestFilterData: FilterGroup[] = [
   {
     name: "field",
     label: "분야",
@@ -9,7 +9,11 @@ export const filterData: FilterGroup[] = [
       { label: "사진/영상/UCC", value: "video" },
       { label: "아이디어/기획", value: "idea" },
       { label: "IT/학술/논문", value: "it" },
+      { label: "네이밍/슬로건", value: "naming" },
+      { label: "스포츠/음악", value: "sport" },
+      { label: "미술/디자인/건축", value: "art" },
     ],
+    multiSelect: true
   },
   {
     name: "ageGroup",
@@ -20,12 +24,14 @@ export const filterData: FilterGroup[] = [
     ],
   },
   {
-    name: "sort",
-    label: "정렬",
+    name: "organizerType",
+    label: "기업",
     options: [
-      { label: "최신순", value: "latest" },
-      { label: "인기순", value: "popular" },
-      { label: "스크랩순", value: "scrap" },
+      { label: "대기업", value: "big" },
+      { label: "중견/중소기업", value: "small" },
+      { label: "공공기관/공기업업", value: "public" },
+      { label: "비영리단체/협회/재단", value: "society" },
     ],
+    multiSelect: true
   },
 ];
