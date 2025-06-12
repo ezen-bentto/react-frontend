@@ -1,8 +1,11 @@
+
 import Card from "@/components/shared/Card";
 import Fillter from "@/components/shared/Fillter";
 import Title from "@/components/shared/Title";
 import { contestFilterData } from "@/constants/ContestfilterData";
 import { useContestStore } from "@/store/contest/useContest";
+
+
 import countDate from "@/utils/countDate";
 import { useEffect, useState } from "react";
 
@@ -86,6 +89,7 @@ const ContestList = () => {
           <p>데이터 로딩 중...</p>
         ) : (
           filteredContests.map(item => (
+
             <Card
               key={item.id}
               dday={countDate(item.end_date).toString()}

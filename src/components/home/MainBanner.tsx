@@ -11,28 +11,32 @@ const MainBanner = () => {
   const items = useMemo(() => {
     const data = [
       {
-        id: 3,
-        image: "https://api.linkareer.com/attachments/561810",
-        bgColor: "bg-[#074B72]",
-        duration: "2025.06.04 ~ 2025.06.24",
-        title: "제11회 교보손글씨대회",
-        summary: "책 속 문장을 손글씨로 담아, 깊이 있는 감성을 나누어보세요!",
+        id: 266,
+        image: "https://api.linkareer.com/attachments/579371",
+        bgColor: "bg-[#000000]",
+        textColor: "white",
+        duration: "2025.06.15 ~ 2025.06.22",
+        title: "2025 한글문화특별기획전 참여작가 공모",
+        summary:
+          "재단법인 세종시문화관광재단에서는 다양한 창작 역량을 보유한 예술인 발굴을 통한 한글문화 활성화 및 시민 문화예술 향유기회 확대를 위해 2025년 한글문화특별기획전 참여 작가 선발 공모를 다음과 같이 공고하오니 예술인(단체)의 많은 참여 바랍니다.",
       },
       {
-        id: 3,
-        image: "https://api.linkareer.com/attachments/582062",
-        bgColor: "bg-[#074B72]",
-        duration: "2025-05-21 ~",
-        title: "청년들을 위한\n통합 페이지\n청바지2",
-        summary: "안녕하세요 반가워요",
+        id: 191,
+        image: "https://api.linkareer.com/attachments/581642",
+        bgColor: "bg-[#000000]",
+        textColor: "white",
+        duration: "2025.06.23 ~ 2025.07.11",
+        title: "[오비맥주 크리에이티브 공모전] Creative X Challengers 참가자 모집",
+        summary: "OB맥주 브랜드 제품(카스, 카스 제로, 한맥, 스텔라 등) 캠페인 아이디어 제안",
       },
       {
-        id: 3,
-        image: "https://api.linkareer.com/attachments/563498",
-        bgColor: "bg-[#34b934]",
-        duration: "2025.05.01 ~ 2025.07.13",
-        title: "제 6회 시험/연구용 유전자변형생물체 안전 콘텐츠 공모전(~7/13)",
-        summary: "안녕하세요 반가워요",
+        id: 71,
+        image: "../../../public/images/banner_2.png",
+        bgColor: "bg-[#1754A5]",
+        textColor: "white",
+        duration: "2025.06.05 ~ 2025.07.18",
+        title: "제3회 학교안전사고 데이터 분석·활용 경진대회",
+        summary: "학교안전사고 예방 관련 자유주제",
       },
     ];
 
@@ -55,11 +59,11 @@ const MainBanner = () => {
         <SwiperSlide key={item.renderId}>
           <Link to={`/constest/${item.id}`}>
             <div
-              className={`w-full h-[80vh] overflow-hidden px-[20%] flex-default ${item.bgColor}`}
+              className={`w-full max-h-[800px] h-[80vh] overflow-hidden px-[20%] flex-default ${item.bgColor}`}
             >
               <div className="w-full max-w-[1400px] flex-default md:flex-row flex-col gap-4">
                 <img
-                  className="order-1 md:order-2 w-auto md:w-1/2"
+                  className="order-1 md:order-2 w-full md:w-1/2  flex-1"
                   src={item.image}
                   alt={item.title}
                 />
