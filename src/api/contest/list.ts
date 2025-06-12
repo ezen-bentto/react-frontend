@@ -18,6 +18,7 @@ export interface ContestFilterParams {
 // 🔹 필터 기반으로 GET 요청
 export const fetchContestListTmp = async (filters: ContestFilterParams) => {
   const params = new URLSearchParams();
+  let query = "http://localhost:4000/api/contest/getList";
 
   if (filters.field) {
     filters.field.forEach(f => params.append("field", f));
@@ -31,9 +32,9 @@ export const fetchContestListTmp = async (filters: ContestFilterParams) => {
     params.append("ageGroup", filters.ageGroup);
   }
 
-  const response = await axios.get<{ data: Contest[] }>(
-    `http://localhost:4000/api/contest/getList?${params.toString()}`
-  );
+  if (params) query += `?${params.toString()}`;
+
+  const response = await axios.get<{ data: Contest[] }>(query);
 
   return response.data.data;
 };
