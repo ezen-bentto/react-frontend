@@ -1,14 +1,15 @@
+
 import Card from "@/components/shared/Card";
 import Fillter from "@/components/shared/Fillter";
 import Pagination from "@/components/shared/Pagination";
 import Title from "@/components/shared/Title";
 import { contestFilterData } from "@/constants/ContestFilterData";
 import { useContestStore } from "@/store/contest/useContest";
+
 import countDate from "@/utils/countDate";
 import { useEffect, useState } from "react";
 
 const ContestList = () => {
-
   const { popularContests, fetchContest } = useContestStore();
   const [ category, setCategory ] = useState<string[]>([]);
   const [ age, setAge ] = useState<string[]>([]);
@@ -47,6 +48,7 @@ const ContestList = () => {
     }
   }, [popularContests]);
 
+  // 카테고리 필터
   useEffect(() => {
     console.info(category, age, organizerType);
     if (!popularContests) return;
@@ -67,8 +69,8 @@ const ContestList = () => {
   }, [category, age, organizerType]);
 
   return (
-    <div>
-      <Title titleText="공모전" linkSrc=""/>
+    <div className="flex flex-col gap-5 mt-28">
+      <Title titleText="공모전" linkSrc="" />
       {/* 필터 */}
       <div className="py-5">
         <Fillter
@@ -86,7 +88,6 @@ const ContestList = () => {
       {/* 배너 */}
 
       {/* 카드 리스트 */}
-
       <div className="flex gap-6 flex-wrap justify-start py-5">
         {!filteredContests ? (
           <p>데이터 로딩 중...</p>

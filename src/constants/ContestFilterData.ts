@@ -35,4 +35,8 @@ export const contestFilterData: FilterGroup[] = [
     ],
     multiSelect: true,
   },
+<<<<<<< HEAD
 ];
+=======
+];
+>>>>>>> cfc03f9b288aed4d83e3275ac84e5e32a4022d68
