@@ -55,7 +55,7 @@ const MainBanner = () => {
         <SwiperSlide key={item.renderId}>
           <Link to={`/constest/${item.id}`}>
             <div
-              className={`w-full h-[80vh] overflow-hidden px-[20%] flex-default ${item.bgColor}`}
+              className={`w-full max-h-[800px] h-[80vh] overflow-hidden px-[20%] flex-default ${item.bgColor}`}
             >
               <div className="w-full max-w-[1400px] flex-default md:flex-row flex-col gap-4">
                 <img
