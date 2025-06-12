@@ -21,7 +21,7 @@ function PopularContestList() {
     fetchData();
   }, []);
   return (
-    <div className="flex-default flex-col w-full">
+    <div className="flex-default flex-col w-full gap-8">
       <Title linkSrc="/contest" titleText="주목받는 공모전" />
       <ul className="flex items-center md:justify-between justify-center flex-wrap gap-y-8 md:gap-8 w-full">
         {items.map(item => (
