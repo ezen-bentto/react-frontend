@@ -10,7 +10,7 @@ import {
 import { v4 as uuidv4 } from "uuid";
 import { Link } from "react-router-dom";
 import { ThemeToggle } from "./ThemeToggle";
-import { useThemeStore } from "@/store/themeStore";
+import { useThemeStore } from "@/features/common/themeStore";
 
 /**
  *
