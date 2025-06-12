@@ -11,7 +11,7 @@ import countDate from "@/utils/countDate";
 import { useContestStore } from "@/store/contest/useContest";
 
 const ContestSlider = () => {
-  const { contests, fetchContest } = useContestStore();
+  const { latestContests, fetchContest } = useContestStore();
 
   useEffect(() => {
     fetchContest();
@@ -38,7 +38,7 @@ const ContestSlider = () => {
           640: { slidesPerView: 1 },
         }}
       >
-        {contests.map(item => (
+        {latestContests.map(item => (
           <SwiperSlide key={item.id}>
             <Card
               dday={countDate(item.end_date).toString()}

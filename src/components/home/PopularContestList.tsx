@@ -8,14 +8,12 @@ function PopularContestList() {
   const { popularContests } = useContestStore();
   const [top4, setTop4] = useState<Contest[]>();
 
-  const fetchData = async () => {
-    const slicedWithId = popularContests.slice(0, 4);
-    setTop4(slicedWithId);
-  };
+  // const fetchData = async () => {};
 
   useEffect(() => {
-    fetchData();
-  }, [top4]);
+    const slicedWithId = popularContests.slice(0, 4);
+    setTop4(slicedWithId);
+  }, [popularContests]);
   return (
     <div className="flex-default flex-col w-full gap-8">
       <Title linkSrc="/contest" titleText="주목받는 공모전" />
