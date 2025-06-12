@@ -25,7 +25,7 @@ const AppRouter = () => {
         <Route path="/community/write" element={<CommunityWrite />} />
         <Route path="/community/content/:communityId" element={<CommunityContent />} />
         <Route path="/community/list" element={<CommunityList />} />
-        <Route path="/contest/list" element={<ContestList />} />
+        <Route path="/contest " element={<ContestList />} />
         <Route path="/login" element={<Login />} />
         <Route path="/mypage" element={<MyPage />} />
         <Route path="/signup" element={<SignUpTypeSelect />} />
