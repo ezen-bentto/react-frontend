@@ -11,7 +11,7 @@ const TextSlider = ({ slides, activeIndex }: { slides: props[]; activeIndex: num
     <div className="flex-default w-full order-2 md:order-1">
       <div key={activeIndex} className="text-white animate-fadeSlide flex flex-col">
         <p className="text-xl md:text-2xl">{slides[activeIndex].duration}</p>
-        <h2 className="text-4xl md:text-5xl font-bold leading-snug whitespace-pre-line break-words">
+        <h2 className="text-4xl md:text-5xl font-bold leading-snug whitespace-pre-line break-words line-clamp-4">
           {slides[activeIndex].title}
         </h2>
         <p className="text-md mt-2">{slides[activeIndex].summary}</p>

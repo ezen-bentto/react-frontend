@@ -6,7 +6,7 @@ interface TitleProps {
 }
 
 const Title = ({ linkSrc, titleText, className }: TitleProps) => {
-  const combinedClass = `text-xl font-semibold ${className}`.trim();
+  const combinedClass = `text-2xl font-semibold ${className}`.trim();
   return (
     <h2 className={combinedClass}>
       <Link to={linkSrc}>{titleText}</Link>
