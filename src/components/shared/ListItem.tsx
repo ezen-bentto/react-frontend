@@ -29,10 +29,12 @@ import countDate from "@/utils/countDate";
  * @param className 추가 클래스
  * @param likes 좋아요 수
  * @param comment 댓글 수
+ * @param category 청년 정책 카테고리
  * @param type community, policy 타입
  * @param linkSrc a 태그 href
  * @param region policy 지역
  * @param endDate community 공모전 종료 날짜
+
  * @param division 공모전 분류
  * @param communityType 커뮤니티 분류(공모전, 스터디, 자유)
  */
@@ -65,6 +67,7 @@ interface ListItemProps extends ListItemVariants {
   writer?: string;
   description: string;
   className?: string;
+  category?: string;
   likes?: number;
   comment?: number;
   linkSrc: string;
@@ -82,6 +85,7 @@ const ListItem = ({
   size,
   intent,
   className,
+  category,
   likes,
   comment,
   linkSrc,
@@ -94,16 +98,19 @@ const ListItem = ({
 
   return (
     <li className={combinedClass}>
-      <Link to={linkSrc} className="flex-default flex-col gap-2 p-4 w-full">
+      <Link to={linkSrc} className="flex-col w-full gap-2 p-4 flex-default">
         <div className="w-full flex-default">
-          <div className="flex-default gap-2">
-            {(type === "policy" || (type === "community" && communityType === "1")) && (
+          <div className="gap-2 flex-default">
+            {((type === "policy") && (<Badge size="sm" intent="primary">
+                {category !== undefined ? category : "기타"}
+              </Badge>))}
+            {(type === "community" && communityType === "1") && (
               <Badge size="sm" intent="primary">
                 {division !== undefined ? getDivisionLabel(division) : "기타"}
               </Badge>
             )}
             {type === "policy" && (
-              <div className="flex-default gap-2">
+              <div className="gap-2 flex-default">
                 <Badge intent={"orange"} size={"sm"}>
                   {region}
                 </Badge>
@@ -111,7 +118,7 @@ const ListItem = ({
             )}
           </div>
           {type === "community" && communityType !== "3" && (
-            <div className="flex-default gap-2">
+            <div className="gap-2 flex-default">
               <Badge intent={"default"} size={"sm"}>
                 {communityType !== undefined ? getCommunityTypeLabel(communityType) : "기타"}
               </Badge>
@@ -123,21 +130,21 @@ const ListItem = ({
         </div>
 
         <div className="w-full overflow-hidden">
-          <h3 className="font-black justify-start text-2xl truncate">{title}</h3>
+          <h3 className="justify-start text-2xl font-black truncate">{title}</h3>
         </div>
 
-        <div className="flex-default w-full">
+        <div className="w-full flex-default">
           <div className="flex-default flex-col min-h-[48px]">
             {type === "community" ? (
               <p
-                className="list-col-wrap text-base flex-1"
+                className="flex-1 text-base list-col-wrap"
                 dangerouslySetInnerHTML={{ __html: description }}
               />
             ) : (
-              <p className="list-col-wrap text-base flex-1">{description}</p>
+              <p className="flex-1 text-base list-col-wrap">{description}</p>
             )}
             {type === "community" && (
-              <div className="text-xs uppercase font-semibold opacity-60">{writer}</div>
+              <div className="text-xs font-semibold uppercase opacity-60">{writer}</div>
             )}
           </div>
 

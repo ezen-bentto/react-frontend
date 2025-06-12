@@ -7,7 +7,13 @@ export default function Policy() {
       <section>{/* search component */}</section>
       <section></section>
       <section>
+        <div>
         <PolicyList />
+        </div>
+        {/* pagenation */}
+        <div>
+
+        </div>
       </section>
     </div>
   );
