@@ -1,4 +1,3 @@
-
 import Card from "@/components/shared/Card";
 import Fillter from "@/components/shared/Fillter";
 import Pagination from "@/components/shared/Pagination";
@@ -11,11 +10,11 @@ import { useEffect, useState } from "react";
 
 const ContestList = () => {
   const { popularContests, fetchContest } = useContestStore();
-  const [ category, setCategory ] = useState<string[]>([]);
-  const [ age, setAge ] = useState<string[]>([]);
-  const [ organizerType, setOrganizerType ] = useState<string[]>([]);
-  const [ filteredContests, setFilteredContests ] = useState(popularContests);
-  const [ currentPage, setCurrentpage ] = useState(1);
+  const [category, setCategory] = useState<string[]>([]);
+  const [age, setAge] = useState<string[]>([]);
+  const [organizerType, setOrganizerType] = useState<string[]>([]);
+  const [filteredContests, setFilteredContests] = useState(popularContests);
+  const [currentPage, setCurrentpage] = useState(1);
   const itemsPerPage = 16;
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
@@ -111,10 +110,10 @@ const ContestList = () => {
       <div className="">
         <Pagination
           currentPage={currentPage}
-          onPrevious={() => setCurrentpage(prev => Math.max(prev -1))}
-          onNext={() => 
+          onPrevious={() => setCurrentpage(prev => Math.max(prev - 1))}
+          onNext={() =>
             setCurrentpage(prev => {
-              const totalPages = Math.ceil(filteredContests.length /itemsPerPage);
+              const totalPages = Math.ceil(filteredContests.length / itemsPerPage);
               return Math.min(prev + 1, totalPages);
             })
           }
