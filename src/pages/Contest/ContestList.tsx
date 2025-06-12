@@ -1,8 +1,11 @@
 import Card from "@/components/shared/Card";
 import Fillter from "@/components/shared/Fillter";
+import Pagination from "@/components/shared/Pagination";
 import Title from "@/components/shared/Title";
 import { contestFilterData } from "@/constants/ContestFilterData";
+
 import { useContestStore } from "@/features/contest/store";
+
 import countDate from "@/utils/countDate";
 
 import { useEffect, useState } from "react";
@@ -13,8 +16,12 @@ const ContestList = () => {
   const [age, setAge] = useState<string[]>([]);
   const [organizerType, setOrganizerType] = useState<string[]>([]);
   const [filteredContests, setFilteredContests] = useState(popularContests);
-  // const isFiltered = category.length > 0 || age.length > 0 || organizerType.length > 0;
 
+  const [currentPage, setCurrentpage] = useState(1);
+  const itemsPerPage = 16;
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const currentItem = filteredContests.slice(indexOfFirstItem, indexOfLastItem);
   // const [items, setItems] = useState<Contest[]>([]);
 
   // const fetchData = async () => {
@@ -48,11 +55,14 @@ const ContestList = () => {
     if (!popularContests) return;
 
     const filtered = popularContests.filter(item => {
-      const selectedCategory = category.length === 0 || category.includes(item.contest_tag);
+      const contestTag = item.contest_tag.split(",")[0].trim();
+      const selectedCategory = category.length === 0 || category.includes(contestTag);
       const selectedAge = age.length === 0 || age.includes(item.participants);
       const selectedOrganizer =
         organizerType.length === 0 || organizerType.includes(item.organizer_type);
 
+      console.info(item.contest_tag, typeof item.contest_tag);
+      console.info(category);
       return selectedCategory && selectedAge && selectedOrganizer;
     });
 
@@ -63,7 +73,6 @@ const ContestList = () => {
     <div className="flex flex-col gap-5 mt-28">
       <Title titleText="공모전" linkSrc="" />
       {/* 필터 */}
-
       <div className="py-5">
         <Fillter
           filters={contestFilterData}
@@ -77,15 +86,14 @@ const ContestList = () => {
           onSearchSubmit={() => console.info("검색 핸들러")}
         />
       </div>
-
       {/* 배너 */}
 
       {/* 카드 리스트 */}
-      <div className="flex gap-6 flex-wrap justify-center py-5">
+      <div className="flex gap-6 flex-wrap justify-start py-5">
         {!filteredContests ? (
           <p>데이터 로딩 중...</p>
         ) : (
-          filteredContests.map(item => (
+          currentItem.map(item => (
             <Card
               key={item.id}
               dday={countDate(item.end_date).toString()}
@@ -98,6 +106,22 @@ const ContestList = () => {
             />
           ))
         )}
+      </div>
+
+      {/* 페이징 */}
+      <div className="">
+        <Pagination
+          currentPage={currentPage}
+          onPrevious={() => setCurrentpage(prev => Math.max(prev - 1))}
+          onNext={() =>
+            setCurrentpage(prev => {
+              const totalPages = Math.ceil(filteredContests.length / itemsPerPage);
+              return Math.min(prev + 1, totalPages);
+            })
+          }
+          intent="primary"
+          size="sm"
+        />
       </div>
     </div>
   );
