@@ -1,11 +1,11 @@
 import { featchContestlist } from "@/api/contest/list";
-import type { ContestItem } from "@/components/home/ContestSlider";
 import Card from "@/components/shared/Card";
+import type { Contest } from "@/types/contestType";
 import countDate from "@/utils/countDate";
 import { useEffect, useState } from "react";
 
 const ContestList = () => {
-  const [items, setItems] = useState<ContestItem[]>([]);
+  const [items, setItems] = useState<Contest[]>([]);
 
   const fetchData = async () => {
     try {
@@ -23,8 +23,7 @@ const ContestList = () => {
   return (
     <div>
       {/* 필터 */}
-      <div>
-      </div>
+      <div></div>
       {/* 배너 */}
 
       {/* 카드 리스트 */}
@@ -37,7 +36,7 @@ const ContestList = () => {
               key={item.id}
               dday={countDate(item.end_date).toString()}
               id={item.id}
-              img={item.img}
+              img={item.img ? item.img : ""}
               text={item.organizer}
               title={item.title}
               intent="neutral"
@@ -46,7 +45,6 @@ const ContestList = () => {
           ))
         )}
       </div>
-      
     </div>
   );
 };
