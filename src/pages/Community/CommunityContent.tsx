@@ -62,7 +62,10 @@ const CommunityContent = () => {
 
         const totalSeconds = Math.floor(diff / 1000);
         const days = Math.floor(totalSeconds / (60 * 60 * 24));
-        const hours = String(Math.floor((totalSeconds % (60 * 60 * 24)) / (60 * 60))).padStart(2, "0");
+        const hours = String(Math.floor((totalSeconds % (60 * 60 * 24)) / (60 * 60))).padStart(
+          2,
+          "0"
+        );
         const minutes = String(Math.floor((totalSeconds % (60 * 60)) / 60)).padStart(2, "0");
         const seconds = String(totalSeconds % 60).padStart(2, "0");
 
@@ -128,7 +131,7 @@ const CommunityContent = () => {
   }, []);
 
   const getCategoryName = (id: number): string => {
-    const found = categories.find((c) => c.category_id === id);
+    const found = categories.find(c => c.category_id === id);
     return found?.name ?? "알 수 없음";
   };
 
@@ -454,7 +457,9 @@ const CommunityContent = () => {
                 <div className="flex items-baseline">
                   <span className="w-28 text-gray-600 font-semibold">모집 종료</span>
                   {community.recruit_end_date && countdown && (
-                    <span className={`text-sm font-medium ${countdown.includes("모집 종료") ? "text-red-500" : "text-black-600"}`}>
+                    <span
+                      className={`text-sm font-medium ${countdown.includes("모집 종료") ? "text-red-500" : "text-black-600"}`}
+                    >
                       {countdown}
                     </span>
                   )}
@@ -500,56 +505,73 @@ const CommunityContent = () => {
 
             {/* 댓글 목록 */}
             <div className="space-y-1">
-              {comments && comments.map(comment => {
-                const isEditing = editingCommentId === comment.comment_id;
-                const isDeleted = comment.del_yn === "Y";
+              {comments &&
+                comments.map(comment => {
+                  const isEditing = editingCommentId === comment.comment_id;
+                  const isDeleted = comment.del_yn === "Y";
 
-                return (
-                  <div key={comment.comment_id} className="flex gap-3 items-start p-2 rounded-lg">
-                    <Avatar
-                      src="/assets/icons/iconmonstr-user-circle-thin.svg"
-                      size="md"
-                      shape="circle"
-                    />
-                    <div className="flex-1">
-                      <div className="flex items-center justify-between mb-2">
-                        <div className="flex items-center gap-2">
-                          <span className="font-semibold text-gray-900">{comment.nickname}</span>
-                          <span className="text-sm text-gray-500">{formatDate(comment.reg_date)}</span>
+                  return (
+                    <div key={comment.comment_id} className="flex gap-3 items-start p-2 rounded-lg">
+                      <Avatar
+                        src="/assets/icons/iconmonstr-user-circle-thin.svg"
+                        size="md"
+                        shape="circle"
+                      />
+                      <div className="flex-1">
+                        <div className="flex items-center justify-between mb-2">
+                          <div className="flex items-center gap-2">
+                            <span className="font-semibold text-gray-900">{comment.nickname}</span>
+                            <span className="text-sm text-gray-500">
+                              {formatDate(comment.reg_date)}
+                            </span>
+                          </div>
+
+                          {!isDeleted && (
+                            <div className="flex justify-end text-xs text-gray-500 gap-2">
+                              {isEditing ? (
+                                <>
+                                  <button onClick={() => submitEdit(Number(comment.comment_id))}>
+                                    수정
+                                  </button>
+                                  <button onClick={cancelEditing}>취소</button>
+                                </>
+                              ) : (
+                                <>
+                                  <button
+                                    onClick={() =>
+                                      startEditing(comment.comment_id, comment.content)
+                                    }
+                                  >
+                                    수정
+                                  </button>
+                                  <button
+                                    onClick={() =>
+                                      showCommentDeleteConfirmModal(comment.comment_id)
+                                    }
+                                  >
+                                    삭제
+                                  </button>
+                                </>
+                              )}
+                            </div>
+                          )}
                         </div>
 
-                        {!isDeleted && (
-                          <div className="flex justify-end text-xs text-gray-500 gap-2">
-                            {isEditing ? (
-                              <>
-                                <button onClick={() => submitEdit(Number(comment.comment_id))}>수정</button>
-                                <button onClick={cancelEditing}>취소</button>
-                              </>
-                            ) : (
-                              <>
-                                <button onClick={() => startEditing(comment.comment_id, comment.content)}>수정</button>
-                                <button onClick={() => showCommentDeleteConfirmModal(comment.comment_id)}>삭제</button>
-                              </>
-                            )}
-                          </div>
+                        {isEditing ? (
+                          <textarea
+                            className="w-full border border-gray-300 rounded-md p-2 text-sm focus:outline-none resize-none"
+                            value={editedContent}
+                            onChange={e => setEditedContent(e.target.value)}
+                          />
+                        ) : (
+                          <p className="text-gray-700 leading-relaxed">
+                            {isDeleted ? "삭제된 댓글입니다." : comment.content}
+                          </p>
                         )}
                       </div>
-
-                      {isEditing ? (
-                        <textarea
-                          className="w-full border border-gray-300 rounded-md p-2 text-sm focus:outline-none resize-none"
-                          value={editedContent}
-                          onChange={(e) => setEditedContent(e.target.value)}
-                        />
-                      ) : (
-                        <p className="text-gray-700 leading-relaxed">
-                          {isDeleted ? "삭제된 댓글입니다." : comment.content}
-                        </p>
-                      )}
                     </div>
-                  </div>
-                );
-              })}
+                  );
+                })}
 
               {comments?.length === 0 && (
                 <div className="text-center py-8 text-gray-500">첫 번째 댓글을 작성해보세요!</div>
@@ -558,7 +580,10 @@ const CommunityContent = () => {
           </div>
 
           {/* 댓글 작성 폼 */}
-          <form onSubmit={handleCommentSubmit} className="flex items-start gap-3 bg-white border border-gray-200 rounded-lg p-4">
+          <form
+            onSubmit={handleCommentSubmit}
+            className="flex items-start gap-3 bg-white border border-gray-200 rounded-lg p-4"
+          >
             <div className="w-16 h-16 rounded-full overflow-hidden shrink-0">
               <img
                 src="/assets/icons/iconmonstr-user-circle-thin.svg"
@@ -569,22 +594,17 @@ const CommunityContent = () => {
             <div className="flex-1">
               <textarea
                 value={commentContent}
-                onChange={(e) => setCommentContent(e.target.value)}
+                onChange={e => setCommentContent(e.target.value)}
                 placeholder="댓글을 입력해주세요..."
                 className="w-full p-3 border border-gray-300 rounded-lg resize-none focus:outline-none focus:ring-2"
                 rows={3}
                 disabled={isSubmitting}
               />
               <div className="flex justify-end gap-2 mt-2">
-                <Button
-                  type="button"
-                  intent="primary"
-                  size="sm"
-                  onClickFnc={handleCommentCancel}
-                >
+                <Button type="button" intent="primary" size="sm" onClickFnc={handleCommentCancel}>
                   취소
                 </Button>
-                <Button type="submit" intent="orange" size="sm" onClickFnc={() => { }}>
+                <Button type="submit" intent="orange" size="sm" onClickFnc={() => {}}>
                   {isSubmitting ? "등록중..." : "등록"}
                 </Button>
               </div>
@@ -619,8 +639,9 @@ const CommunityContent = () => {
       <dialog id="result_modal" className="modal">
         <div className="modal-box">
           <h3
-            className={`font-bold text-lg ${deleteModalState.type === "success" ? "text-green-600" : "text-red-600"
-              }`}
+            className={`font-bold text-lg ${
+              deleteModalState.type === "success" ? "text-green-600" : "text-red-600"
+            }`}
           >
             {deleteModalState.type === "success" ? "삭제 완료" : "삭제 실패"}
           </h3>
@@ -630,10 +651,11 @@ const CommunityContent = () => {
           )}
           <div className="modal-action">
             <button
-              className={`btn ${deleteModalState.type === "success"
-                ? "bg-green-500 hover:bg-green-600 text-white"
-                : "bg-red-500 hover:bg-red-600 text-white"
-                }`}
+              className={`btn ${
+                deleteModalState.type === "success"
+                  ? "bg-green-500 hover:bg-green-600 text-white"
+                  : "bg-red-500 hover:bg-red-600 text-white"
+              }`}
               onClick={() => {
                 closeModal("result_modal");
                 if (deleteModalState.type === "error") {
@@ -674,18 +696,20 @@ const CommunityContent = () => {
       <dialog id="comment_result_modal" className="modal">
         <div className="modal-box">
           <h3
-            className={`font-bold text-lg ${commentDeleteModalState.type === "success" ? "text-green-600" : "text-red-600"
-              }`}
+            className={`font-bold text-lg ${
+              commentDeleteModalState.type === "success" ? "text-green-600" : "text-red-600"
+            }`}
           >
             {commentDeleteModalState.type === "success" ? "삭제 완료" : "삭제 실패"}
           </h3>
           <p className="py-4">{commentDeleteModalState.message}</p>
           <div className="modal-action">
             <button
-              className={`btn ${commentDeleteModalState.type === "success"
-                ? "bg-green-500 hover:bg-green-600 text-white"
-                : "bg-red-500 hover:bg-red-600 text-white"
-                }`}
+              className={`btn ${
+                commentDeleteModalState.type === "success"
+                  ? "bg-green-500 hover:bg-green-600 text-white"
+                  : "bg-red-500 hover:bg-red-600 text-white"
+              }`}
               onClick={() => {
                 closeModal("comment_result_modal");
                 // 모달 상태 초기화

@@ -7,7 +7,6 @@ import WriteButton from "@/components/shared/WriteButton";
 import Pagination from "@/components/shared/Pagination";
 import { useSearchParams } from "react-router-dom";
 
-
 const CommunityList = () => {
   const [posts, setPosts] = useState<CommunityItem[]>([]);
   const [filteredPosts, setFilteredPosts] = useState<CommunityItem[]>([]);
@@ -74,8 +73,8 @@ const CommunityList = () => {
     // 필터: category
     const categoryFilter = filters.category;
     if (categoryFilter?.length) {
-      result = result.filter(post =>
-        post.category_type && categoryFilter.includes(String(post.category_type))
+      result = result.filter(
+        post => post.category_type && categoryFilter.includes(String(post.category_type))
       );
     }
 
@@ -167,8 +166,7 @@ const CommunityList = () => {
     setFilters(prev => ({ ...prev, [groupName]: selected }));
   };
 
-  const handleSearchSubmit = () => {
-  };
+  const handleSearchSubmit = () => {};
 
   // 뷰 모드 변경
   const handleViewModeChange = (mode: "card" | "list") => {
@@ -223,7 +221,7 @@ const CommunityList = () => {
                 width: "1.5em",
                 height: "1.5em",
                 cursor: "pointer",
-                color: viewMode === "card" ? "#1890ff" : "#8c8c8c"
+                color: viewMode === "card" ? "#1890ff" : "#8c8c8c",
               }}
               onClick={() => handleViewModeChange("card")}
             />
@@ -232,7 +230,7 @@ const CommunityList = () => {
                 width: "1.5em",
                 height: "1.5em",
                 cursor: "pointer",
-                color: viewMode === "list" ? "#1890ff" : "#8c8c8c"
+                color: viewMode === "list" ? "#1890ff" : "#8c8c8c",
               }}
               onClick={() => handleViewModeChange("list")}
             />
@@ -275,7 +273,7 @@ const CommunityList = () => {
                         totalPages={totalPages}
                         onPrevious={handlePreviousPage}
                         onNext={handleNextPage}
-                        onPageChange={(page) => setCurrentPage(page)}
+                        onPageChange={page => setCurrentPage(page)}
                         intent="primary"
                         size="md"
                       />
@@ -315,7 +313,7 @@ const CommunityList = () => {
           <WriteButton />
         </div>
       </div>
-    </main >
+    </main>
   );
 };
 

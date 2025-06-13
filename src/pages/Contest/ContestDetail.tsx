@@ -17,7 +17,6 @@ const ContestDetail = () => {
         <DetailContent />
       </div>
 
-
       <Title titleText="팀원 모집" linkSrc="" />
       {/* 팀원모집 */}
       <section className="main-community w-full flex justify-start flex-col gap-4">
