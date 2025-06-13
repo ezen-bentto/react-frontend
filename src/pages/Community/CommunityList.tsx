@@ -5,14 +5,8 @@ import Fillter, { type FilterGroup } from "@/components/shared/Fillter";
 import ListItem from "@/components/shared/ListItem";
 import WriteButton from "@/components/shared/WriteButton";
 import Pagination from "@/components/shared/Pagination";
+import { useSearchParams } from "react-router-dom";
 
-interface CommunityListResponse {
-  page: number;
-  size: number;
-  totalCount: number;
-  totalPages: number;
-  list: CommunityItem[];
-}
 
 const CommunityList = () => {
   const [posts, setPosts] = useState<CommunityItem[]>([]);
@@ -22,63 +16,56 @@ const CommunityList = () => {
   const [viewMode, setViewMode] = useState<"card" | "list">("list"); // 뷰 모드 상태
   const [currentPage, setCurrentPage] = useState(1); // 현재 페이지
   const [totalPages, setTotalPages] = useState(1); // 총 페이지 수
-  // const [totalCount, setTotalCount] = useState(0); // 총 게시글 수 - 현재 미사용
   const [postsPerPage] = useState(12); // 카드 모드 페이지당 게시글 수
 
   const urlParams = new URLSearchParams(window.location.search);
   const communityType = urlParams.get("communityType") || "1";
+  const [searchParams] = useSearchParams();
 
-  // 카드 모드일 때 서버에서 페이징된 데이터를 가져오는 함수
-  const loadPagedList = async (page: number) => {
-    try {
-      setLoading(true);
-      const data: CommunityListResponse = await fetchCommunityList(
-        `${communityType}`,
-        page,
-        postsPerPage
-      );
-      setPosts(data.list);
-      setTotalPages(data.totalPages);
-      // setTotalCount(data.totalCount);
-      setCurrentPage(data.page);
-    } catch (err) {
-      console.error("커뮤니티 목록 조회 실패:", err);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  // 리스트 모드일 때 전체 데이터를 가져오는 함수
-  const loadFullList = async () => {
-    try {
-      setLoading(true);
-      const data: CommunityListResponse = await fetchCommunityList(`${communityType}`, 1, 100);
-      setPosts(data.list);
-      // setTotalCount(data.totalCount);
-    } catch (err) {
-      console.error("커뮤니티 목록 조회 실패:", err);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  // 뷰 모드나 커뮤니티 타입이 변경될 때 데이터 로딩
+  // 기존 useEffect - 거의 그대로 유지
   useEffect(() => {
-    if (viewMode === "card") {
-      loadPagedList(1); // 카드 모드는 첫 페이지부터
-    } else {
-      loadFullList(); // 리스트 모드는 전체 데이터
-    }
-  }, [communityType, viewMode]);
+    const loadList = async () => {
+      try {
+        setLoading(true);
+        if (viewMode === "card") {
+          const urlPage = parseInt(searchParams.get("page") || "1", 10);
+          const data = await fetchCommunityList(communityType, urlPage, postsPerPage);
+          setPosts(data.list);
+          setTotalPages(data.totalPages);
+          setCurrentPage(data.page);
+        } else {
+          const data = await fetchCommunityList(communityType, 1, 100);
+          setPosts(data.list);
+        }
+      } catch (err) {
+        console.error("커뮤니티 목록 조회 실패:", err);
+      } finally {
+        setLoading(false);
+      }
+    };
 
-  // 카드 모드에서 페이지 변경 시 데이터 로딩
+    loadList();
+  }, [communityType, viewMode, searchParams]);
+  // 카드 모드에서 페이지 변경시
   useEffect(() => {
-    if (viewMode === "card") {
-      loadPagedList(currentPage);
+    if (viewMode === "card" && currentPage > 1) {
+      const loadPage = async () => {
+        try {
+          setLoading(true);
+          const data = await fetchCommunityList(communityType, currentPage, postsPerPage);
+          setPosts(data.list);
+          setTotalPages(data.totalPages);
+        } catch (err) {
+          console.error("커뮤니티 목록 조회 실패:", err);
+        } finally {
+          setLoading(false);
+        }
+      };
+      loadPage();
     }
   }, [currentPage]);
 
-  // 필터링 로직 (리스트 모드에서만 적용)
+  // 기존 필터링 로직 그대로
   useEffect(() => {
     if (loading || viewMode === "card") return;
 
@@ -120,6 +107,7 @@ const CommunityList = () => {
     setFilteredPosts(result);
   }, [filters, posts, loading, viewMode]);
 
+  // 기존 필터 설정 그대로
   const filterGroupByContest: FilterGroup[] = [
     {
       name: "category",
@@ -180,16 +168,15 @@ const CommunityList = () => {
   };
 
   const handleSearchSubmit = () => {
-    // 검색 로직이 필요하면 여기에 구현
   };
 
-  // 뷰 모드 변경 핸들러
+  // 뷰 모드 변경
   const handleViewModeChange = (mode: "card" | "list") => {
     setViewMode(mode);
-    setCurrentPage(1); // 뷰 모드 변경 시 첫 페이지로
+    setCurrentPage(1);
   };
 
-  // 페이지 변경 핸들러
+  // 페이지 변경
   const handlePreviousPage = () => {
     if (currentPage > 1) {
       setCurrentPage(prev => prev - 1);
@@ -257,7 +244,7 @@ const CommunityList = () => {
             <p>게시글이 없습니다.</p>
           ) : (
             <>
-              {/* 카드형 레이아웃 (그리드 + md 사이즈) */}
+              {/* 카드형 레이아웃 */}
               {viewMode === "card" && (
                 <>
                   <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
@@ -272,7 +259,7 @@ const CommunityList = () => {
                         comment={post.comment_count}
                         linkSrc={`/community/content/${post.community_id}`}
                         endDate={post.recruit_end_date ?? undefined}
-                        size="md" // 카드 모드에서는 md 사이즈
+                        size="md"
                         intent="primary"
                         division={post.category_type ?? 0}
                         communityType={post.community_type}
@@ -309,7 +296,7 @@ const CommunityList = () => {
                       comment={post.comment_count}
                       linkSrc={`/community/content/${post.community_id}`}
                       endDate={post.recruit_end_date ?? undefined}
-                      size="lg" // 리스트 모드에서는 lg 사이즈
+                      size="lg"
                       intent="primary"
                       division={post.category_type ?? 0}
                       communityType={post.community_type}
@@ -326,7 +313,7 @@ const CommunityList = () => {
           <WriteButton />
         </div>
       </div>
-    </main>
+    </main >
   );
 };
 
