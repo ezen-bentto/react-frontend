@@ -116,7 +116,8 @@ const ListItem = ({
                 {communityType !== undefined ? getCommunityTypeLabel(communityType) : "기타"}
               </Badge>
               <Badge intent={"orange"} size={"sm"}>
-                D-{countDate(endDate ? endDate : "error")}
+                {/* D- */}
+                {countDate(endDate ?? "error") <= 0 ? "마감" : `D-${countDate(endDate ?? "error")}`}
               </Badge>
             </div>
           )}

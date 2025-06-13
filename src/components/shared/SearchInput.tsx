@@ -11,7 +11,7 @@ import {
  * 옵션 배열을 받아 드롭다운 셀렉트 박스를 렌더링하는 UI 컴포넌트
  * intent와 size로 스타일 변형 가능
  *
- * @function SelectInput.tsx
+ * @function SearchInput.tsx
  * @date 2025/06/01
  * @history
  * -------------------------------------------------------
