@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import Title from "../shared/Title";
 import PopularContestCard from "./PopularContestCard";
 import type { Contest } from "@/types/contestType";
-import { useContestStore } from "@/store/contest/useContest";
+import { useContestStore } from "@/features/contest/store";
 
 function PopularContestList() {
   const { popularContests } = useContestStore();

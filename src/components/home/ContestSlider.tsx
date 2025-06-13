@@ -8,7 +8,7 @@ import Title from "../shared/Title";
 import SwiperNavBtn from "./SwiperNavBtn";
 import { useEffect } from "react";
 import countDate from "@/utils/countDate";
-import { useContestStore } from "@/store/contest/useContest";
+import { useContestStore } from "@/features/contest/store";
 
 const ContestSlider = () => {
   const { latestContests, fetchContest } = useContestStore();

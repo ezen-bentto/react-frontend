@@ -1,4 +1,4 @@
-import { useThemeStore } from "@/store/themeStore";
+import { useThemeStore } from "@/features/common/themeStore";
 import { themeToggleVariants } from "../style/themeToggle";
 
 /**

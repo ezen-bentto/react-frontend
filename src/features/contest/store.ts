@@ -21,6 +21,5 @@ export const useContestStore = create<ContestStore>(set => ({
       popularContests: top10,
       latestContests: latestList,
     });
-    console.info(response.data);
   },
 }));
