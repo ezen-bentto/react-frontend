@@ -4,70 +4,55 @@ import Pagination from "@/components/shared/Pagination";
 import Title from "@/components/shared/Title";
 import { contestFilterData } from "@/constants/ContestFilterData";
 
-import { useContestStore } from "@/features/contest/store";
+import { useContestPage } from "@/features/contest/useGetList";
+import type { Contest } from "@/types/contestType";
 
 import countDate from "@/utils/countDate";
 
 import { useEffect, useState } from "react";
 
 const ContestList = () => {
-  const { popularContests, fetchContest } = useContestStore();
+  // const { popularContests, fetchContest } = useContestStore();
+  const [currentPage, setCurrentpage] = useState(1);
   const [category, setCategory] = useState<string[]>([]);
   const [age, setAge] = useState<string[]>([]);
   const [organizerType, setOrganizerType] = useState<string[]>([]);
-  const [filteredContests, setFilteredContests] = useState(popularContests);
 
-  const [currentPage, setCurrentpage] = useState(1);
-  const itemsPerPage = 16;
-  const indexOfLastItem = currentPage * itemsPerPage;
-  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-  const currentItem = filteredContests.slice(indexOfFirstItem, indexOfLastItem);
-  // const [items, setItems] = useState<Contest[]>([]);
+  //  react query 로 값 불러오기
+  const { data } = useContestPage(currentPage);
+  const [filteredContests, setFilteredContests] = useState<Contest[]>([]);
 
-  // const fetchData = async () => {
-  //   try {
-  //     const data = await fetchContestList();
-  //     console.info(data);
-  //     setItems(data);
-  //   } catch (e) {
-  //     console.error(e);
-  //   }
-  // };
-
-  // useEffect(() => {
-  //   fetchData();
-  // }, []);
-
-  useEffect(() => {
-    fetchContest();
-  }, []);
+  // // 전체 페이지 수
+  // const itemsPerPage = 12;
+  // // start index
+  // const indexOfLastItem = currentPage * itemsPerPage;
+  // // end index
+  // const indexOfFirstItem = indexOfLastItem - itemsPerPage;
 
   // 전체 공모전 불러오기
   useEffect(() => {
-    if (popularContests) {
-      setFilteredContests(popularContests);
+    if (data) {
+      setFilteredContests(data);
     }
-  }, [popularContests]);
+  }, [data, currentPage]);
 
   // 카테고리 필터
   useEffect(() => {
-    console.info(category, age, organizerType);
-    if (!popularContests) return;
+    if (data) {
+      // 필터를 적용해도, 최신 데이터 기준으로 적용하도록
+      const filtered = data.filter(item => {
+        const contestTag = item.contest_tag.split(",")[0].trim();
+        const selectedCategory = category.length === 0 || category.includes(contestTag);
+        const selectedAge = age.length === 0 || age.includes(item.participants);
+        const selectedOrganizer =
+          organizerType.length === 0 || organizerType.includes(item.organizer_type);
 
-    const filtered = popularContests.filter(item => {
-      const contestTag = item.contest_tag.split(",")[0].trim();
-      const selectedCategory = category.length === 0 || category.includes(contestTag);
-      const selectedAge = age.length === 0 || age.includes(item.participants);
-      const selectedOrganizer =
-        organizerType.length === 0 || organizerType.includes(item.organizer_type);
+        return selectedCategory && selectedAge && selectedOrganizer;
+      });
 
-      console.info(item.contest_tag, typeof item.contest_tag);
-      console.info(category);
-      return selectedCategory && selectedAge && selectedOrganizer;
-    });
-
-    setFilteredContests(filtered);
-  }, [category, age, organizerType]);
+      setFilteredContests(filtered);
+    }
+  }, [data, category, age, organizerType]);
 
   return (
     <div className="flex flex-col gap-5 mt-28">
@@ -93,7 +78,7 @@ const ContestList = () => {
         {!filteredContests ? (
           <p>데이터 로딩 중...</p>
         ) : (
-          currentItem.map(item => (
+          filteredContests.map(item => (
             <Card
               key={item.id}
               dday={countDate(item.end_date).toString()}
@@ -112,13 +97,14 @@ const ContestList = () => {
       <div className="">
         <Pagination
           currentPage={currentPage}
+          totalPages={10}
           onPrevious={() => setCurrentpage(prev => Math.max(prev - 1))}
           onNext={() =>
             setCurrentpage(prev => {
-              const totalPages = Math.ceil(filteredContests.length / itemsPerPage);
-              return Math.min(prev + 1, totalPages);
+              return Math.min(prev + 1, 10);
             })
           }
+          onPageChange={p => setCurrentpage(p)}
           intent="primary"
           size="sm"
         />

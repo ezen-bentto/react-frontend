@@ -1,41 +1,48 @@
 import { joinGroup, joinButton, type JoinButtonVariants } from "../style/pagination";
-
-/**
- *
- * Pagination 컴포넌트
- * 현재 페이지 표시 및 이전/다음 페이지 버튼으로 구성된 간단한 페이지네이션 UI
- * 스타일은 intent, size에 따라 다르게 적용됨
- *
- * @function Pagination.tsx
- * @date 2025/05/31
- * @history
- * -------------------------------------------------------
- *           변경일             작성자             변경내용
- * -------------------------------------------------------
- *
- *        2025/05/31           이철욱               신규작성
- *
- * @param currentPage 현재 페이지 번호
- * @param onPrevious 이전 페이지로 이동하는 콜백 함수
- * @param onNext 다음 페이지로 이동하는 콜백 함수
- * @param intent 버튼의 스타일 의도
- * @param size 버튼의 크기
- */
+import { v4 as uuidv4 } from "uuid";
 
 type PaginationProps = {
-  currentPage: number;
+  currentPage: number; // 현재 페이지 (필수로 처리)
+  totalPages: number; // 전체 페이지 수
   onPrevious: () => void;
   onNext: () => void;
+  // eslint-disable-next-line no-unused-vars
+  onPageChange: (page: number) => void; // 페이지 번호 클릭 시 콜백
 } & JoinButtonVariants;
 
-const Pagination = ({ currentPage, onPrevious, onNext, intent, size }: PaginationProps) => {
+const Pagination = ({
+  currentPage,
+  totalPages,
+  onPrevious,
+  onNext,
+  onPageChange,
+  intent,
+  size,
+}: PaginationProps) => {
+  const pages = Array.from({ length: totalPages }, (_, i) => ({
+    id: uuidv4(),
+    value: i + 1,
+  }));
+
   return (
     <div className={joinGroup()}>
       <button className={joinButton({ intent, size })} onClick={onPrevious}>
         {"<"}
       </button>
-      {/* map 을 돌리던가 해서 페이지 버튼을 늘리던가 해야하지 않을까 */}
-      <button className={joinButton({ intent, size })}>{currentPage}</button>
+
+      {pages.map(page => (
+        <button
+          key={page.id}
+          className={joinButton({
+            intent: page.value === currentPage ? "active" : intent, // 현재 페이지면 강조
+            size,
+          })}
+          onClick={() => onPageChange(page.value)}
+        >
+          {page.value}
+        </button>
+      ))}
+
       <button className={joinButton({ intent, size })} onClick={onNext}>
         {">"}
       </button>

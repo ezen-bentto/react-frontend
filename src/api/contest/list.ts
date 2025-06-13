@@ -8,6 +8,11 @@ export const fetchContestList = async () => {
   return response.data.data;
 };
 
+export const fetchContestPage = async (page: number = 1) => {
+  const response = await axios.get<Contest[]>(`/data/contest/contest_${page}.json`);
+  return response.data;
+};
+
 // 필터 타입 정의
 export interface ContestFilterParams {
   field?: string[]; // 분야
