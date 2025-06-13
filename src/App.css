@@ -1,6 +1,5 @@
 .input {
-    @supports (color: color-mix(in lab, red, red)) {
-        --input-color: 
- color-mix( var(--color-brand-primary) 20%, transparent);
-    }
+  @supports (color: color-mix(in lab, red, red)) {
+    --input-color: color-mix(var(--color-brand-primary) 20%, transparent);
+  }
 }

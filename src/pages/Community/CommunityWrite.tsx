@@ -65,12 +65,13 @@ const CommunityWrite = () => {
         ageGroup: data.age_group || "",
         title: data.title || "",
         content: data.content || "",
-        recruitments: data.recruitment_detail_list?.length > 0
-          ? data.recruitment_detail_list.map(detail => ({
-            role: detail.role,
-            count: detail.count.toString()
-          }))
-          : [{ role: "", count: "" }],
+        recruitments:
+          data.recruitment_detail_list?.length > 0
+            ? data.recruitment_detail_list.map(detail => ({
+                role: detail.role,
+                count: detail.count.toString(),
+              }))
+            : [{ role: "", count: "" }],
       });
 
       // 선택된 옵션 설정
@@ -263,11 +264,11 @@ const CommunityWrite = () => {
         selectedOption === "3"
           ? undefined
           : formData.recruitments
-            .filter(r => r.role.trim())
-            .map(r => ({
-              role: r.role.trim(),
-              count: Number(r.count),
-            })),
+              .filter(r => r.role.trim())
+              .map(r => ({
+                role: r.role.trim(),
+                count: Number(r.count),
+              })),
     };
 
     try {
@@ -288,11 +289,11 @@ const CommunityWrite = () => {
             selectedOption === "3"
               ? undefined
               : formData.recruitments
-                .filter(r => r.role.trim())
-                .map(r => ({
-                  role: r.role.trim(),
-                  count: Number(r.count),
-                })),
+                  .filter(r => r.role.trim())
+                  .map(r => ({
+                    role: r.role.trim(),
+                    count: Number(r.count),
+                  })),
         };
         result = await modifyCommunity(modifyData);
       } else {
@@ -330,9 +331,7 @@ const CommunityWrite = () => {
         <div className="max-w-[1400px] mx-auto pt-28">
           {/* 기본 정보 */}
           <section>
-            <div className="font-bold text-xl py-2">
-              기본 정보를 입력해주세요.
-            </div>
+            <div className="font-bold text-xl py-2">기본 정보를 입력해주세요.</div>
             <div className="border-t-2 border-gray-200 py-4">
               <input
                 type="radio"
@@ -555,15 +554,10 @@ const CommunityWrite = () => {
               />
             </div>
             <div className="flex justify-end gap-2 py-8">
-              <Button
-                intent="primary"
-                size="lg"
-                type="button"
-                onClickFnc={handleCancel}
-              >
+              <Button intent="primary" size="lg" type="button" onClickFnc={handleCancel}>
                 취소
               </Button>
-              <Button intent="primary" size="lg" type="submit" onClickFnc={() => { }}>
+              <Button intent="primary" size="lg" type="submit" onClickFnc={() => {}}>
                 {isEditMode ? "수정" : "등록"}
               </Button>
             </div>
