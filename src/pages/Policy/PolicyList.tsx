@@ -13,7 +13,7 @@ export default function PolicyList() {
   if (error) return <p>{error}</p>;
 
   return (
-    <div  className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 min-w-[360px]">
+    <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 min-w-[360px]">
       {policies.map(item => (
         <ListItem
           key={item.link}
