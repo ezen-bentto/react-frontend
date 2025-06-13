@@ -16,8 +16,8 @@ const ContestDetail = () => {
   const fetchData = async (targetId: number) => {
     const res = await fetchContestPage();
     if (res) {
-      setDataFile(res); // 나중을 위해 상태로 저장
-      const targetData = res.find(item => item.id === targetId); // ✅ 여기서 바로 찾기
+      setDataFile(res);
+      const targetData = res.find(item => item.id === targetId);
       setData(targetData);
     }
   };
@@ -29,7 +29,7 @@ const ContestDetail = () => {
     setId(parsedId);
 
     if (parsedId < 241) {
-      fetchData(parsedId); // ✅ id 넘겨서 바로 사용
+      fetchData(parsedId);
     } else {
       // DB 값 가져오기
     }
@@ -42,12 +42,12 @@ const ContestDetail = () => {
       <Title titleText="상세페이지" linkSrc="" />
       {/* 상세정보 */}
       <div>
-        <DetailInfo />
+        <DetailInfo data={data}/>
       </div>
 
       {/* 상세내용 */}
       <div>
-        <DetailContent />
+        <DetailContent html={data?.article ?? ""}/>
       </div>
 
       <Title titleText="팀원 모집" linkSrc="" />

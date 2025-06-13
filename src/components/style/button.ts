@@ -9,6 +9,7 @@ export const button = cva(
         primary: "bg-gray-200",
         fillter: "theme-bg dark:text-white",
         orange: "bg-accent-orange text-white",
+        sky: "bg-accent-sky text-white"
       },
       size: {
         sm: "text-sm",
