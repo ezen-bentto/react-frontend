@@ -272,8 +272,10 @@ const CommunityList = () => {
                     <div className="flex justify-center mt-8">
                       <Pagination
                         currentPage={currentPage}
+                        totalPages={totalPages}
                         onPrevious={handlePreviousPage}
                         onNext={handleNextPage}
+                        onPageChange={(page) => setCurrentPage(page)}
                         intent="primary"
                         size="md"
                       />
