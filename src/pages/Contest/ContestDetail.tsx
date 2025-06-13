@@ -1,9 +1,42 @@
+import { fetchContestPage } from "@/api/contest/list";
 import DetailContent from "@/components/contest/DetailContent";
 import DetailInfo from "@/components/contest/DetailInfo";
 import ListItem from "@/components/shared/ListItem";
 import Title from "@/components/shared/Title";
+import type { Contest } from "@/types/contestType";
+import { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
 
 const ContestDetail = () => {
+  const { contestId } = useParams();
+  const [id, setId] = useState(0);
+  const [data, setData] = useState<Contest>();
+  const [dataFile, setDataFile] = useState<Contest[]>([]);
+
+  const fetchData = async (targetId: number) => {
+    const res = await fetchContestPage();
+    if (res) {
+      setDataFile(res); // 나중을 위해 상태로 저장
+      const targetData = res.find(item => item.id === targetId); // ✅ 여기서 바로 찾기
+      setData(targetData);
+    }
+  };
+
+  useEffect(() => {
+    if (!contestId) return;
+
+    const parsedId = parseInt(contestId);
+    setId(parsedId);
+
+    if (parsedId < 241) {
+      fetchData(parsedId); // ✅ id 넘겨서 바로 사용
+    } else {
+      // DB 값 가져오기
+    }
+  }, [contestId]);
+
+  console.info(id, data, dataFile);
+
   return (
     <div className="flex flex-col gap-5 mt-28">
       <Title titleText="상세페이지" linkSrc="" />
