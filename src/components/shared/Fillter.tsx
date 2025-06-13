@@ -42,10 +42,12 @@ interface FilteProps {
   filters: FilterGroup[];
   // eslint-disable-next-line no-unused-vars
   onFilterChange: (type: string, selected: string[]) => void;
-  onSearchSubmit: () => void;
+  // eslint-disable-next-line no-unused-vars
+  onSearchSubmit: (value: string) => void;
 }
 
 const Fillter = ({ filters, onFilterChange, onSearchSubmit }: FilteProps) => {
+  const [searchText, setSearchText] = useState("");
   const [selectedFilters, setSelectedFilters] = useState<Record<string, Record<string, boolean>>>(
     {}
   );
@@ -86,7 +88,7 @@ const Fillter = ({ filters, onFilterChange, onSearchSubmit }: FilteProps) => {
       className="p-4 box-border-black space-y-6"
       onSubmit={e => {
         e.preventDefault();
-        onSearchSubmit();
+        onSearchSubmit(searchText);
       }}
     >
       {/* 각 필드 내에 속성들 뿌리기 */}
@@ -145,7 +147,7 @@ const Fillter = ({ filters, onFilterChange, onSearchSubmit }: FilteProps) => {
       </div>
       {/* 버튼 */}
       <div className="flex items-center gap-2 mt-4">
-        <SearchInput size={"lg"} />
+        <SearchInput size={"lg"} value={searchText} onChange={e => setSearchText(e.target.value)} />
         <Button type="submit" intent="fillter" onClickFnc={() => {}}>
           검색
         </Button>

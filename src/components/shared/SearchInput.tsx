@@ -25,7 +25,14 @@ import {
  *
  */
 
-const SearchInput = ({ size }: { size?: SearchInputVariants["size"] }) => {
+interface SearchInputProps extends SearchInputVariants {
+  // eslint-disable-next-line no-unused-vars
+  value: string;
+  // eslint-disable-next-line no-unused-vars
+  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+}
+
+const SearchInput = ({ size, value, onChange }: SearchInputProps) => {
   return (
     <label className={searchLabel()}>
       <svg className={searchIcon()} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
@@ -40,7 +47,13 @@ const SearchInput = ({ size }: { size?: SearchInputVariants["size"] }) => {
           <path d="m21 21-4.3-4.3"></path>
         </g>
       </svg>
-      <input type="search" placeholder="검색어를 입력해주세요" className={searchInput({ size })} />
+      <input
+        type="search"
+        placeholder="검색어를 입력해주세요"
+        className={searchInput({ size })}
+        value={value}
+        onChange={onChange}
+      />
     </label>
   );
 };

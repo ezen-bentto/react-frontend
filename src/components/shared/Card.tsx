@@ -54,6 +54,7 @@ const Card = ({ id, dday, img, title, text, size, intent, className }: CardProps
             <img
               src={"대체이미지"}
               alt={title}
+              loading="lazy"
               className="aspect-[4/3] w-full object-cover object-top"
             />
           )}
