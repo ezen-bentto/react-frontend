@@ -8,7 +8,7 @@ export const fieldset = cva(
 export const legend = cva("fieldset-legend text-inherit");
 
 export const input = cva(
-  "input w-full max-w-xl !text-brand-primary dark:!text-white dark:!bg-gray-500 placeholder:text-gray-400",
+  "input  w-full max-w-xl !text-brand-primary dark:!text-white dark:!bg-gray-500 placeholder:text-gray-400",
   {
     variants: {
       status: {

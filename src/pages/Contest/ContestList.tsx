@@ -79,6 +79,12 @@ const ContestList = () => {
                 : setOrganizerType(value)
           }
           onSearchSubmit={value => setSearchText(value)}
+          onResetFilters={() => {
+            setCategory([]); // ✅ 필터 상태 초기화
+            setAge([]);
+            setOrganizerType([]);
+            setSearchText(""); // 검색어도 초기화
+          }}
         />
       </div>
 
