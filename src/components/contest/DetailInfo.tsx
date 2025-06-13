@@ -23,7 +23,7 @@ function DetailInfo({ data }: DetailInfoProps) {
     <div className="bg-white rounded-lg shadow-sm border p-6 mb-20">
       <div className="flex-default">
         {/* dday */}
-        <Badge intent="orange" >D - {countDate(data.end_date.toString())}</Badge>
+        <Badge intent="orange">D - {countDate(data.end_date.toString())}</Badge>
 
         {/* 조회수 찜 */}
         <div className="flex items-center gap-4">
@@ -58,9 +58,7 @@ function DetailInfo({ data }: DetailInfoProps) {
         <div className="flex-1">
           {/* 제목 */}
           <div className="flex justify-between items-start mb-6">
-            <h1 className="text-2xl font-bold text-gray-900 leading-tight">
-              {data.title}
-            </h1>
+            <h1 className="text-2xl font-bold text-gray-900 leading-tight">{data.title}</h1>
           </div>
 
           {/* 정보 테이블 */}
@@ -70,52 +68,59 @@ function DetailInfo({ data }: DetailInfoProps) {
               <div className="space-y-4">
                 <InfoRow label="주최사" value={data.organizer} />
                 <InfoRow label="기업형태" value={data.organizer_type} />
-                <InfoRow 
-                  label="시상규모" 
-                  value={data.prize} 
-                />            
+                <InfoRow label="시상규모" value={data.prize} />
                 <InfoRow label="추가혜택" value={data.benefits} />
-                <InfoRow label="관심분야" value={
-                  <div className="flex gap-2">
-                    <span className="bg-gray-100 px-3 py-1 rounded-full text-sm">{data.contest_tag}</span>
-                  </div>
-                } />
-                <InfoRow label="활동분야" value={
-                  <div className="flex gap-2">
-                    <span className="bg-gray-100 px-3 py-1 rounded-full text-sm">서포터즈</span>
-                    <span className="bg-gray-100 px-3 py-1 rounded-full text-sm">기자단</span>
-                  </div>
-                } />
+                <InfoRow
+                  label="관심분야"
+                  value={
+                    <div className="flex gap-2">
+                      <span className="bg-gray-100 px-3 py-1 rounded-full text-sm">
+                        {data.contest_tag}
+                      </span>
+                    </div>
+                  }
+                />
+                <InfoRow
+                  label="활동분야"
+                  value={
+                    <div className="flex gap-2">
+                      <span className="bg-gray-100 px-3 py-1 rounded-full text-sm">서포터즈</span>
+                      <span className="bg-gray-100 px-3 py-1 rounded-full text-sm">기자단</span>
+                    </div>
+                  }
+                />
               </div>
 
               {/* 오른쪽 컬럼 */}
               <div className="space-y-4">
                 <InfoRow label="접수대상" value={data.participants} />
                 <InfoRow label="접수기간" value={`${data.start_date} ~ ${data.end_date}`} />
-                <InfoRow 
-                  label="홈페이지" 
+                <InfoRow
+                  label="홈페이지"
                   value={
-                    <a 
-                      href={data.homepage} 
-                      target="_blank" 
+                    <a
+                      href={data.homepage}
+                      target="_blank"
                       rel="noopener noreferrer"
                       className="text-blue-500 hover:underline"
                     >
                       {data.homepage}
                     </a>
-                  } 
+                  }
                 />
               </div>
             </div>
-          </div>          
+          </div>
 
           <div className="flex gap-8 mb-6 items-center">
             {/* 지원하기 */}
-            <Button intent="sky" type="button" size="lg" onClickFnc={()=>{}}>홈페이지 지원</Button>
+            <Button intent="sky" type="button" size="lg" onClickFnc={() => {}}>
+              홈페이지 지원
+            </Button>
 
             {/* 공유하기 */}
             <div className="flex gap-2">
-              {shareButtons.map((button) => (
+              {shareButtons.map(button => (
                 <button
                   key={button.name}
                   className={`w-10 h-10 rounded-md ${button.color} text-white flex items-center justify-center hover:opacity-80 transition-opacity`}
@@ -141,12 +146,8 @@ interface InfoRowProps {
 function InfoRow({ label, value }: InfoRowProps) {
   return (
     <div className="flex">
-      <dt className="w-20 flex-shrink-0 text-sm font-medium text-gray-600">
-        {label}
-      </dt>
-      <dd className="text-sm text-gray-900 flex-1">
-        {value}
-      </dd>
+      <dt className="w-20 flex-shrink-0 text-sm font-medium text-gray-600">{label}</dt>
+      <dd className="text-sm text-gray-900 flex-1">{value}</dd>
     </div>
   );
 }

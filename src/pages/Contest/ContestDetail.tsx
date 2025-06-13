@@ -42,12 +42,12 @@ const ContestDetail = () => {
       <Title titleText="상세페이지" linkSrc="" />
       {/* 상세정보 */}
       <div>
-        <DetailInfo data={data}/>
+        <DetailInfo data={data} />
       </div>
 
       {/* 상세내용 */}
       <div>
-        <DetailContent html={data?.article ?? ""}/>
+        <DetailContent html={data?.article ?? ""} />
       </div>
 
       <Title titleText="팀원 모집" linkSrc="" />
