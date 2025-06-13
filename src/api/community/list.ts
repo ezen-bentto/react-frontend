@@ -19,31 +19,19 @@ export interface CommunityItem {
   comment_count: number;
 }
 
+// @/api/community/list.ts 파일 수정 제안
 export interface CommunityListResponse {
-  list: CommunityItem[];
+  page: number;
+  size: number;
   totalCount: number;
+  totalPages: number;
+  list: CommunityItem[];
 }
 
-/**
- *
- * 커뮤니티 목록 조회
- *
- * @function fetchCommunityList
- * @date 2025/06/11
- * @history
- * -------------------------------------------------------
- *           변경일             작성자             변경내용
- * -------------------------------------------------------
- *
- *        2025/06/11           김혜미               신규작성
- * @param communityType
- * @param page
- * @param size
- */
 export const fetchCommunityList = async (
   communityType: string,
-  page = 1,
-  size = 10
+  page: number,
+  size: number
 ): Promise<CommunityListResponse> => {
   const response = await axios.get<{ data: CommunityListResponse }>(
     `${import.meta.env.VITE_API_URL}/api/community/getList`,
@@ -55,5 +43,5 @@ export const fetchCommunityList = async (
       },
     }
   );
-  return response.data.data;
+  return response.data.data; // 서버 응답의 data 부분을 그대로 반환
 };
