@@ -9,12 +9,12 @@ export const fetchContestList = async () => {
   return response.data.data;
 };
 
-export const fetchContestDetail = async (id:number) => {
-  const response = await axios.get<{data: ContestWithCommunity}>(
+export const fetchContestDetail = async (id: number) => {
+  const response = await axios.get<{ data: ContestWithCommunity }>(
     `http://localhost:4000/api/contest/getDetail?id=${id}`
-  )
-  return response.data.data
-}
+  );
+  return response.data.data;
+};
 
 export const fetchContestPage = async () => {
   const response = await axios.get<Contest[]>("/data/contest.json");
