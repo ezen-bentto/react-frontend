@@ -1,6 +1,7 @@
 interface TextInputProps {
   placeholder?: string;
   value: string;
+  // eslint-disable-next-line no-unused-vars
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   className?: string;
 }
