@@ -1,4 +1,4 @@
-import { fetchContestPage } from "@/api/contest/list";
+import { fetchContestList, fetchContestPage } from "@/api/contest/list";
 import Card from "@/components/shared/Card";
 import Fillter from "@/components/shared/Fillter";
 import Pagination from "@/components/shared/Pagination";
@@ -25,7 +25,7 @@ const ContestList = () => {
   // 끝 index
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
 
-  // ✅ 필터링은 useMemo로
+  // 필터링은 useMemo로
   const filteredContests = useMemo(() => {
     if (!data) return [];
 
@@ -42,20 +42,59 @@ const ContestList = () => {
     });
   }, [data, category, age, organizerType, searchText]);
 
-  // ✅ 현재 페이지 데이터
+  // 현재 페이지 데이터
   const currentItem = filteredContests.slice(indexOfFirstItem, indexOfLastItem);
 
-  // 전체 공모전 불러오기
+  // // 전체 공모전 불러오기
+  // useEffect(() => {
+  //   async function fetchData() {
+  //     setIsLoading(true);
+  //     const res = await fetchContestPage();
+  //     if (res) {
+  //       setData(res);
+  //     }
+  //     setIsLoading(false);
+  //   }
+  //   fetchData();
+  // }, []);
+
   useEffect(() => {
     async function fetchData() {
       setIsLoading(true);
-      const res = await fetchContestPage();
-      if (res) {
-        setData(res);
+      const [crawledData, dbData ] = await Promise.all([
+        fetchContestPage(),
+        fetchContestList()
+      ]);
+
+      // id number 변환
+      const normalizedCrawledData = (crawledData || []).map(item => ({
+        ...item,
+        id: Number(item.id)
+      }))
+        
+      const normalizedDbData  = (dbData || []).map(item => ({
+          ...item,
+          id: Number(item.id)
+        }));
+
+      // 데이터 병합
+      const combinedData  = [...normalizedCrawledData, ...normalizedDbData];
+
+      // id 중복 제거
+      const uniqueData = combinedData.reduce((acc, current) => {
+        const existingIndex = acc.findIndex(item => item.id === current.id);
+        if (existingIndex !== -1) {
+          acc[existingIndex] = current; // 중복된 id가 있으면 새로운 데이터로 교체
+          } else {
+            acc.push(current);
+          }
+          return acc;
+        }, [] as Contest[]);        
+
+        setData(uniqueData);
+        setIsLoading(false);
       }
-      setIsLoading(false);
-    }
-    fetchData();
+      fetchData();
   }, []);
 
   // 필터 바뀌면 페이지 리셋 & 페이지 수 다시 계산
@@ -80,10 +119,10 @@ const ContestList = () => {
           }
           onSearchSubmit={value => setSearchText(value)}
           onResetFilters={() => {
-            setCategory([]); // ✅ 필터 상태 초기화
+            setCategory([]); // 필터 상태 초기화
             setAge([]);
             setOrganizerType([]);
-            setSearchText(""); // 검색어도 초기화
+            setSearchText(""); // 검색어 초기화
           }}
         />
       </div>
