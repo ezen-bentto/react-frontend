@@ -10,8 +10,8 @@ import { useParams } from "react-router-dom";
 
 const ContestDetail = () => {
   const { contestId } = useParams();
-  const [ data, setData ] = useState<Contest>();
-  const [ communityList, setCommunityList ] = useState<CommunityListItem[]>([]);
+  const [data, setData] = useState<Contest>();
+  const [communityList, setCommunityList] = useState<CommunityListItem[]>([]);
 
   const fetchData = async (targetId: number) => {
     const res = await fetchContestPage();
@@ -24,10 +24,10 @@ const ContestDetail = () => {
   const fetchDetailData = async (targetId: number) => {
     const res = await fetchContestDetail(targetId);
     if (res) {
-        setData(res);
-        setCommunityList(res.communityList || []);
+      setData(res);
+      setCommunityList(res.communityList || []);
     }
-  }
+  };
 
   useEffect(() => {
     if (!contestId) return;
@@ -57,7 +57,7 @@ const ContestDetail = () => {
       <Title titleText="팀원 모집" linkSrc="" />
       {/* 팀원모집 */}
       <section className="main-community w-full flex justify-start flex-col gap-4">
-        {communityList.map((post) => (
+        {communityList.map(post => (
           <ListItem
             key={post.id}
             type="community"
@@ -72,11 +72,9 @@ const ContestDetail = () => {
             communityType="팀원모집"
           />
         ))}
-        
+
         {communityList.length === 0 && (
-          <p className="text-gray-500 text-center py-8">
-            아직 등록된 팀원 모집 글이 없습니다.
-          </p>
+          <p className="text-gray-500 text-center py-8">아직 등록된 팀원 모집 글이 없습니다.</p>
         )}
       </section>
     </div>
