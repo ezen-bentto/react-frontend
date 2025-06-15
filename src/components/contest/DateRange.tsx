@@ -1,7 +1,9 @@
 interface DateRangeProps {
   startDate: string;
   endDate: string;
+  // eslint-disable-next-line no-unused-vars
   onStartDateChange: (date: string) => void;
+  // eslint-disable-next-line no-unused-vars
   onEndDateChange: (date: string) => void;
   className?: string;
 }

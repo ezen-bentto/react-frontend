@@ -6,6 +6,7 @@ interface CheckboxOption {
 interface CheckboxGroupProps {
   options: CheckboxOption[];
   selectedValues: string[];
+  // eslint-disable-next-line no-unused-vars
   onChange: (values: string[]) => void;
 }
 
