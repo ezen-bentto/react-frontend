@@ -9,7 +9,7 @@ body {
 /* Tailwind 커스텀 테마 */
 @theme {
   --color-brand-primary: #26414a;
-  --color-accent-sky: #a4d7ee;
+  --color-accent-sky: #4375db;
   --color-accent-orange: #fc8d09;
   --color-theme-dark: #2b2b2b;
 

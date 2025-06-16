@@ -1,63 +1,73 @@
+import { fetchContestPage } from "@/api/contest/list";
 import Card from "@/components/shared/Card";
 import Fillter from "@/components/shared/Fillter";
 import Pagination from "@/components/shared/Pagination";
 import Title from "@/components/shared/Title";
 import { contestFilterData } from "@/constants/ContestFilterData";
-
-import { useContestPage } from "@/features/contest/useGetList";
 import type { Contest } from "@/types/contestType";
-
 import countDate from "@/utils/countDate";
-
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 const ContestList = () => {
-  // const { popularContests, fetchContest } = useContestStore();
   const [currentPage, setCurrentpage] = useState(1);
   const [category, setCategory] = useState<string[]>([]);
   const [age, setAge] = useState<string[]>([]);
   const [organizerType, setOrganizerType] = useState<string[]>([]);
+  const [data, setData] = useState<Contest[]>([]);
+  const [totalPages, setTotalPages] = useState(0);
+  const [isLoading, setIsLoading] = useState(true);
+  const [searchText, setSearchText] = useState("");
 
-  //  react query 로 값 불러오기
-  const { data } = useContestPage(currentPage);
-  const [filteredContests, setFilteredContests] = useState<Contest[]>([]);
+  // 페이지당 item 갯수
+  const itemsPerPage = 12;
+  // 시작 index
+  const indexOfLastItem = currentPage * itemsPerPage;
+  // 끝 index
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
 
-  // // 전체 페이지 수
-  // const itemsPerPage = 12;
-  // // start index
-  // const indexOfLastItem = currentPage * itemsPerPage;
-  // // end index
-  // const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  // ✅ 필터링은 useMemo로
+  const filteredContests = useMemo(() => {
+    if (!data) return [];
+
+    return data.filter(item => {
+      const contestTag = item.contest_tag.split(",")[0].trim();
+      const selectedCategory = category.length === 0 || category.includes(contestTag);
+      const selectedAge = age.length === 0 || age.includes(item.participants);
+      const selectedOrganizer =
+        organizerType.length === 0 || organizerType.includes(item.organizer_type);
+
+      const matchesSearch =
+        searchText.trim() === "" || item.title.toLowerCase().includes(searchText.toLowerCase());
+      return selectedCategory && selectedAge && selectedOrganizer && matchesSearch;
+    });
+  }, [data, category, age, organizerType, searchText]);
+
+  // ✅ 현재 페이지 데이터
+  const currentItem = filteredContests.slice(indexOfFirstItem, indexOfLastItem);
 
   // 전체 공모전 불러오기
   useEffect(() => {
-    if (data) {
-      setFilteredContests(data);
+    async function fetchData() {
+      setIsLoading(true);
+      const res = await fetchContestPage();
+      if (res) {
+        setData(res);
+      }
+      setIsLoading(false);
     }
-  }, [data, currentPage]);
+    fetchData();
+  }, []);
 
-  // 카테고리 필터
+  // 필터 바뀌면 페이지 리셋 & 페이지 수 다시 계산
   useEffect(() => {
-    if (data) {
-      // 필터를 적용해도, 최신 데이터 기준으로 적용하도록
-      const filtered = data.filter(item => {
-        const contestTag = item.contest_tag.split(",")[0].trim();
-        const selectedCategory = category.length === 0 || category.includes(contestTag);
-        const selectedAge = age.length === 0 || age.includes(item.participants);
-        const selectedOrganizer =
-          organizerType.length === 0 || organizerType.includes(item.organizer_type);
-
-        return selectedCategory && selectedAge && selectedOrganizer;
-      });
-
-      setFilteredContests(filtered);
-    }
-  }, [data, category, age, organizerType]);
+    setTotalPages(Math.ceil(filteredContests.length / itemsPerPage));
+    setCurrentpage(1);
+  }, [filteredContests]);
 
   return (
     <div className="flex flex-col gap-5 mt-28">
       <Title titleText="공모전" linkSrc="" />
-      {/* 필터 */}
+
       <div className="py-5">
         <Fillter
           filters={contestFilterData}
@@ -68,22 +78,26 @@ const ContestList = () => {
                 ? setAge(value)
                 : setOrganizerType(value)
           }
-          onSearchSubmit={() => console.info("검색 핸들러")}
+          onSearchSubmit={value => setSearchText(value)}
+          onResetFilters={() => {
+            setCategory([]); // ✅ 필터 상태 초기화
+            setAge([]);
+            setOrganizerType([]);
+            setSearchText(""); // 검색어도 초기화
+          }}
         />
       </div>
-      {/* 배너 */}
 
-      {/* 카드 리스트 */}
       <div className="flex gap-6 flex-wrap justify-start py-5">
-        {!filteredContests ? (
+        {isLoading ? (
           <p>데이터 로딩 중...</p>
         ) : (
-          filteredContests.map(item => (
+          currentItem.map(item => (
             <Card
               key={item.id}
               dday={countDate(item.end_date).toString()}
               id={item.id}
-              img={item.img ? item.img : ""}
+              img={item.img ?? ""}
               text={item.organizer}
               title={item.title}
               intent="neutral"
@@ -93,18 +107,22 @@ const ContestList = () => {
         )}
       </div>
 
-      {/* 페이징 */}
       <div className="">
         <Pagination
           currentPage={currentPage}
-          totalPages={10}
-          onPrevious={() => setCurrentpage(prev => Math.max(prev - 1))}
-          onNext={() =>
-            setCurrentpage(prev => {
-              return Math.min(prev + 1, 10);
-            })
-          }
-          onPageChange={p => setCurrentpage(p)}
+          totalPages={totalPages}
+          onPrevious={() => {
+            setCurrentpage(prev => Math.max(prev - 1, 1));
+            window.scrollTo({ top: 0, behavior: "smooth" });
+          }}
+          onNext={() => {
+            setCurrentpage(prev => Math.min(prev + 1, totalPages));
+            window.scrollTo({ top: 0, behavior: "smooth" });
+          }}
+          onPageChange={p => {
+            setCurrentpage(p);
+            window.scrollTo({ top: 0, behavior: "smooth" });
+          }}
           intent="primary"
           size="sm"
         />

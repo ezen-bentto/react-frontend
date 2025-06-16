@@ -1,5 +1,6 @@
-import type { Contest, ContestStore } from "@/types/contestType";
-import axios from "axios";
+import { fetchContestPage } from "@/api/contest/list";
+import type { ContestStore } from "@/types/contestType";
+
 import { create } from "zustand";
 
 export const useContestStore = create<ContestStore>(set => ({
@@ -8,8 +9,7 @@ export const useContestStore = create<ContestStore>(set => ({
   latestContests: [],
 
   fetchContest: async () => {
-    const response = await axios.get<Contest[]>("/data/contest/contest_1.json");
-    const contests = response.data;
+    const contests = await fetchContestPage();
 
     const viewSorted = [...contests].sort((a, b) => b.views - a.views);
     const ascSorted = [...contests].sort((a, b) => parseInt(a.reg_date) - parseInt(b.reg_date));
