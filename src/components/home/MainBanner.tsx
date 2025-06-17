@@ -57,7 +57,7 @@ const MainBanner = () => {
     >
       {items.map(item => (
         <SwiperSlide key={item.renderId}>
-          <Link to={`/constest/${item.id}`}>
+          <Link to={`/contest/${item.id}`}>
             <div
               className={`w-full max-h-[800px] h-[80vh] overflow-hidden px-[20%] flex-default ${item.bgColor}`}
             >
