@@ -1,5 +1,6 @@
 import { useCommunityPage } from "@/features/community/useGetList";
 import ListItem from "../shared/ListItem";
+import Title from "../shared/Title";
 
 const CommunityList = () => {
   const { data, isLoading } = useCommunityPage();
@@ -7,6 +8,7 @@ const CommunityList = () => {
 
   return (
     <div className="main-community w-full flex justify-start flex-col gap-4">
+      <Title linkSrc="/community/list?communityType=1" titleText="지원 할 수 있는 정책" />
       {data &&
         data.map(item => (
           <ListItem
