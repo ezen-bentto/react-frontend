@@ -19,7 +19,6 @@ export interface CommunityItem {
   comment_count: number;
 }
 
-// @/api/community/list.ts 파일 수정 제안
 export interface CommunityListResponse {
   page: number;
   size: number;
@@ -37,11 +36,11 @@ export const fetchCommunityList = async (
     `${import.meta.env.VITE_API_URL}/api/community/getList`,
     {
       params: {
-        community_type: communityType,
+        communityType: communityType,
         page,
         size,
       },
     }
   );
-  return response.data.data; // 서버 응답의 data 부분을 그대로 반환
+  return response.data.data;
 };
