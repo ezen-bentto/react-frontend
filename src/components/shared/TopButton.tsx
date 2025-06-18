@@ -44,7 +44,6 @@ const TopButton = () => {
       className={fixedCircleBtn({ hidden: !visible, color: "top" })}
     >
       <UpOutlined className="text-4xl !text-white " />
-      <div className=""></div>
     </button>
   );
 };
