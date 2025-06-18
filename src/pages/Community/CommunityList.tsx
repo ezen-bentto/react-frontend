@@ -191,7 +191,7 @@ const CommunityList = () => {
   const currentPosts = viewMode === "card" ? posts : filteredPosts;
 
   return (
-    <main className="bg-white pt-28">
+    <main className="pt-28">
       <div className="max-w-[1400px] mx-auto">
         {/* 필터 UI */}
         <h2 className="text-2xl font-extrabold mb-6">커뮤니티</h2>
