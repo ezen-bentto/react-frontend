@@ -45,7 +45,6 @@ interface HeaderMenu {
 const headerMenus: HeaderMenu[] = [
   { name: "공모전", src: "/contest", id: "" },
   { name: "청년정책", src: "/policy", id: "" },
-  { name: "통계", src: "#", id: "" },
   {
     name: "커뮤니티",
     src: "#",

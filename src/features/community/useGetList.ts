@@ -5,7 +5,7 @@ export const useCommunityPage = () => {
   const { data, isLoading } = useQuery<CommunityItem[]>({
     queryKey: ["community"], // 캐시 구분용 키
     queryFn: async () => {
-      const response = await fetchCommunityList("1", 1, 12);
+      const response = await fetchCommunityList("1", 1, 10);
       return response.list; // 여기서 list만 추출해서 반환
     },
     placeholderData: keepPreviousData,

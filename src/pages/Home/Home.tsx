@@ -2,7 +2,8 @@ import ContestSlider from "@/components/home/ContestSlider";
 import MainBanner from "../../components/home/MainBanner";
 import PopularContestList from "@/components/home/PopularContestList";
 import PolicySider from "@/components/home/PolicySider";
-import CommunityList from "../Community/CommunityList";
+import CommunityList from "@/components/home/CommunityList";
+
 const Home = () => {
   return (
     <div className="flex justify-center flex-col mt-19 md:mt-20  items-center gap-8">
