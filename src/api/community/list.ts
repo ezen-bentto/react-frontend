@@ -37,7 +37,7 @@ export const fetchCommunityList = async (
     `${import.meta.env.VITE_API_URL}/api/community/getList`,
     {
       params: {
-        community_type: communityType,
+        communityType: communityType,
         page,
         size,
       },
