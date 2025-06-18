@@ -21,7 +21,7 @@ const CommunityList = () => {
             intent="primary"
             division={item.category_type ?? 0}
             communityType={item.community_type}
-            endDate={item.end_date}
+            endDate={item.end_date ?? ""}
           />
         ))}
     </div>
