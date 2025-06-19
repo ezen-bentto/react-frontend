@@ -21,9 +21,11 @@ function DetailInfo({ data }: DetailInfoProps) {
 
   return (
     <div className="rounded-lg shadow-sm border p-6 mb-20">
-      <div className="flex-default">
+      <div className="flex items-start justify-between">
         {/* dday */}
-        <Badge intent="orange">D - {countDate(data.end_date.toString())}</Badge>
+        <div className="mt-2">
+          <Badge intent="orange">D - {countDate(data.end_date.toString())}</Badge>
+        </div>
 
         {/* 조회수 찜 */}
         <div className="flex items-center gap-4">
@@ -102,7 +104,7 @@ function DetailInfo({ data }: DetailInfoProps) {
                       href={data.homepage}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="text-blue-500 hover:underline"
+                      className="text-blue-500 hover:underline block truncate"
                     >
                       {data.homepage}
                     </a>
@@ -112,7 +114,7 @@ function DetailInfo({ data }: DetailInfoProps) {
             </div>
           </div>
 
-          <div className="flex gap-3 md:gap-8 mb-6 items-center">
+          <div className="flex flex-col md:flex-row gap-8 md:gap-8 md:mb-6 items-center flex-wrap">
             {/* 지원하기 */}
             <Button intent="sky" type="button" size="lg" onClickFnc={() => {}}>
               홈페이지 지원
@@ -145,9 +147,9 @@ interface InfoRowProps {
 
 function InfoRow({ label, value }: InfoRowProps) {
   return (
-    <div className="flex">
+    <div className="flex w-full">
       <dt className="w-20 flex-shrink-0 text-sm font-medium">{label}</dt>
-      <dd className="text-sm flex-1">{value}</dd>
+      <dd className="text-sm flex-1 truncate">{value}</dd>
     </div>
   );
 }
