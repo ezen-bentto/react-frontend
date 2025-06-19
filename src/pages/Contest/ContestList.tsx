@@ -112,10 +112,15 @@ const ContestList = () => {
         />
       </div>
 
-      <div className="flex gap-6 flex-wrap justify-start py-5">
+      <div className={`flex gap-6 flex-wrap py-5
+        ${currentPage === totalPages ? "justify-start" : "justify-center"}`}>
         {isLoading ? (
           <p>데이터 로딩 중...</p>
-        ) : (
+        ) : currentItem.length === 0 ? (
+          <div className="w-full flex justify-center items-center">
+            <img src="/public/images/empty_list.png" alt="검색 결과 없음" className="w-100 opacity-70" />
+          </div>
+        ) :(
           currentItem.map(item => (
             <Card
               key={item.id}

@@ -4,14 +4,14 @@ import axios from "axios";
 
 export const fetchContestList = async () => {
   const response = await axios.get<{ data: Contest[] }>(
-    "http://localhost:4000/api/contest/getList"
+    `${import.meta.env.VITE_API_URL}/api/contest/getList`
   );
   return response.data.data;
 };
 
 export const fetchContestDetail = async (id: number) => {
   const response = await axios.get<{ data: ContestWithCommunity }>(
-    `http://localhost:4000/api/contest/getDetail?id=${id}`
+    `${import.meta.env.VITE_API_URL}/api/contest/getDetail?id=${id}`
   );
   return response.data.data;
 };
