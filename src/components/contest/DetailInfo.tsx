@@ -20,7 +20,7 @@ function DetailInfo({ data }: DetailInfoProps) {
   ];
 
   return (
-    <div className="bg-white rounded-lg shadow-sm border p-6 mb-20">
+    <div className="rounded-lg shadow-sm border p-6 mb-20">
       <div className="flex-default">
         {/* dday */}
         <Badge intent="orange">D - {countDate(data.end_date.toString())}</Badge>
@@ -35,14 +35,14 @@ function DetailInfo({ data }: DetailInfoProps) {
           </button>
           <button className="flex flex-col items-center gap-1 p-2 hover:bg-gray-50 rounded-md transition-colors">
             <div className="w-8 h-8 bg-gray-200 rounded-full flex items-center justify-center">
-              views
+              👀
             </div>
             <span className="text-xs text-gray-600">356</span>
           </button>
         </div>
       </div>
 
-      <div className="flex gap-8">
+      <div className="flex flex-col md:flex-row gap-8">
         {/* 왼쪽: 이미지 */}
         <div className="flex-shrink-0">
           <div className="w-72 h-96 bg-gray-100 rounded-lg overflow-hidden">
@@ -58,12 +58,12 @@ function DetailInfo({ data }: DetailInfoProps) {
         <div className="flex-1">
           {/* 제목 */}
           <div className="flex justify-between items-start mb-6">
-            <h1 className="text-2xl font-bold text-gray-900 leading-tight">{data.title}</h1>
+            <h1 className="text-2xl font-bold leading-tight">{data.title}</h1>
           </div>
 
           {/* 정보 테이블 */}
           <div className="space-y-4 mb-8">
-            <div className="grid grid-cols-2 gap-8">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
               {/* 왼쪽 컬럼 */}
               <div className="space-y-4">
                 <InfoRow label="주최사" value={data.organizer} />
@@ -74,7 +74,7 @@ function DetailInfo({ data }: DetailInfoProps) {
                   label="관심분야"
                   value={
                     <div className="flex gap-2">
-                      <span className="bg-gray-100 px-3 py-1 rounded-full text-sm">
+                      <span className="bg-gray-100 text-gray-700 px-3 py-1 rounded-full text-sm">
                         {data.contest_tag}
                       </span>
                     </div>
@@ -83,7 +83,7 @@ function DetailInfo({ data }: DetailInfoProps) {
                 <InfoRow
                   label="활동분야"
                   value={
-                    <div className="flex gap-2">
+                    <div className="flex gap-2 text-gray-700">
                       <span className="bg-gray-100 px-3 py-1 rounded-full text-sm">서포터즈</span>
                       <span className="bg-gray-100 px-3 py-1 rounded-full text-sm">기자단</span>
                     </div>
@@ -112,7 +112,7 @@ function DetailInfo({ data }: DetailInfoProps) {
             </div>
           </div>
 
-          <div className="flex gap-8 mb-6 items-center">
+          <div className="flex gap-3 md:gap-8 mb-6 items-center">
             {/* 지원하기 */}
             <Button intent="sky" type="button" size="lg" onClickFnc={() => {}}>
               홈페이지 지원
@@ -146,8 +146,8 @@ interface InfoRowProps {
 function InfoRow({ label, value }: InfoRowProps) {
   return (
     <div className="flex">
-      <dt className="w-20 flex-shrink-0 text-sm font-medium text-gray-600">{label}</dt>
-      <dd className="text-sm text-gray-900 flex-1">{value}</dd>
+      <dt className="w-20 flex-shrink-0 text-sm font-medium">{label}</dt>
+      <dd className="text-sm flex-1">{value}</dd>
     </div>
   );
 }
