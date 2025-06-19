@@ -4,6 +4,8 @@ import Fillter from "@/components/shared/Fillter";
 import Pagination from "@/components/shared/Pagination";
 import Title from "@/components/shared/Title";
 import { contestFilterData } from "@/constants/ContestFilterData";
+import { DARK_NOT_ITEM, LiGHT_NOT_ITEM } from "@/constants/ImageSrc";
+import { useThemeStore } from "@/features/common/themeStore";
 import type { Contest } from "@/types/contestType";
 import countDate from "@/utils/countDate";
 import { useEffect, useMemo, useState } from "react";
@@ -17,6 +19,13 @@ const ContestList = () => {
   const [totalPages, setTotalPages] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
   const [searchText, setSearchText] = useState("");
+  const { theme } = useThemeStore();
+  const [imgSrc, setImgSrc] = useState(LiGHT_NOT_ITEM);
+
+  useEffect(
+    () => (theme === "light" ? setImgSrc(LiGHT_NOT_ITEM) : setImgSrc(DARK_NOT_ITEM)),
+    [theme]
+  );
 
   // 페이지당 item 갯수
   const itemsPerPage = 12;
@@ -120,11 +129,7 @@ const ContestList = () => {
           <p>데이터 로딩 중...</p>
         ) : currentItem.length === 0 ? (
           <div className="w-full flex justify-center items-center">
-            <img
-              src="/public/images/empty_list.png"
-              alt="검색 결과 없음"
-              className="w-100 opacity-70"
-            />
+            <img src={imgSrc} alt="검색 결과 없음" className="w-100" />
           </div>
         ) : (
           currentItem.map(item => (
