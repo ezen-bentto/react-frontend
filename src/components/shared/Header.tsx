@@ -189,7 +189,7 @@ export const Header = ({ opacityEffect = false }: HeaderProps) => {
         </nav>
 
         {/* Mobile Toggle Button */}
-        <div className="md:hidden cursor-pointer" onClick={() => setIsMobileOpen(!isMobileOpen)}>
+        <div className="md:hidden cursor-pointer" onClick={() => setIsMobileOpen(prev => !prev)}>
           <div className={`${hamBtn()} ${isMobileOpen ? "rotate-45 translate-y-2" : ""}`} />
           <div className={`${hamBtn()} ${isMobileOpen ? "opacity-0" : ""}`} />
           <div className={`${hamBtn()} ${isMobileOpen ? "-rotate-45 -translate-y-2" : ""}`} />
@@ -199,49 +199,78 @@ export const Header = ({ opacityEffect = false }: HeaderProps) => {
       {/* Mobile Menu */}
       {isMobileOpen && (
         <div className={mobileMenu({ theme: "w" })}>
-          {!isLoggedIn ? (
-            <>
-              <Link to={"/login"} className={headerLinkHover()}>
-                로그인
-              </Link>
-              <Link to={"/signup"} className={headerLinkHover()}>
-                회원가입
-              </Link>
-            </>
-          ) : (
-            <>
-              <Link to={"/mypage"} className={headerLinkHover()}>
-                마이페이지
-              </Link>
-              <Link to={"/logout"} className={headerLinkHover()} onClick={handleLogout}>
-                로그아웃
-              </Link>
-            </>
-          )}
-          {items.map(item => (
-            <div key={item.id}>
-              {item.subMenus ? (
-                <>
-                  <div className={`${headerLinkHover({ highlight: true })} cursor-default`}>
-                    {item.name}
-                  </div>
-                  {item.subMenus.map((subItem, index) => (
-                    <Link
-                      key={index}
-                      to={subItem.src}
-                      className={`${headerLinkHover()} pl-4 text-sm`}
-                    >
-                      └ {subItem.name}
-                    </Link>
-                  ))}
-                </>
-              ) : (
-                <Link to={item.src} className={headerLinkHover({ highlight: true })}>
-                  {item.name}
+          <div className="flex flex-col gap-4">
+            {!isLoggedIn ? (
+              <>
+                <Link
+                  to={"/login"}
+                  className={headerLinkHover()}
+                  onClick={() => setIsMobileOpen(prev => !prev)}
+                >
+                  로그인
                 </Link>
-              )}
-            </div>
-          ))}
+                <Link
+                  to={"/signup"}
+                  className={headerLinkHover()}
+                  onClick={() => setIsMobileOpen(prev => !prev)}
+                >
+                  회원가입
+                </Link>
+              </>
+            ) : (
+              <>
+                <Link
+                  to={"/mypage"}
+                  className={headerLinkHover()}
+                  onClick={() => setIsMobileOpen(prev => !prev)}
+                >
+                  마이페이지
+                </Link>
+                <Link
+                  to={"/logout"}
+                  className={headerLinkHover()}
+                  onClick={() => {
+                    setIsMobileOpen(prev => !prev);
+                    handleLogout();
+                  }}
+                >
+                  로그아웃
+                </Link>
+              </>
+            )}
+            {items.map(item => (
+              <div key={item.id}>
+                {item.subMenus ? (
+                  <>
+                    <div className={`${headerLinkHover({ highlight: true })} cursor-default`}>
+                      {item.name}
+                    </div>
+                    {item.subMenus.map((subItem, index) => (
+                      <Link
+                        key={index}
+                        to={subItem.src}
+                        className={`${headerLinkHover()} pl-4 text-sm`}
+                        onClick={() => setIsMobileOpen(prev => !prev)}
+                      >
+                        └ {subItem.name}
+                      </Link>
+                    ))}
+                  </>
+                ) : (
+                  <Link
+                    to={item.src}
+                    className={headerLinkHover({ highlight: true })}
+                    onClick={() => setIsMobileOpen(prev => !prev)}
+                  >
+                    {item.name}
+                  </Link>
+                )}
+              </div>
+            ))}
+          </div>
+          <div className="flex justify-end [margin-bottom:50%]">
+            <ThemeToggle />
+          </div>
         </div>
       )}
     </header>
