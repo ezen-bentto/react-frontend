@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import { card, type CardVariants } from "../style/card";
 import Badge from "./Badge";
+import { useState } from "react";
 
 /**
  *
@@ -41,21 +42,27 @@ const Card = ({ id, dday, img, title, text, size, intent, className }: CardProps
   const combinedClass =
     `relative w-full h-full ${card({ size, intent })} ${className ?? ""}`.trim(); // 👉 w-full, h-full 강제
 
+  const [isImageLoaded, setIsImageLoaded] = useState(false);
+
   return (
     <Link to={`/contest/${id}`}>
       <div className={combinedClass}>
         <div className="p-4 flex justify-end absolute w-full">
           <Badge intent="default">D-{dday}</Badge>
         </div>
-        <figure>
-          {img ? (
-            <img src={img} alt={title} className="aspect-[4/3] w-full object-cover object-top" />
-          ) : (
+        <figure className="relative w-full aspect-[4/3]">
+          {!isImageLoaded && (
+            <div className="absolute top-0 left-0 w-full h-full bg-gray-200 animate-pulse rounded" />
+          )}
+          {img && (
             <img
-              src={"대체이미지"}
+              src={img}
               alt={title}
               loading="lazy"
-              className="aspect-[4/3] w-full object-cover object-top"
+              onLoad={() => setIsImageLoaded(true)}
+              className={`absolute top-0 left-0 w-full h-full object-cover object-top transition-opacity duration-300 ${
+                isImageLoaded ? "opacity-100" : "opacity-0"
+              }`}
             />
           )}
         </figure>
