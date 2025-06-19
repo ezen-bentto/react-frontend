@@ -31,9 +31,22 @@ const Login = () => {
   }, [navigate]);
 
   const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
-    // e: React.FormEvent<HTMLFormElement>으로 타입 명시
     e.preventDefault();
     setErrorMessage("");
+
+    // 유효성 검사
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    const passwordRegex = /^(?=.*[0-9])(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{8,}$/;
+
+    if (!emailRegex.test(email)) {
+      setErrorMessage("유효한 이메일 주소를 입력해주세요.");
+      return;
+    }
+
+    if (!passwordRegex.test(password)) {
+      setErrorMessage("비밀번호는 8자 이상이며 숫자와 특수문자를 포함해야 합니다.");
+      return;
+    }
 
     try {
       const response = await axios.post(`${API_BASE_URL}/auth/login/company`, {
