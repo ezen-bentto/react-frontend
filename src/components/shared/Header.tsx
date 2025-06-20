@@ -8,7 +8,7 @@ import {
   mobileMenu,
 } from "@/components/style/header";
 import { v4 as uuidv4 } from "uuid";
-import { Link } from "react-router-dom";
+import { Link, NavLink } from "react-router-dom";
 import { ThemeToggle } from "./ThemeToggle";
 import { useThemeStore } from "@/features/common/themeStore";
 
@@ -121,13 +121,18 @@ export const Header = ({ opacityEffect = false }: HeaderProps) => {
               }}
             >
               {item.subMenus ? (
-                <div className={`${headerLinkHover({ highlight: true })} cursor-pointer`}>
+                <div className={`${headerLinkHover({ highlight: false })} cursor-pointer`}>
                   {item.name}
                 </div>
               ) : (
-                <Link to={item.src} className={headerLinkHover({ highlight: true })}>
+                <NavLink
+                  to={item.src}
+                  className={({ isActive }) =>
+                    `${headerLinkHover({ highlight: isActive })} transition-colors`
+                  }
+                >
                   {item.name}
-                </Link>
+                </NavLink>
               )}
 
               {/* 드롭다운 메뉴 */}
@@ -168,21 +173,45 @@ export const Header = ({ opacityEffect = false }: HeaderProps) => {
         <nav className="hidden items-center md:flex gap-4 text-sm ">
           {!isLoggedIn ? (
             <>
-              <Link to={"/login"} className={headerLinkHover()}>
+              <NavLink
+                to={"/login"}
+                className={({ isActive }) =>
+                  `${headerLinkHover({ highlight: isActive })} transition-colors`
+                }
+              >
                 로그인
-              </Link>
-              <Link to={"/signup"} className={headerLinkHover()}>
+              </NavLink>
+
+              <NavLink
+                to={"/signup"}
+                className={({ isActive }) =>
+                  `${headerLinkHover({ highlight: isActive })} transition-colors`
+                }
+              >
                 회원가입
-              </Link>
+              </NavLink>
             </>
           ) : (
             <>
-              <Link to={"/mypage"} className={headerLinkHover()}>
+              <NavLink
+                to={"/mypage"}
+                className={({ isActive }) =>
+                  `${headerLinkHover({ highlight: isActive })} transition-colors`
+                }
+              >
                 마이페이지
-              </Link>
-              <Link to={"/logout"} className={headerLinkHover()}>
+              </NavLink>
+              <NavLink
+                to={"/logout"}
+                className={({ isActive }) =>
+                  `${headerLinkHover({ highlight: isActive })} transition-colors`
+                }
+                onClick={() => {
+                  handleLogout();
+                }}
+              >
                 로그아웃
-              </Link>
+              </NavLink>
             </>
           )}
           <ThemeToggle />
@@ -202,54 +231,63 @@ export const Header = ({ opacityEffect = false }: HeaderProps) => {
           <div className="flex flex-col gap-4">
             {!isLoggedIn ? (
               <>
-                <Link
+                <NavLink
                   to={"/login"}
-                  className={headerLinkHover()}
+                  className={({ isActive }) =>
+                    `${headerLinkHover({ highlight: isActive })} transition-colors`
+                  }
                   onClick={() => setIsMobileOpen(prev => !prev)}
                 >
                   로그인
-                </Link>
-                <Link
+                </NavLink>
+                <NavLink
                   to={"/signup"}
-                  className={headerLinkHover()}
+                  className={({ isActive }) =>
+                    `${headerLinkHover({ highlight: isActive })} transition-colors`
+                  }
                   onClick={() => setIsMobileOpen(prev => !prev)}
                 >
                   회원가입
-                </Link>
+                </NavLink>
               </>
             ) : (
               <>
-                <Link
+                <NavLink
                   to={"/mypage"}
-                  className={headerLinkHover()}
+                  className={({ isActive }) =>
+                    `${headerLinkHover({ highlight: isActive })} transition-colors`
+                  }
                   onClick={() => setIsMobileOpen(prev => !prev)}
                 >
                   마이페이지
-                </Link>
-                <Link
+                </NavLink>
+
+                <NavLink
                   to={"/logout"}
-                  className={headerLinkHover()}
+                  className={({ isActive }) =>
+                    `${headerLinkHover({ highlight: isActive })} transition-colors`
+                  }
                   onClick={() => {
                     setIsMobileOpen(prev => !prev);
                     handleLogout();
                   }}
                 >
                   로그아웃
-                </Link>
+                </NavLink>
               </>
             )}
             {items.map(item => (
               <div key={item.id}>
                 {item.subMenus ? (
                   <>
-                    <div className={`${headerLinkHover({ highlight: true })} cursor-default`}>
+                    <div className={`${headerLinkHover({ highlight: false })} cursor-default`}>
                       {item.name}
                     </div>
                     {item.subMenus.map((subItem, index) => (
                       <Link
                         key={index}
                         to={subItem.src}
-                        className={`${headerLinkHover()} pl-4 text-sm`}
+                        className={`${headerLinkHover({ highlight: false })} pl-4 text-sm`}
                         onClick={() => setIsMobileOpen(prev => !prev)}
                       >
                         └ {subItem.name}
@@ -257,13 +295,14 @@ export const Header = ({ opacityEffect = false }: HeaderProps) => {
                     ))}
                   </>
                 ) : (
-                  <Link
+                  <NavLink
                     to={item.src}
-                    className={headerLinkHover({ highlight: true })}
-                    onClick={() => setIsMobileOpen(prev => !prev)}
+                    className={({ isActive }) =>
+                      `${headerLinkHover({ highlight: isActive })} transition-colors`
+                    }
                   >
                     {item.name}
-                  </Link>
+                  </NavLink>
                 )}
               </div>
             ))}
