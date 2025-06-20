@@ -26,7 +26,7 @@ export const headerMainLogo = cva("text-3xl font-logo font-bold hover:text-accen
 export const headerLinkHover = cva("hover:scale-105 hover:text-accent-orange", {
   variants: {
     highlight: {
-      true: "text-my-orange",
+      true: "text-accent-orange",
     },
   },
 });
