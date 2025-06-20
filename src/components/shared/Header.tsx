@@ -300,6 +300,7 @@ export const Header = ({ opacityEffect = false }: HeaderProps) => {
                     className={({ isActive }) =>
                       `${headerLinkHover({ highlight: isActive })} transition-colors`
                     }
+                    onClick={() => setIsMobileOpen(prev => !prev)}
                   >
                     {item.name}
                   </NavLink>
