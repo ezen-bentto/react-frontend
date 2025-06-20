@@ -41,7 +41,7 @@ export const hamBtn = cva("w-8 h-1 my-1 rounded-xs bg-brand-primary dark:bg-whit
 });
 
 export const mobileMenu = cva(
-  "md:hidden absolute theme-bg theme-text top-full flex flex-col right-0 w-[70%] max-w-[300px] h-screen shadow-lg z-50 gap-2 px-4 py-2 space-y-2",
+  "md:hidden absolute theme-bg theme-text top-full  right-0 w-[70%] max-w-[300px] h-screen shadow-lg z-50 px-4 py-2 space-y-2 flex flex-col justify-between",
   {
     variants: {
       theme: {
