@@ -119,39 +119,49 @@ const Fillter = ({ filters, onFilterChange, onSearchSubmit, onResetFilters }: Fi
         </fieldset>
       ))}
       {/* 적용된 태그 나열 */}
-      <div className="flex flex-wrap gap-2 mt-4 items-center">
+      <div className="flex flex-wrap gap-2 mt-4 items-center min-h-[48px]">
         <span>적용된 검색조건</span>
         <ReloadOutlined
           onClick={() => {
             setSelectedFilters({});
             onResetFilters?.();
           }}
-          className="text-xl"
+          className="text-xl cursor-pointer"
         />
-        {Object.entries(selectedFilters).map(([groupName, values]) =>
-          Object.entries(values).map(([value, isSelected]) => {
-            if (!isSelected) return null;
 
-            const optionLabel =
-              filters.find(f => f.name === groupName)?.options.find(opt => opt.value === value)
-                ?.label || value;
+        {Object.entries(selectedFilters).some(([, values]) =>
+          Object.values(values).some(Boolean)
+        ) ? (
+          Object.entries(selectedFilters).map(([groupName, values]) =>
+            Object.entries(values).map(([value, isSelected]) => {
+              if (!isSelected) return null;
 
-            return (
-              <Button
-                key={`${groupName}-${value}`}
-                type="button"
-                intent="orange"
-                onClickFnc={() => {
-                  const multiSelect = filters.find(f => f.name === groupName)?.multiSelect ?? false;
-                  handleFilterClick(groupName, value, multiSelect);
-                }}
-              >
-                {optionLabel} ✕
-              </Button>
-            );
-          })
+              const optionLabel =
+                filters.find(f => f.name === groupName)?.options.find(opt => opt.value === value)
+                  ?.label || value;
+
+              return (
+                <Button
+                  key={`${groupName}-${value}`}
+                  type="button"
+                  intent="orange"
+                  onClickFnc={() => {
+                    const multiSelect =
+                      filters.find(f => f.name === groupName)?.multiSelect ?? false;
+                    handleFilterClick(groupName, value, multiSelect);
+                  }}
+                >
+                  {optionLabel} ✕
+                </Button>
+              );
+            })
+          )
+        ) : (
+          // 선택된 필터가 없을 때 빈 상태 (스켈레톤처럼 보이게)
+          <div className="w-24 h-8 bg-muted rounded animate-pulse opacity-30 ml-2" />
         )}
       </div>
+
       {/* 버튼 */}
       <div className="flex items-center gap-2 mt-4">
         <SearchInput size={"lg"} value={searchText} onChange={e => setSearchText(e.target.value)} />
