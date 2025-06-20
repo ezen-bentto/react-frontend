@@ -15,11 +15,11 @@ export const headerVariants = cva(
   }
 );
 
-export const hedaerWrap = cva("max-w-[1400px] mx-auto px-8 py-7 flex-default font-sans ", {
+export const hedaerWrap = cva("max-w-[1400px] mx-auto px-8 py-7 flex-default ", {
   variants: {},
 });
 
-export const headerMainLogo = cva("text-3xl font-bold hover:text-accent-sky", {
+export const headerMainLogo = cva("text-3xl font-logo font-bold hover:text-accent-sky", {
   variants: {},
 });
 
