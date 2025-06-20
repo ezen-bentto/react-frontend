@@ -1,26 +1,23 @@
-// src/components/SignUpPersonal.tsx
+//react-frontend\src\pages\SignUp\SignUpPersonal.tsx
 import { useNavigate } from "react-router-dom";
-import axios from "axios"; // axios 추가
+import axios from "axios";
+import { getKakaoSignUpUrl } from "../../api/auth";
 
 const SignUpPersonal = () => {
   const navigate = useNavigate();
-  const API_BASE_URL = "http://localhost:8080/api"; // 백엔드 서버 주소
 
   const handleSocialSignup = async (provider: string) => {
     if (provider === "카카오") {
       try {
-        const response = await axios.get(`${API_BASE_URL}/auth/kakao/login-url`);
-        if (response.data.success && response.data.data.loginUrl) {
-          window.location.href = response.data.data.loginUrl; // 카카오 로그인 페이지로 리다이렉트
-        } else {
-          alert("카카오 회원가입 URL을 가져오지 못했습니다.");
-        }
+        const loginUrl = await getKakaoSignUpUrl();
+        window.location.href = loginUrl; // 카카오 로그인 페이지로 리다이렉트
       } catch (error: unknown) {
-        // error: unknown으로 변경
         if (axios.isAxiosError(error)) {
-          // Axios 에러인지 확인
           console.error("카카오 회원가입 URL 요청 에러:", error.response?.data || error.message);
           alert("카카오 회원가입 연동 중 오류가 발생했습니다.");
+        } else if (error instanceof Error) {
+          console.error("카카오 회원가입 에러:", error.message);
+          alert(error.message);
         } else {
           console.error("알 수 없는 에러:", error);
           alert("알 수 없는 오류가 발생했습니다.");

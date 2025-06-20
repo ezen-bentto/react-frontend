@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import { signUpCompany, type CompanySignUpPayload } from "../../api/auth";
 
 interface SignUpForm {
   email: string;
@@ -23,8 +24,6 @@ const SignUpCompany = () => {
   const [passwordValid, setPasswordValid] = useState<boolean | null>(null);
   const [errorMessage, setErrorMessage] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
-
-  const API_BASE_URL = "http://localhost:8080/api";
 
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   const passwordRegex = /^(?=.*[0-9])(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{8,}$/;
@@ -72,20 +71,22 @@ const SignUpCompany = () => {
     }
 
     try {
-      const response = await axios.post(`${API_BASE_URL}/auth/signup/company`, {
+      const payload: CompanySignUpPayload = {
         email: form.email,
         password: form.password,
         companyName: form.companyName,
         phoneNumber: form.phoneNumber,
-      });
+      };
 
-      if (response.data.success) {
-        setSuccessMessage(response.data.message || "회원가입이 완료되었습니다.");
+      const response = await signUpCompany(payload);
+
+      if (response.success) {
+        setSuccessMessage(response.message || "회원가입이 완료되었습니다.");
         setTimeout(() => {
           navigate("/login");
         }, 2000);
       } else {
-        setErrorMessage(response.data.message || "회원가입 실패");
+        setErrorMessage(response.message || "회원가입 실패");
       }
     } catch (error: unknown) {
       if (axios.isAxiosError(error)) {

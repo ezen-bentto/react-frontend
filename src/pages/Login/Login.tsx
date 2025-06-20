@@ -1,7 +1,8 @@
-// src/components/Login.tsx
+// src/pages/Login/Login.tsx
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
+import axios from "axios"; // 기본 axios import로 변경
+import { login, getKakaoLoginUrl, type LoginPayload } from "../../api/auth"; // 절대 경로 대신 상대 경로 사용
 
 const Login = () => {
   const navigate = useNavigate();
@@ -9,8 +10,6 @@ const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
-
-  const API_BASE_URL = "http://localhost:8080/api";
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
@@ -49,24 +48,22 @@ const Login = () => {
     }
 
     try {
-      const response = await axios.post(`${API_BASE_URL}/auth/login/company`, {
-        email,
-        password,
-      });
+      const payload: LoginPayload = { email, password };
+      const loginData = await login(payload);
 
-      if (response.data.success) {
-        localStorage.setItem("accessToken", response.data.data.accessToken);
-        localStorage.setItem("refreshToken", response.data.data.refreshToken);
-        alert("로그인 성공!");
-        navigate("/");
-      } else {
-        setErrorMessage(response.data.message || "로그인 실패");
+      localStorage.setItem("accessToken", loginData.accessToken);
+      if (loginData.refreshToken) {
+        localStorage.setItem("refreshToken", loginData.refreshToken);
       }
+
+      alert("로그인 성공!");
+      navigate("/");
     } catch (error: unknown) {
-      // error: unknown으로 변경 후 instanceof AxiosError로 체크
       if (axios.isAxiosError(error)) {
-        console.error("기업 로그인 에러:", error.response?.data || error.message);
-        setErrorMessage(error.response?.data?.message || "로그인 중 오류가 발생했습니다.");
+        console.error("기업 로그인 에러:", error);
+        // 서버에서 반환된 에러 메시지 처리
+        const errorMsg = error.response?.data?.message || "로그인에 실패했습니다.";
+        setErrorMessage(errorMsg);
       } else {
         console.error("알 수 없는 에러:", error);
         setErrorMessage("알 수 없는 오류가 발생했습니다.");
@@ -77,16 +74,11 @@ const Login = () => {
   const handleSocialLogin = async (provider: string) => {
     if (provider === "카카오") {
       try {
-        const response = await axios.get(`${API_BASE_URL}/auth/kakao/login-url`);
-        if (response.data.success && response.data.data.loginUrl) {
-          window.location.href = response.data.data.loginUrl;
-        } else {
-          setErrorMessage("카카오 로그인 URL을 가져오지 못했습니다.");
-        }
+        const loginUrl = await getKakaoLoginUrl();
+        window.location.href = loginUrl;
       } catch (error: unknown) {
-        // error: unknown으로 변경 후 instanceof AxiosError로 체크
         if (axios.isAxiosError(error)) {
-          console.error("카카오 로그인 URL 요청 에러:", error.response?.data || error.message);
+          console.error("카카오 로그인 URL 요청 에러:", error);
           setErrorMessage("카카오 로그인 연동 중 오류가 발생했습니다.");
         } else {
           console.error("알 수 없는 에러:", error);
