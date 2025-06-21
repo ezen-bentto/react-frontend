@@ -1,3 +1,4 @@
+import React from "react";
 import {
   searchLabel,
   searchInput,
@@ -18,6 +19,7 @@ import {
  *           변경일             작성자             변경내용
  * -------------------------------------------------------
  *        2025/06/01           이철욱             신규작성
+ *        2025/06/20           이철욱             useMemo 적용
  *
  * @param options 드롭다운에 표시할 옵션 문자열 배열
  * @param intent 스타일 의도 (variant) - optional
@@ -58,4 +60,4 @@ const SearchInput = ({ size, value, onChange }: SearchInputProps) => {
   );
 };
 
-export default SearchInput;
+export default React.memo(SearchInput);
