@@ -49,7 +49,7 @@ const Card = ({ id, dday, img, title, text, size, intent, className }: CardProps
   return (
     <Link to={`/contest/${id}`}>
       <div className={combinedClass}>
-        <div className="p-4 flex justify-end absolute w-full">
+        <div className="p-4 flex justify-end absolute w-full z-2">
           <Badge intent="default">D-{dday}</Badge>
         </div>
         <figure className="relative w-full aspect-[4/3]">
