@@ -20,6 +20,8 @@ import FilterGroupSection from "./FilterGroupSection";
  * -------------------------------------------------------
  *
  *        2025/06/09           이철욱               신규작성
+ *        2025/06/21           이철욱               태그 추가 고정 레이아웃
+ *        2025/06/21           이철욱               리팩토링
  *
  * @param filters 필터 그룹 배열. 그룹마다 라벨, 이름, 옵션, 다중선택 여부 포함
  * @param onFilterChange 필터 선택 변경 시 호출되는 콜백 (groupName, selectedValues[])
