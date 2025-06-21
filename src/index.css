@@ -38,6 +38,14 @@ body {
   font-family: "Pretendard", sans-serif;
 }
 
+.swiper-horizontal > .swiper-pagination-progressbar,
+.swiper-pagination-progressbar.swiper-pagination-horizontal,
+.swiper-vertical > .swiper-pagination-progressbar.swiper-pagination-progressbar-opposite,
+.swiper-pagination-progressbar.swiper-pagination-vertical.swiper-pagination-progressbar-opposite {
+  top: auto !important;
+  bottom: 0;
+}
+
 /* Tailwind 커스텀 테마 */
 @theme {
   --color-brand-primary: #26414a;
