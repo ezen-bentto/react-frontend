@@ -1,7 +1,7 @@
 import { v4 as uuidv4 } from "uuid";
 import { useMemo, useState } from "react";
 import TextSlider from "./TextSlider";
-import { Autoplay, EffectFade, Navigation } from "swiper/modules";
+import { Autoplay, EffectFade, Navigation, Pagination } from "swiper/modules";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Link } from "react-router-dom";
 
@@ -12,13 +12,12 @@ const MainBanner = () => {
     const data = [
       {
         id: 266,
-        image: "https://api.linkareer.com/attachments/579371",
-        bgColor: "bg-[#000000]",
-        textColor: "white",
-        duration: "2025.06.15 ~ 2025.06.22",
-        title: "2025 한글문화특별기획전 참여작가 공모",
-        summary:
-          "재단법인 세종시문화관광재단에서는 다양한 창작 역량을 보유한 예술인 발굴을 통한 한글문화 활성화 및 시민 문화예술 향유기회 확대를 위해 2025년 한글문화특별기획전 참여 작가 선발 공모를 다음과 같이 공고하오니 예술인(단체)의 많은 참여 바랍니다.",
+        image: "../../../public/images/banner_1.png",
+        bgColor: "bg-[#FFFFFF]",
+        textColor: "black",
+        duration: "2025.05.28 ~ 2025.06.26",
+        title: "대구광역시 신청사 건립사업 국제설계 공모",
+        summary: "대구광역시 신청사 건립사업 국제설계 공모",
       },
       {
         id: 191,
@@ -45,13 +44,17 @@ const MainBanner = () => {
 
   return (
     <Swiper
-      modules={[Autoplay, EffectFade, Navigation]}
+      modules={[Autoplay, EffectFade, Navigation, Pagination]}
       autoplay={{ delay: 3000 }}
       navigation
       effect="slide"
       loop={true}
       onSlideChange={swiper => {
         setActiveIndex(swiper.realIndex);
+      }}
+      scrollbar={{ draggable: true }}
+      pagination={{
+        type: "progressbar",
       }}
       className="max-w-dvw"
     >

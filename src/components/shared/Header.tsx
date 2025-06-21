@@ -8,7 +8,7 @@ import {
   mobileMenu,
 } from "@/components/style/header";
 import { v4 as uuidv4 } from "uuid";
-import { Link, NavLink } from "react-router-dom";
+import { Link, NavLink, useLocation } from "react-router-dom";
 import { ThemeToggle } from "./ThemeToggle";
 import { useThemeStore } from "@/features/common/themeStore";
 
@@ -30,6 +30,8 @@ import { useThemeStore } from "@/features/common/themeStore";
  *
  *        2025/05/31           이철욱               신규작성
  *        2025/06/10           김혜미               커뮤니티 메뉴 분리
+ *        2025/06/20           이철욱               해당 페이지 접속시 해당 메뉴 버튼 활성화 표시
+ *        2025/06/21           이철욱               커뮤니티 및 하위 메뉴에도 활성화 적용
  *
  * @param opacityEffect 높이에 따른 header 컴포넌트 투명화 매개변수다.
  * 바닐라 프로젝트 초창기에 구현하였으나 디자인상 불필요하여 현재는 쓰이지 않는다.
@@ -67,6 +69,12 @@ export const Header = ({ opacityEffect = false }: HeaderProps) => {
   const [isLoggedIn, setIsLoggedIn] = useState<boolean>(!!localStorage.getItem("isLoggedIn"));
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
   const { initTheme } = useThemeStore();
+
+  const location = useLocation();
+  console.info(location.pathname);
+  const currentPath = location.pathname + location.search;
+
+  const isSubActive = (src: string) => currentPath === src;
 
   // UUID 생성을 useMemo로 최적화하여 리렌더링 시에도 동일한 ID 유지
   const items = useMemo(() => headerMenus.map(item => ({ ...item, id: uuidv4() })), []);
@@ -121,7 +129,9 @@ export const Header = ({ opacityEffect = false }: HeaderProps) => {
               }}
             >
               {item.subMenus ? (
-                <div className={`${headerLinkHover({ highlight: false })} cursor-pointer`}>
+                <div
+                  className={`${headerLinkHover({ highlight: location.pathname.includes("community") })} cursor-pointer`}
+                >
                   {item.name}
                 </div>
               ) : (
@@ -138,15 +148,9 @@ export const Header = ({ opacityEffect = false }: HeaderProps) => {
               {/* 드롭다운 메뉴 */}
               {item.subMenus && (
                 <div
-                  className={`absolute top-full left-0 bg-white border border-gray-200 rounded-md shadow-xl min-w-[140px] z-[9999] py-1 ${
+                  className={`absolute top-full left-0 theme-bg border box-border shadow-xl min-w-[140px] z-[9999] py-1 ${
                     activeDropdown === item.id ? "block" : "hidden"
                   }`}
-                  style={{
-                    backgroundColor: "white",
-                    border: "1px solid #e5e7eb",
-                    boxShadow:
-                      "0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)",
-                  }}
                   onMouseEnter={() => {
                     setActiveDropdown(item.id);
                   }}
@@ -158,7 +162,7 @@ export const Header = ({ opacityEffect = false }: HeaderProps) => {
                     <Link
                       key={index}
                       to={subItem.src}
-                      className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors duration-150"
+                      className={`${headerLinkHover({ highlight: isSubActive(subItem.src) })} block px-4 py-2 text-sm duration-150`}
                       onClick={() => setActiveDropdown(null)}
                     >
                       {subItem.name}
@@ -300,6 +304,7 @@ export const Header = ({ opacityEffect = false }: HeaderProps) => {
                     className={({ isActive }) =>
                       `${headerLinkHover({ highlight: isActive })} transition-colors`
                     }
+                    onClick={() => setIsMobileOpen(prev => !prev)}
                   >
                     {item.name}
                   </NavLink>

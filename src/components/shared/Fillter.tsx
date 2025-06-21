@@ -1,7 +1,8 @@
-import { useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import Button from "./Button";
 import SearchInput from "./SearchInput";
 import { ReloadOutlined } from "@ant-design/icons";
+import FilterGroupSection from "./FilterGroupSection";
 
 /**
  *
@@ -19,6 +20,8 @@ import { ReloadOutlined } from "@ant-design/icons";
  * -------------------------------------------------------
  *
  *        2025/06/09           이철욱               신규작성
+ *        2025/06/21           이철욱               태그 추가 고정 레이아웃
+ *        2025/06/21           이철욱               리팩토링
  *
  * @param filters 필터 그룹 배열. 그룹마다 라벨, 이름, 옵션, 다중선택 여부 포함
  * @param onFilterChange 필터 선택 변경 시 호출되는 콜백 (groupName, selectedValues[])
@@ -53,6 +56,14 @@ const Fillter = ({ filters, onFilterChange, onSearchSubmit, onResetFilters }: Fi
     {}
   );
 
+  useEffect(() => {
+    // 모든 그룹의 선택 상태가 바뀔 때마다 콜백 실행
+    Object.entries(selectedFilters).forEach(([groupName, valueObj]) => {
+      const selectedValues = Object.keys(valueObj).filter(k => valueObj[k]);
+      onFilterChange(groupName, selectedValues);
+    });
+  }, [selectedFilters]);
+
   const handleFilterClick = (groupName: string, value: string, multiSelect = false) => {
     setSelectedFilters(prev => {
       const currentGroup = prev[groupName] || {};
@@ -77,12 +88,20 @@ const Fillter = ({ filters, onFilterChange, onSearchSubmit, onResetFilters }: Fi
       };
 
       // 선택된 값들만 배열로 추출해서 콜백 호출
-      const selectedValues = Object.keys(updatedGroup).filter(k => updatedGroup[k]);
-      onFilterChange(groupName, selectedValues);
+      // const selectedValues = Object.keys(updatedGroup).filter(k => updatedGroup[k]);
+      // onFilterChange(groupName, selectedValues);
 
       return updated;
     });
   };
+
+  const createRemoveHandler = useCallback(
+    (groupName: string, value: string) => {
+      const multiSelect = filters.find(f => f.name === groupName)?.multiSelect ?? false;
+      return () => handleFilterClick(groupName, value, multiSelect);
+    },
+    [filters, handleFilterClick]
+  );
 
   return (
     <form
@@ -94,29 +113,12 @@ const Fillter = ({ filters, onFilterChange, onSearchSubmit, onResetFilters }: Fi
     >
       {/* 각 필드 내에 속성들 뿌리기 */}
       {filters.map(group => (
-        <fieldset key={group.name}>
-          <div className="flex items-center gap-4">
-            <span className="font-semibold whitespace-nowrap">{group.label}</span>
-            <ul className="flex flex-wrap gap-2">
-              {group.options.map(option => {
-                const selected = selectedFilters[group.name]?.[option.value] ?? false;
-                return (
-                  <li key={option.value}>
-                    <Button
-                      type="button"
-                      onClickFnc={() =>
-                        handleFilterClick(group.name, option.value, group.multiSelect)
-                      }
-                      intent={selected ? "orange" : "fillter"}
-                    >
-                      {option.label}
-                    </Button>
-                  </li>
-                );
-              })}
-            </ul>
-          </div>
-        </fieldset>
+        <FilterGroupSection
+          key={group.name}
+          group={group}
+          selected={selectedFilters[group.name] || {}}
+          onClick={(value: string) => handleFilterClick(group.name, value, group.multiSelect)}
+        />
       ))}
       {/* 적용된 태그 나열 */}
       <div className="flex flex-wrap gap-2 mt-4 items-center min-h-[48px]">
@@ -145,11 +147,7 @@ const Fillter = ({ filters, onFilterChange, onSearchSubmit, onResetFilters }: Fi
                   key={`${groupName}-${value}`}
                   type="button"
                   intent="orange"
-                  onClickFnc={() => {
-                    const multiSelect =
-                      filters.find(f => f.name === groupName)?.multiSelect ?? false;
-                    handleFilterClick(groupName, value, multiSelect);
-                  }}
+                  onClickFnc={createRemoveHandler(groupName, value)}
                 >
                   {optionLabel} ✕
                 </Button>

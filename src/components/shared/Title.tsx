@@ -1,3 +1,4 @@
+import React from "react";
 import { Link } from "react-router-dom";
 interface TitleProps {
   linkSrc?: string;
@@ -12,4 +13,4 @@ const Title = ({ linkSrc, titleText, className }: TitleProps) => {
   );
 };
 
-export default Title;
+export default React.memo(Title);
