@@ -17,10 +17,28 @@ export type Contest = {
   reg_date: string;
 };
 
+export type ContestFormData = {
+  id?: number;
+  writer_id: number;
+  title: string;
+  img?: string | null;
+  organizer: string;
+  organizer_type: string;
+  participants: string;
+  prize: string;
+  start_date: string;
+  end_date: string;
+  homepage: string;
+  benefits: string;
+  contest_tag: string[];
+  article: string;
+}
+
 export interface ContestStore {
   contests: Contest[];
   popularContests: Contest[];
   latestContests: Contest[];
-
-  fetchContest: () => void;
+  contestFormData: ContestFormData;
+  // eslint-disable-next-line no-unused-vars
+  updateContestFormData: (data: Partial<ContestFormData>) => void;
 }

@@ -1,4 +1,4 @@
-import { fetchContestPage } from "@/api/contest/list";
+import { fetchContestPage } from "@/api/contest/contestApi";
 import type { ContestStore } from "@/types/contestType";
 
 import { create } from "zustand";

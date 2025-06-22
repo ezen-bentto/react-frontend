@@ -1,4 +1,4 @@
-import { fetchContestDetail, fetchContestPage } from "@/api/contest/list";
+import { fetchContestDetail, fetchContestPage } from "@/api/contest/contestApi";
 import DetailContent from "@/components/contest/DetailContent";
 import DetailInfo from "@/components/contest/DetailInfo";
 import ListItem from "@/components/shared/ListItem";

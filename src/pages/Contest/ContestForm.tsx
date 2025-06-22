@@ -2,82 +2,85 @@ import { CheckboxGroup } from "@/components/contest/Checkbox";
 import { FormField } from "@/components/contest/FormField";
 import { TextInput } from "@/components/contest/TextInput";
 import Button from "@/components/shared/Button";
-import { useState } from "react";
 import ReactQuill from "react-quill-new";
 import { contestFilterData } from "@/constants/ContestFilterData";
 import { DateRange } from "@/components/contest/DateRange";
-import axios from "axios";
+import { fetchContestEdit, fetchContestWrite } from "@/api/contest/contestApi";
+import { RadioGroup } from "@/components/contest/RadioGroup";
+import { useContestStore } from "@/store/ContestFormStore";
+import { useNavigate, useParams } from "react-router-dom";
+import { useEffect } from "react";
 
 const ContestForm = () => {
-  // const { id } = useParams();
-  // const isEdit = Boolean(id);
-  const [formData, setFormData] = useState({
-    contestName: "",
-    contestPeriod: {
-      start: "",
-      end : ""
-    },
-    homepage: "",
-    organizer: "",
-    contestFields: [] as string[],
-    contestMaterials: [] as string[],
-    awardCategory: "선택",
-    benefits: [] as string[],
-    content: ""
-  });
+  const { id } = useParams();
+  const isEdit = Boolean(id);
+  const { contestFormData, updateContestFormData } = useContestStore();
+  const navigate = useNavigate();
 
-   // contestFilterData에서 옵션들 추출
-  const contestFieldOptions = contestFilterData.find(group => group.name === "field")?.options || [];
-  const ageGroupOptions = contestFilterData.find(group => group.name === "ageGroup")?.options || [];
-  const organizerTypeOptions = contestFilterData.find(group => group.name === "organizerType")?.options || [];
-  const benefitOptions = contestFilterData.find(group => group.name === "benefits")?.options || [];
-  const awardOptions = contestFilterData.find(group => group.name === "award")?.options || [];
+  // contestFilterData에서 옵션들 추출
+  const getOptionsByName = (name: string) => {
+    return contestFilterData.find(group => group.name === name)?.options || [];
+  };
+
+  const contestFieldOptions = getOptionsByName("field");
+  const ageGroupOptions = getOptionsByName("ageGroup");
+  const organizerTypeOptions = getOptionsByName("organizerType");
+  const benefitOptions = getOptionsByName("benefits");
+  const awardOptions = getOptionsByName("award");
+
+  useEffect(() => {
+    if (isEdit) {
+      // store에 contestFormData 가져오기
+    }
+  }, [id]);
 
   const handleSubmit = async () => {
+    console.info("등록 전 데이터 확인:", contestFormData);
+    let response;
     try {
-      const response = await axios.post("http://localhost:4000/api/contest/register", formData);
-      console.info("등록", response.data)
-      alert("성공적으로 등록되었습니다.");
+      if (isEdit){
+        response = await fetchContestEdit(contestFormData);
+        console.info("수정", response.data);
+        alert("성공적으로 수정되었습니다.");
+      }else {
+        response = await fetchContestWrite(contestFormData);
+        console.info("등록", response.data);
+        alert("성공적으로 등록되었습니다.");
+      }
+      navigate(`/contest/${response.data.id}`);
     } catch (error) {
-      console.info("실패", error)
+      console.info("실패", error);
       alert("등록에 실패했습니다.");
     }
-  }
+  };
 
   return (
-     <div className="flex flex-col gap-5 mt-28">
+    <div className="flex flex-col gap-5 mt-28">
       <div className="space-y-6">
         {/* 공모명 */}
         <FormField label="공모명" required>
           <TextInput
-            value={formData.contestName}
-            onChange={(e) => setFormData({...formData, contestName: e.target.value})}
+            value={contestFormData.title}
+            onChange={e => updateContestFormData({ title: e.target.value })}
             placeholder="공모명을 입력해 주세요."
           />
-          {/* <Input legendText="" key={} status="normal" /> */}
         </FormField>
 
         {/* 공모기간 */}
         <FormField label="공모기간" required>
           <DateRange
-            startDate={formData.contestPeriod.start}
-            endDate={formData.contestPeriod.end}
-            onStartDateChange={(date) => setFormData({
-              ...formData, 
-              contestPeriod: {...formData.contestPeriod, start: date}
-            })}
-            onEndDateChange={(date) => setFormData({
-              ...formData, 
-              contestPeriod: {...formData.contestPeriod, end: date}
-            })}
+            startDate={contestFormData.start_date}
+            endDate={contestFormData.end_date}
+            onStartDateChange={date => updateContestFormData({ start_date: date })}
+            onEndDateChange={date => updateContestFormData({ end_date: date })}
           />
         </FormField>
 
         {/* 홈페이지 */}
         <FormField label="홈페이지" required>
           <TextInput
-            value={formData.homepage}
-            onChange={(e) => setFormData({...formData, homepage: e.target.value})}
+            value={contestFormData.homepage}
+            onChange={e => updateContestFormData({ homepage: e.target.value })}
             placeholder="공모전관련 페이지를 입력해 주세요."
           />
         </FormField>
@@ -85,8 +88,8 @@ const ContestForm = () => {
         {/* 주최사 */}
         <FormField label="주최사" required>
           <TextInput
-            value={formData.organizer}
-            onChange={(e) => setFormData({...formData, organizer: e.target.value})}
+            value={contestFormData.organizer}
+            onChange={e => updateContestFormData({ organizer: e.target.value })}
             placeholder="주최사를 입력해 주세요."
           />
         </FormField>
@@ -95,84 +98,74 @@ const ContestForm = () => {
         <FormField label="공모분야" required>
           <CheckboxGroup
             options={contestFieldOptions}
-            selectedValues={formData.contestFields}
-            onChange={(values) => setFormData({...formData, contestFields: values})}
+            selectedValues={contestFormData.contest_tag}
+            onChange={values => updateContestFormData({ contest_tag: values })} 
           />
         </FormField>
 
         {/* 참여대상 */}
         <FormField label="참여대상" required>
-          <CheckboxGroup
+          <RadioGroup
             options={ageGroupOptions}
-            selectedValues={formData.benefits}
-            onChange={(values) => setFormData({...formData, benefits: values})}
+            selectedValue={contestFormData.participants}
+            onChange={value => updateContestFormData({ participants: value })}
           />
         </FormField>
 
         {/* 시상내역 */}
         <FormField label="시상내역" required>
-          <CheckboxGroup
+          <RadioGroup
             options={awardOptions}
-            selectedValues={formData.benefits}
-            onChange={(values) => setFormData({...formData, benefits: values})}
+            selectedValue={contestFormData.prize}
+            onChange={value => updateContestFormData({ prize: value })}
           />
         </FormField>
 
         {/* 기업형태 */}
         <FormField label="기업형태" required>
-          <CheckboxGroup
+          <RadioGroup
             options={organizerTypeOptions}
-            selectedValues={formData.contestFields}
-            onChange={(values) => setFormData({...formData, contestFields: values})}
+            selectedValue={contestFormData.organizer_type}
+            onChange={value => updateContestFormData({ organizer_type: value })}
           />
         </FormField>
 
         {/* 혜택 */}
         <FormField label="혜택">
-          <CheckboxGroup
+          <RadioGroup
             options={benefitOptions}
-            selectedValues={formData.benefits}
-            onChange={(values) => setFormData({...formData, benefits: values})}
+            selectedValue={contestFormData.benefits}
+            onChange={value => updateContestFormData({ benefits: value })}
           />
         </FormField>
 
         {/* 상세정보 */}
         <FormField label="상세정보" required>
-          <div className="w-full">
-          <ReactQuill
-            value={formData.content}
-              onChange={value => setFormData(prev => ({ ...prev, content: value }))}
+          <div className="w-full ">
+            <ReactQuill
+              value={contestFormData.article}
+              onChange={value => updateContestFormData({ article: value })}
               theme="snow"
-              className="h-[500px]"
-              placeholder="내용을 입력해주세요"
+              className="h-[400px] mb-4"
+              placeholder=""
             />
-            </div>
+          </div>
         </FormField>
 
         {/* TODO: 파일 */}
+      </div>
 
-        {/* 버튼 */}
-        <div className="flex justify-end gap-2 py-8 mx-5">
-          <Button
-            intent="primary" 
-            size="lg"
-            type="button"
-            onClickFnc={()=>{}}>
-            취소
-          </Button>
-          <Button
-            intent="primary"
-            size="lg"
-            type="submit"
-            onClickFnc={handleSubmit}>
-            {/* {isEditMode ? "수정" : "등록"} */}
-            등록
-          </Button>
-        </div>
-
+      {/* 버튼 */}
+      <div className="flex justify-end gap-3 py-10">
+        <Button intent="primary" size="lg" type="button" onClickFnc={() => {}}>
+          취소
+        </Button>
+        <Button intent="primary" size="lg" type="submit" onClickFnc={handleSubmit}>
+          {contestFormData.id ? "수정" : "등록"}
+        </Button>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default ContestForm
+export default ContestForm;

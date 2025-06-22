@@ -4,9 +4,9 @@ interface FormFieldProps {
   children: React.ReactNode;
 }
 
-export const FormField = ({ label, required = false, children }:FormFieldProps) => (
-  <div className="flex mb-6 mx-5 items-center">
-    <label className="min-w-30 block text-sm font-medium text-gray-700 mb-2">
+export const FormField = ({ label, required = false, children }: FormFieldProps) => (
+  <div className="flex flex-col items-start md:flex-row md:items-center">
+    <label className="min-w-30 block text-sm font-medium mb-2">
       {label}
       {required && <span className="text-red-500 ml-1">*</span>}
     </label>

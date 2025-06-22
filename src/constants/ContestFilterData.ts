@@ -44,8 +44,8 @@ export const contestFilterData: FilterGroup[] = [
       { label: "인턴십", value: "인턴십" },
       { label: "취업연계", value: "취업연계" },
       { label: "해외연수", value: "해외연수" },
-      { label: "기타", value: "기타" }
-    ]
+      { label: "기타", value: "기타" },
+    ],
   },
   {
     name: "award",
@@ -54,7 +54,7 @@ export const contestFilterData: FilterGroup[] = [
       { label: "1000만원 미만", value: "1000만원 미만" },
       { label: "1000만원 이상 ~ 3000만원 미만", value: "1000만원 이상 ~ 3000만원 미만" },
       { label: "3000만원 이상 ~ 5000만원 미만", value: "3000만원 이상 ~ 5000만원 미만" },
-      { label: "5000만원 이상", value: "5000만원 이상" }
-    ]
-  }
+      { label: "5000만원 이상", value: "5000만원 이상" },
+    ],
+  },
 ];
