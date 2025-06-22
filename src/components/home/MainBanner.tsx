@@ -11,8 +11,8 @@ const MainBanner = () => {
   const items = useMemo(() => {
     const data = [
       {
-        id: 266,
-        image: "/public/images/banner_1.png",
+        id: 106,
+        image: "/images/banner_1.png",
         bgColor: "bg-[#FFFFFF]",
         textColor: "black",
         duration: "2025.05.28 ~ 2025.06.26",
@@ -30,7 +30,7 @@ const MainBanner = () => {
       },
       {
         id: 71,
-        image: "/public/images/banner_2.png",
+        image: "/images/banner_2.png",
         bgColor: "bg-[#1754A5]",
         textColor: "white",
         duration: "2025.06.05 ~ 2025.07.18",
