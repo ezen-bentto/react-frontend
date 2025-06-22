@@ -22,17 +22,17 @@ export const fetchContestPage = async () => {
 };
 
 export const fetchContestWrite = async (contestData: ContestFormData) => {
-  const response = await axios.post<{data: Contest}>(
+  const response = await axios.post<{ data: Contest }>(
     `${import.meta.env.VITE_API_URL}/api/contest/register`,
     contestData
   );
   return response.data;
-}
+};
 
 export const fetchContestEdit = async (contestData: ContestFormData) => {
-  const response = await axios.post<{data: Contest}>(
+  const response = await axios.post<{ data: Contest }>(
     `${import.meta.env.VITE_API_URL}/api/contest/modify`,
     contestData
   );
   return response.data;
-}
+};

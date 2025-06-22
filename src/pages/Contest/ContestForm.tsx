@@ -38,11 +38,11 @@ const ContestForm = () => {
     console.info("등록 전 데이터 확인:", contestFormData);
     let response;
     try {
-      if (isEdit){
+      if (isEdit) {
         response = await fetchContestEdit(contestFormData);
         console.info("수정", response.data);
         alert("성공적으로 수정되었습니다.");
-      }else {
+      } else {
         response = await fetchContestWrite(contestFormData);
         console.info("등록", response.data);
         alert("성공적으로 등록되었습니다.");
@@ -99,7 +99,7 @@ const ContestForm = () => {
           <CheckboxGroup
             options={contestFieldOptions}
             selectedValues={contestFormData.contest_tag}
-            onChange={values => updateContestFormData({ contest_tag: values })} 
+            onChange={values => updateContestFormData({ contest_tag: values })}
           />
         </FormField>
 

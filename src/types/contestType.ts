@@ -32,7 +32,7 @@ export type ContestFormData = {
   benefits: string;
   contest_tag: string[];
   article: string;
-}
+};
 
 export interface ContestStore {
   contests: Contest[];

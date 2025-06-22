@@ -16,7 +16,7 @@ const initialContestFormData: ContestFormData = {
   article: "",
 };
 
-export const useContestStore = create<ContestStore>((set) => ({
+export const useContestStore = create<ContestStore>(set => ({
   // 상태: 폼 데이터
   contests: [],
   popularContests: [],
@@ -25,8 +25,8 @@ export const useContestStore = create<ContestStore>((set) => ({
   contestFormData: initialContestFormData,
 
   // 폼 데이터 업데이트
-  updateContestFormData: (data) => {
-    set((state) => ({
+  updateContestFormData: data => {
+    set(state => ({
       contestFormData: {
         ...state.contestFormData,
         ...data,
