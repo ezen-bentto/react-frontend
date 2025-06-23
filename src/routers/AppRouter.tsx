@@ -26,7 +26,6 @@ const AppRouter = () => {
         <Route path="*" element={<NotFound />} />
         <Route path="/policy" element={<Policy />} />
         <Route path="/stats" element={<Stats />} />
-        <Route path="/community/write" element={<CommunityWrite />} />
         <Route path="/community/content/:communityId" element={<CommunityContent />} />
         <Route path="/community/list" element={<CommunityList />} />
         <Route path="/contest" element={<ContestList />} />
@@ -38,6 +37,14 @@ const AppRouter = () => {
           element={
             <ProtectedRoute>
               <MyPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/community/write"
+          element={
+            <ProtectedRoute>
+              <CommunityWrite />
             </ProtectedRoute>
           }
         />
