@@ -30,7 +30,6 @@ const SignUpPersonal = () => {
 
   return (
     <div className="flex min-h-screen items-center justify-center px-4">
-      {/* [수정] 카드 배경색 제거, 테두리 추가 */}
       <div className="w-full max-w-md rounded-2xl border border-gray-200 p-8 shadow-xl dark:border-gray-700">
         <h2 className="mb-2 text-center text-3xl font-bold text-gray-900 dark:text-white">
           개인 회원가입
@@ -40,25 +39,25 @@ const SignUpPersonal = () => {
         </p>
 
         <div className="flex flex-col gap-4">
-          {/* [수정] 소셜 버튼들 다크모드 스타일 통일 */}
+          {/* [수정] 다크모드 hover시 톤 다운된 색상 적용 */}
           <button
             type="button"
             onClick={() => handleSocialSignup("카카오")}
-            className="w-full rounded-lg border border-yellow-400 bg-transparent px-6 py-3 text-lg font-semibold text-yellow-400 transition-all duration-200 hover:bg-yellow-400 hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:ring-offset-2"
+            className="w-full rounded-lg border border-yellow-400 bg-transparent px-6 py-3 text-lg font-semibold text-yellow-400 transition-all duration-200 hover:bg-yellow-400 hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:ring-offset-2 dark:hover:bg-yellow-700 dark:hover:text-white"
           >
             🎨 카카오로 회원가입
           </button>
           <button
             type="button"
             onClick={() => handleSocialSignup("네이버")}
-            className="w-full rounded-lg border border-green-500 bg-transparent px-6 py-3 text-lg font-semibold text-green-500 transition-all duration-200 hover:bg-green-500 hover:text-white focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2"
+            className="w-full rounded-lg border border-green-500 bg-transparent px-6 py-3 text-lg font-semibold text-green-500 transition-all duration-200 hover:bg-green-500 hover:text-white focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 dark:hover:bg-green-700"
           >
             🌐 네이버로 회원가입
           </button>
           <button
             type="button"
             onClick={() => handleSocialSignup("구글")}
-            className="w-full rounded-lg border border-gray-400 bg-transparent px-6 py-3 text-lg font-semibold text-gray-600 transition-all duration-200 hover:bg-red-500 hover:text-white focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 dark:text-gray-400"
+            className="w-full rounded-lg border border-gray-400 bg-transparent px-6 py-3 text-lg font-semibold text-gray-600 transition-all duration-200 hover:bg-red-500 hover:text-white focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 dark:text-gray-400 dark:hover:bg-red-700"
           >
             🔍 구글로 회원가입
           </button>

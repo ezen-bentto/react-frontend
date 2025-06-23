@@ -96,6 +96,7 @@ const Login = () => {
         <h2 className="mb-8 text-center text-3xl font-bold text-gray-900 dark:text-white">
           로그인
         </h2>
+
         <div className="mb-6 flex rounded-lg border border-gray-200 p-1 dark:border-gray-700">
           <button
             type="button"
@@ -125,24 +126,25 @@ const Login = () => {
 
         {tab === "personal" && (
           <div className="flex flex-col gap-3">
+            {/* [수정] 다크모드 hover시 톤 다운된 색상 적용 */}
             <button
               type="button"
               onClick={() => handleSocialLogin("카카오")}
-              className="w-full rounded-lg border border-yellow-400 bg-transparent px-6 py-3 text-lg font-semibold text-yellow-400 transition-all duration-200 hover:bg-yellow-400 hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:ring-offset-2"
+              className="w-full rounded-lg border border-yellow-400 bg-transparent px-6 py-3 text-lg font-semibold text-yellow-400 transition-all duration-200 hover:bg-yellow-400 hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:ring-offset-2 dark:hover:bg-yellow-700 dark:hover:text-white"
             >
               🎨 카카오로 로그인
             </button>
             <button
               type="button"
               onClick={() => handleSocialLogin("네이버")}
-              className="w-full rounded-lg border border-green-500 bg-transparent px-6 py-3 text-lg font-semibold text-green-500 transition-all duration-200 hover:bg-green-500 hover:text-white focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2"
+              className="w-full rounded-lg border border-green-500 bg-transparent px-6 py-3 text-lg font-semibold text-green-500 transition-all duration-200 hover:bg-green-500 hover:text-white focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 dark:hover:bg-green-700"
             >
               🌐 네이버로 로그인
             </button>
             <button
               type="button"
               onClick={() => handleSocialLogin("구글")}
-              className="w-full rounded-lg border border-gray-400 bg-transparent px-6 py-3 text-lg font-semibold text-gray-600 transition-all duration-200 hover:bg-red-500 hover:text-white focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 dark:text-gray-400"
+              className="w-full rounded-lg border border-gray-400 bg-transparent px-6 py-3 text-lg font-semibold text-gray-600 transition-all duration-200 hover:bg-red-500 hover:text-white focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 dark:text-gray-400 dark:hover:bg-red-700"
             >
               🔍 구글로 로그인
             </button>
@@ -187,9 +189,10 @@ const Login = () => {
                 required
               />
             </div>
+            {/* [수정] 다크모드 버튼 색상 변경 */}
             <button
               type="submit"
-              className="mt-2 w-full rounded-lg bg-blue-600 px-6 py-3 text-lg font-semibold text-white transition-all duration-200 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:focus:ring-offset-2"
+              className="mt-2 w-full rounded-lg bg-blue-600 px-6 py-3 text-lg font-semibold text-white transition-all duration-200 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:focus:ring-offset-2 dark:bg-gray-600 dark:hover:bg-gray-700"
             >
               로그인
             </button>
