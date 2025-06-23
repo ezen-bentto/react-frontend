@@ -5,11 +5,13 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { login as loginApi, getKakaoLoginUrl, type LoginPayload } from "../../api/auth";
 import { useAuth } from "../../context/AuthContext";
+import Title from "@/components/shared/Title";
+import Button from "@/components/shared/Button";
+import Input from "@/components/shared/Input";
 
 const Login = () => {
   const navigate = useNavigate();
-  const { login } = useAuth(); // login 함수를 가져오기
-
+  const { login } = useAuth();
   const [tab, setTab] = useState<"personal" | "company">("personal");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -80,9 +82,7 @@ const Login = () => {
   return (
     <div className="flex min-h-screen items-center justify-center px-4">
       <div className="w-full max-w-md rounded-2xl border border-gray-200 p-8 shadow-xl dark:border-gray-700">
-        <h2 className="mb-8 text-center text-3xl font-bold text-gray-900 dark:text-white">
-          로그인
-        </h2>
+        <Title titleText="로그인" className="mb-8 text-center text-3xl font-bold" />
 
         <div className="mb-6 flex rounded-lg border border-gray-200 p-1 dark:border-gray-700">
           <button
@@ -149,38 +149,27 @@ const Login = () => {
 
         {tab === "company" && (
           <form onSubmit={handleLogin} className="flex flex-col gap-4">
-            <div className="mb-4">
-              <label className="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300">
-                이메일
-              </label>
-              <input
-                type="email"
-                className="w-full rounded-lg border border-gray-300 bg-transparent px-3 py-2 text-gray-900 placeholder-gray-500 transition-colors focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-offset-0 dark:border-gray-600 dark:text-white dark:placeholder-gray-400 focus:ring-blue-500"
-                placeholder="example@company.com"
-                value={email}
-                onChange={e => setEmail(e.target.value)}
-                required
-              />
-            </div>
-            <div className="mb-4">
-              <label className="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300">
-                비밀번호
-              </label>
-              <input
-                type="password"
-                className="w-full rounded-lg border border-gray-300 bg-transparent px-3 py-2 text-gray-900 placeholder-gray-500 transition-colors focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-offset-0 dark:border-gray-600 dark:text-white dark:placeholder-gray-400 focus:ring-blue-500"
-                placeholder="비밀번호를 입력하세요"
-                value={password}
-                onChange={e => setPassword(e.target.value)}
-                required
-              />
-            </div>
-            <button
-              type="submit"
-              className="mt-2 w-full rounded-lg bg-blue-600 px-6 py-3 text-lg font-semibold text-white transition-all duration-200 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:focus:ring-offset-2 dark:bg-gray-600 dark:hover:bg-gray-700"
-            >
+            <Input
+              legendText="이메일"
+              type="email"
+              name="email"
+              placeholder="example@company.com"
+              value={email}
+              onChange={e => setEmail(e.target.value)}
+              required
+            />
+            <Input
+              legendText="비밀번호"
+              type="password"
+              name="password"
+              placeholder="비밀번호를 입력하세요"
+              value={password}
+              onChange={e => setPassword(e.target.value)}
+              required
+            />
+            <Button type="submit" intent="sky" className="mt-4 w-full">
               로그인
-            </button>
+            </Button>
             <p className="mt-4 text-center text-sm text-gray-600 dark:text-gray-400">
               계정이 없으신가요?{" "}
               <button

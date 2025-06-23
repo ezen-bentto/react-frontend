@@ -23,7 +23,9 @@ import { button, type ButtonVariants } from "../style/button";
 
 interface ButtonProps extends ButtonVariants {
   type: "button" | "submit";
-  onClickFnc: () => void;
+  onClickFnc?: () => void;
+  className?: string; // 외부 스타일을 받을 수 있도록 className 추가
+  children: React.ReactNode;
 }
 
 const Button = ({
@@ -32,9 +34,12 @@ const Button = ({
   size,
   children,
   onClickFnc,
-}: ButtonProps & { children: React.ReactNode }) => {
+  className, // 새로 추가된 prop
+}: ButtonProps) => {
+  const combinedClassName = `${button({ intent, size })} ${className ?? ""}`.trim();
+
   return (
-    <button type={type} className={button({ intent, size })} onClick={() => onClickFnc()}>
+    <button type={type} className={combinedClassName} onClick={onClickFnc}>
       {children}
     </button>
   );

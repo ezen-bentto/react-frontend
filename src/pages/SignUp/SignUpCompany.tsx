@@ -2,6 +2,10 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { signUpCompany, type CompanySignUpPayload } from "../../api/auth";
+import Title from "@/components/shared/Title";
+import Button from "@/components/shared/Button";
+import Input from "@/components/shared/Input";
+import Badge from "@/components/shared/Badge";
 
 // form의 상태를 위한 타입 정의
 interface SignUpForm {
@@ -117,21 +121,10 @@ const SignUpCompany = () => {
     }
   };
 
-  const getInputStyle = (isError = false, isSuccess = false) => {
-    let borderColor =
-      "border-gray-300 dark:border-gray-600 focus:ring-blue-500 focus:border-blue-500";
-    if (isError) borderColor = "border-red-500 focus:ring-red-500 focus:border-red-500";
-    if (isSuccess) borderColor = "border-green-500 focus:ring-green-500 focus:border-green-500";
-
-    return `w-full px-3 py-2 border rounded-lg bg-transparent text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-offset-0 transition-colors ${borderColor}`;
-  };
-
   return (
     <div className="flex min-h-screen items-center justify-center px-4 py-8 pt-20">
       <div className="w-full max-w-md rounded-2xl border border-gray-200 p-8 shadow-xl dark:border-gray-700">
-        <h2 className="mb-2 text-center text-3xl font-bold text-gray-900 dark:text-white">
-          기업 회원가입
-        </h2>
+        <Title titleText="기업 회원가입" className="mb-2 text-center text-3xl font-bold" />
         <p className="mb-8 text-center text-gray-600 dark:text-gray-400">
           기업 정보를 입력해주세요
         </p>
@@ -140,14 +133,11 @@ const SignUpCompany = () => {
         {successMessage && <p className="mb-4 text-center text-green-600">{successMessage}</p>}
 
         <form onSubmit={handleSubmit} className="flex flex-col gap-4">
-          <div className="mb-4">
-            <label className="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300">
-              이메일
-            </label>
-            <input
+          <div>
+            <Input
+              legendText="이메일"
               type="email"
               name="email"
-              className={getInputStyle()}
               placeholder="company@example.com"
               value={form.email}
               onChange={handleChange}
@@ -155,83 +145,63 @@ const SignUpCompany = () => {
             />
           </div>
 
-          <div className="mb-4">
-            <label className="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300">
-              비밀번호
-            </label>
-            <input
+          <div>
+            <Input
+              legendText="비밀번호"
               type="password"
               name="password"
-              className={getInputStyle(passwordValid === false, passwordValid === true)}
-              placeholder="비밀번호를 입력하세요"
+              placeholder="8자 이상, 숫자, 특수문자 포함"
+              status={passwordValid === null ? "normal" : passwordValid ? "success" : "error"}
               value={form.password}
               onChange={handleChange}
               required
             />
-            {passwordValid !== null && (
-              <p
-                className={`mt-1 text-xs ${
-                  passwordValid
-                    ? "text-green-600 dark:text-green-400"
-                    : "text-red-600 dark:text-red-400"
-                }`}
-              >
-                {passwordValid
-                  ? "✓ 비밀번호 형식이 올바릅니다"
-                  : "✗ 비밀번호는 8자 이상, 숫자와 특수문자를 포함해야 합니다"}
-              </p>
+            {passwordValid === false && (
+              <div className="mt-1">
+                <Badge intent={"default"} size="sm">
+                  비밀번호는 8자 이상, 숫자와 특수문자를 포함해야 합니다
+                </Badge>
+              </div>
             )}
           </div>
 
-          <div className="mb-4">
-            <label className="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300">
-              비밀번호 확인
-            </label>
-            <input
+          <div>
+            <Input
+              legendText="비밀번호 확인"
               type="password"
               name="confirmPassword"
-              className={getInputStyle(passwordMatch === false, passwordMatch === true)}
               placeholder="비밀번호를 다시 입력하세요"
+              status={passwordMatch === null ? "normal" : passwordMatch ? "success" : "error"}
               value={form.confirmPassword}
               onChange={handleChange}
               required
             />
-            {passwordMatch !== null && (
-              <p
-                className={`mt-1 text-xs ${
-                  passwordMatch
-                    ? "text-green-600 dark:text-green-400"
-                    : "text-red-600 dark:text-red-400"
-                }`}
-              >
-                {passwordMatch ? "✓ 비밀번호가 일치합니다" : "✗ 비밀번호가 일치하지 않습니다"}
-              </p>
+            {passwordMatch === false && (
+              <div className="mt-1">
+                <Badge intent={"default"} size="sm">
+                  비밀번호가 일치하지 않습니다
+                </Badge>
+              </div>
             )}
           </div>
 
-          <div className="mb-4">
-            <label className="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300">
-              회사명
-            </label>
-            <input
+          <div>
+            <Input
+              legendText="회사명"
               type="text"
-              name="companyName"
-              className={getInputStyle()}
-              placeholder="회사명을 입력하세요"
+              name="nickname"
+              placeholder="회사명을 입력하세요 (닉네임으로 사용됩니다)"
               value={form.companyName}
               onChange={handleChange}
               required
             />
           </div>
 
-          <div className="mb-4">
-            <label className="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300">
-              휴대폰번호
-            </label>
-            <input
+          <div>
+            <Input
+              legendText="휴대폰번호"
               type="tel"
               name="phoneNumber"
-              className={getInputStyle()}
               placeholder="010-0000-0000"
               value={formatPhoneNumber(form.phoneNumber)}
               onChange={handleChange}
@@ -239,12 +209,12 @@ const SignUpCompany = () => {
             />
           </div>
 
-          <button
-            type="submit"
-            className="mt-4 w-full rounded-lg bg-blue-600 px-6 py-3 text-lg font-semibold text-white transition-all duration-200 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:bg-gray-600 dark:hover:bg-gray-700"
-          >
-            회원가입
-          </button>
+          <div className="mt-4">
+            <Button type="submit" intent="sky" size="lg" className="w-full">
+              회원가입
+            </Button>
+          </div>
+
           <p className="mt-6 text-center text-sm text-gray-600 dark:text-gray-400">
             이미 계정이 있으신가요?{" "}
             <button
