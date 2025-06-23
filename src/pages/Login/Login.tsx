@@ -91,123 +91,120 @@ const Login = () => {
   };
 
   return (
-    <div>
-      <div className="flex justify-center items-center min-h-screen px-4">
-        <div className="w-full max-w-md bg-white dark:bg-gray-800 shadow-xl rounded-2xl p-8 transition-colors duration-200">
-          <h2 className="text-3xl font-bold text-center mb-8 text-gray-900 dark:text-white">
-            로그인
-          </h2>
-
-          <div className="flex bg-gray-100 dark:bg-gray-700 rounded-lg p-1 mb-6 transition-colors duration-200">
-            <button
-              type="button"
-              onClick={() => setTab("personal")}
-              className={`w-1/2 py-2 text-center font-medium rounded-md transition-all duration-200 ${
-                tab === "personal"
-                  ? "bg-white dark:bg-gray-600 text-blue-600 dark:text-blue-400 shadow-sm"
-                  : "text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200"
-              }`}
-            >
-              개인회원
-            </button>
-            <button
-              type="button"
-              onClick={() => setTab("company")}
-              className={`w-1/2 py-2 text-center font-medium rounded-md transition-all duration-200 ${
-                tab === "company"
-                  ? "bg-white dark:bg-gray-600 text-blue-600 dark:text-blue-400 shadow-sm"
-                  : "text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200"
-              }`}
-            >
-              기업회원
-            </button>
-          </div>
-
-          {errorMessage && <p className="text-red-500 text-center mb-4">{errorMessage}</p>}
-
-          {tab === "personal" && (
-            <div className="flex flex-col gap-3">
-              <button
-                type="button"
-                onClick={() => handleSocialLogin("카카오")}
-                className="w-full px-6 py-3 text-lg font-semibold rounded-lg transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 bg-yellow-400 hover:bg-yellow-500 text-gray-900 focus:ring-yellow-500"
-              >
-                🎨 카카오로 로그인
-              </button>
-              <button
-                type="button"
-                onClick={() => handleSocialLogin("네이버")}
-                className="w-full px-6 py-3 text-lg font-semibold rounded-lg transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 bg-green-500 hover:bg-green-600 text-white focus:ring-green-500"
-              >
-                🌐 네이버로 로그인
-              </button>
-              <button
-                type="button"
-                onClick={() => handleSocialLogin("구글")}
-                className="w-full px-6 py-3 text-lg font-semibold rounded-lg transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 bg-red-500 hover:bg-red-600 text-white focus:ring-red-500"
-              >
-                🔍 구글로 로그인
-              </button>
-              <p className="text-sm text-center text-gray-600 dark:text-gray-400 mt-4">
-                계정이 없으신가요?{" "}
-                <button
-                  type="button"
-                  onClick={() => navigate("/signup/personal")}
-                  className="text-blue-600 dark:text-blue-400 hover:underline font-medium"
-                >
-                  회원가입
-                </button>
-              </p>
-            </div>
-          )}
-
-          {tab === "company" && (
-            <form onSubmit={handleLogin} className="flex flex-col gap-4">
-              <div className="mb-4">
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                  이메일
-                </label>
-                <input
-                  type="email"
-                  className="w-full px-3 py-2 border rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-offset-0 transition-colors border-gray-300 dark:border-gray-600 focus:ring-blue-500 focus:border-blue-500"
-                  placeholder="example@company.com"
-                  value={email}
-                  onChange={e => setEmail(e.target.value)}
-                  required
-                />
-              </div>
-              <div className="mb-4">
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                  비밀번호
-                </label>
-                <input
-                  type="password"
-                  className="w-full px-3 py-2 border rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-offset-0 transition-colors border-gray-300 dark:border-gray-600 focus:ring-blue-500 focus:border-blue-500"
-                  placeholder="비밀번호를 입력하세요"
-                  value={password}
-                  onChange={e => setPassword(e.target.value)}
-                  required
-                />
-              </div>
-              <button
-                type="submit"
-                className="w-full px-6 py-3 text-lg font-semibold rounded-lg transition-all duration-200 focus:outline-none focus:ring-2 focus:focus:ring-offset-2 bg-blue-600 hover:bg-blue-700 text-white focus:ring-blue-500 mt-2"
-              >
-                로그인
-              </button>
-              <p className="text-sm text-center text-gray-600 dark:text-gray-400 mt-4">
-                계정이 없으신가요?{" "}
-                <button
-                  type="button"
-                  onClick={() => navigate("/signup/company")}
-                  className="text-blue-600 dark:text-blue-400 hover:underline font-medium"
-                >
-                  회원가입
-                </button>
-              </p>
-            </form>
-          )}
+    <div className="flex min-h-screen items-center justify-center px-4">
+      <div className="w-full max-w-md rounded-2xl border border-gray-200 p-8 shadow-xl dark:border-gray-700">
+        <h2 className="mb-8 text-center text-3xl font-bold text-gray-900 dark:text-white">
+          로그인
+        </h2>
+        <div className="mb-6 flex rounded-lg border border-gray-200 p-1 dark:border-gray-700">
+          <button
+            type="button"
+            onClick={() => setTab("personal")}
+            className={`w-1/2 rounded-md py-2 text-center font-medium transition-all duration-200 ${
+              tab === "personal"
+                ? "bg-gray-100 text-blue-600 shadow-sm dark:bg-gray-900/50 dark:text-blue-400"
+                : "text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
+            }`}
+          >
+            개인회원
+          </button>
+          <button
+            type="button"
+            onClick={() => setTab("company")}
+            className={`w-1/2 rounded-md py-2 text-center font-medium transition-all duration-200 ${
+              tab === "company"
+                ? "bg-gray-100 text-blue-600 shadow-sm dark:bg-gray-900/50 dark:text-blue-400"
+                : "text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
+            }`}
+          >
+            기업회원
+          </button>
         </div>
+
+        {errorMessage && <p className="mb-4 text-center text-red-500">{errorMessage}</p>}
+
+        {tab === "personal" && (
+          <div className="flex flex-col gap-3">
+            <button
+              type="button"
+              onClick={() => handleSocialLogin("카카오")}
+              className="w-full rounded-lg border border-yellow-400 bg-transparent px-6 py-3 text-lg font-semibold text-yellow-400 transition-all duration-200 hover:bg-yellow-400 hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:ring-offset-2"
+            >
+              🎨 카카오로 로그인
+            </button>
+            <button
+              type="button"
+              onClick={() => handleSocialLogin("네이버")}
+              className="w-full rounded-lg border border-green-500 bg-transparent px-6 py-3 text-lg font-semibold text-green-500 transition-all duration-200 hover:bg-green-500 hover:text-white focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2"
+            >
+              🌐 네이버로 로그인
+            </button>
+            <button
+              type="button"
+              onClick={() => handleSocialLogin("구글")}
+              className="w-full rounded-lg border border-gray-400 bg-transparent px-6 py-3 text-lg font-semibold text-gray-600 transition-all duration-200 hover:bg-red-500 hover:text-white focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 dark:text-gray-400"
+            >
+              🔍 구글로 로그인
+            </button>
+            <p className="mt-4 text-center text-sm text-gray-600 dark:text-gray-400">
+              계정이 없으신가요?{" "}
+              <button
+                type="button"
+                onClick={() => navigate("/signup/personal")}
+                className="font-medium text-blue-600 hover:underline dark:text-blue-400"
+              >
+                회원가입
+              </button>
+            </p>
+          </div>
+        )}
+
+        {tab === "company" && (
+          <form onSubmit={handleLogin} className="flex flex-col gap-4">
+            <div className="mb-4">
+              <label className="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300">
+                이메일
+              </label>
+              <input
+                type="email"
+                className="w-full rounded-lg border border-gray-300 bg-transparent px-3 py-2 text-gray-900 placeholder-gray-500 transition-colors focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-offset-0 dark:border-gray-600 dark:text-white dark:placeholder-gray-400 focus:ring-blue-500"
+                placeholder="example@company.com"
+                value={email}
+                onChange={e => setEmail(e.target.value)}
+                required
+              />
+            </div>
+            <div className="mb-4">
+              <label className="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300">
+                비밀번호
+              </label>
+              <input
+                type="password"
+                className="w-full rounded-lg border border-gray-300 bg-transparent px-3 py-2 text-gray-900 placeholder-gray-500 transition-colors focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-offset-0 dark:border-gray-600 dark:text-white dark:placeholder-gray-400 focus:ring-blue-500"
+                placeholder="비밀번호를 입력하세요"
+                value={password}
+                onChange={e => setPassword(e.target.value)}
+                required
+              />
+            </div>
+            <button
+              type="submit"
+              className="mt-2 w-full rounded-lg bg-blue-600 px-6 py-3 text-lg font-semibold text-white transition-all duration-200 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:focus:ring-offset-2"
+            >
+              로그인
+            </button>
+            <p className="mt-4 text-center text-sm text-gray-600 dark:text-gray-400">
+              계정이 없으신가요?{" "}
+              <button
+                type="button"
+                onClick={() => navigate("/signup/company")}
+                className="font-medium text-blue-600 hover:underline dark:text-blue-400"
+              >
+                회원가입
+              </button>
+            </p>
+          </form>
+        )}
       </div>
     </div>
   );
