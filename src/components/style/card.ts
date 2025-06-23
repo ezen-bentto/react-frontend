@@ -1,6 +1,6 @@
 import { cva, type VariantProps } from "class-variance-authority";
 
-export const card = cva("card shadow-sm box-border overflow-hidden", {
+export const card = cva("card shadow-sm box-border overflow-hidden min-w-xs", {
   variants: {
     size: {
       sm: "max-w-xs", // max-width: 20rem (320px)

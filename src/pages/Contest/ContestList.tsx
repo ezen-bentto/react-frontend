@@ -1,9 +1,11 @@
-import { fetchContestPage } from "@/api/contest/list";
+import { fetchContestList, fetchContestPage } from "@/api/contest/list";
 import Card from "@/components/shared/Card";
 import Fillter from "@/components/shared/Fillter";
 import Pagination from "@/components/shared/Pagination";
 import Title from "@/components/shared/Title";
 import { contestFilterData } from "@/constants/ContestFilterData";
+import { DARK_NOT_ITEM, LiGHT_NOT_ITEM } from "@/constants/ImageSrc";
+import { useThemeStore } from "@/features/common/themeStore";
 import type { Contest } from "@/types/contestType";
 import countDate from "@/utils/countDate";
 import { useEffect, useMemo, useState } from "react";
@@ -17,6 +19,13 @@ const ContestList = () => {
   const [totalPages, setTotalPages] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
   const [searchText, setSearchText] = useState("");
+  const { theme } = useThemeStore();
+  const [imgSrc, setImgSrc] = useState(LiGHT_NOT_ITEM);
+
+  useEffect(
+    () => (theme === "light" ? setImgSrc(LiGHT_NOT_ITEM) : setImgSrc(DARK_NOT_ITEM)),
+    [theme]
+  );
 
   // 페이지당 item 갯수
   const itemsPerPage = 12;
@@ -25,7 +34,7 @@ const ContestList = () => {
   // 끝 index
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
 
-  // ✅ 필터링은 useMemo로
+  // 필터링은 useMemo로
   const filteredContests = useMemo(() => {
     if (!data) return [];
 
@@ -42,17 +51,41 @@ const ContestList = () => {
     });
   }, [data, category, age, organizerType, searchText]);
 
-  // ✅ 현재 페이지 데이터
+  // 현재 페이지 데이터
   const currentItem = filteredContests.slice(indexOfFirstItem, indexOfLastItem);
 
   // 전체 공모전 불러오기
   useEffect(() => {
     async function fetchData() {
       setIsLoading(true);
-      const res = await fetchContestPage();
-      if (res) {
-        setData(res);
-      }
+      const [crawledData, dbData] = await Promise.all([fetchContestPage(), fetchContestList()]);
+
+      // id number 변환
+      const normalizedCrawledData = (crawledData || []).map(item => ({
+        ...item,
+        id: Number(item.id),
+      }));
+
+      const normalizedDbData = (dbData || []).map(item => ({
+        ...item,
+        id: Number(item.id),
+      }));
+
+      // 데이터 병합
+      const combinedData = [...normalizedCrawledData, ...normalizedDbData];
+
+      // id 중복 제거
+      const uniqueData = combinedData.reduce((acc, current) => {
+        const existingIndex = acc.findIndex(item => item.id === current.id);
+        if (existingIndex !== -1) {
+          acc[existingIndex] = current; // 중복된 id가 있으면 새로운 데이터로 교체
+        } else {
+          acc.push(current);
+        }
+        return acc;
+      }, [] as Contest[]);
+
+      setData(uniqueData);
       setIsLoading(false);
     }
     fetchData();
@@ -80,17 +113,24 @@ const ContestList = () => {
           }
           onSearchSubmit={value => setSearchText(value)}
           onResetFilters={() => {
-            setCategory([]); // ✅ 필터 상태 초기화
+            setCategory([]); // 필터 상태 초기화
             setAge([]);
             setOrganizerType([]);
-            setSearchText(""); // 검색어도 초기화
+            setSearchText(""); // 검색어 초기화
           }}
         />
       </div>
 
-      <div className="flex gap-6 flex-wrap justify-start py-5">
+      <div
+        className={`flex gap-6 flex-wrap py-5
+        ${currentPage === totalPages ? "justify-start" : "justify-center"}`}
+      >
         {isLoading ? (
           <p>데이터 로딩 중...</p>
+        ) : currentItem.length === 0 ? (
+          <div className="w-full flex justify-center items-center">
+            <img src={imgSrc} alt="검색 결과 없음" className="w-100" />
+          </div>
         ) : (
           currentItem.map(item => (
             <Card

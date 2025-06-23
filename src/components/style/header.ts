@@ -15,18 +15,18 @@ export const headerVariants = cva(
   }
 );
 
-export const hedaerWrap = cva("max-w-[1400px] mx-auto px-8 py-7 flex-default font-sans ", {
+export const hedaerWrap = cva("max-w-[1400px] mx-auto px-8 py-7 flex-default ", {
   variants: {},
 });
 
-export const headerMainLogo = cva("text-3xl font-bold hover:text-accent-sky", {
+export const headerMainLogo = cva("text-3xl font-logo font-bold hover:text-accent-sky", {
   variants: {},
 });
 
 export const headerLinkHover = cva("hover:scale-105 hover:text-accent-orange", {
   variants: {
     highlight: {
-      true: "text-my-orange",
+      true: "text-accent-orange",
     },
   },
 });
@@ -41,7 +41,7 @@ export const hamBtn = cva("w-8 h-1 my-1 rounded-xs bg-brand-primary dark:bg-whit
 });
 
 export const mobileMenu = cva(
-  "md:hidden absolute theme-bg theme-text top-full flex flex-col right-0 w-[70%] max-w-[300px] h-screen shadow-lg z-50 gap-2 px-4 py-2 space-y-2",
+  "md:hidden absolute theme-bg theme-text top-full  right-0 w-[70%] max-w-[300px] h-screen shadow-lg z-50 px-4 py-2 space-y-2 flex flex-col justify-between",
   {
     variants: {
       theme: {

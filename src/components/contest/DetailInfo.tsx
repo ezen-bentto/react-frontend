@@ -12,18 +12,37 @@ function DetailInfo({ data }: DetailInfoProps) {
     return <div>로딩 중...</div>;
   }
 
-  // 공유하기 버튼들
   const shareButtons = [
-    { name: "Facebook", icon: "📘", color: "bg-blue-600" },
-    { name: "Twitter", icon: "🐦", color: "bg-sky-500" },
-    { name: "Naver", icon: "N", color: "bg-green-500" },
+    {
+      name: "Facebook",
+      icon: "📘",
+      color: "bg-blue-600",
+      url: (pageUrl: string) =>
+        `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(pageUrl)}`,
+    },
+    {
+      name: "Twitter",
+      icon: "🐦",
+      color: "bg-sky-500",
+      url: (pageUrl: string) =>
+        `https://twitter.com/intent/tweet?url=${encodeURIComponent(pageUrl)}&text=${encodeURIComponent("이 페이지를 공유해요!")}`,
+    },
+    {
+      name: "Naver",
+      icon: "N",
+      color: "bg-green-500",
+      url: (pageUrl: string) =>
+        `https://share.naver.com/web/shareView.nhn?url=${encodeURIComponent(pageUrl)}&title=${encodeURIComponent("페이지 제목")}`,
+    },
   ];
 
   return (
-    <div className="bg-white rounded-lg shadow-sm border p-6 mb-20">
-      <div className="flex-default">
+    <div className="rounded-lg shadow-sm border p-6 mb-20">
+      <div className="flex items-start justify-between">
         {/* dday */}
-        <Badge intent="orange">D - {countDate(data.end_date.toString())}</Badge>
+        <div className="mt-2">
+          <Badge intent="orange">D - {countDate(data.end_date.toString())}</Badge>
+        </div>
 
         {/* 조회수 찜 */}
         <div className="flex items-center gap-4">
@@ -35,16 +54,16 @@ function DetailInfo({ data }: DetailInfoProps) {
           </button>
           <button className="flex flex-col items-center gap-1 p-2 hover:bg-gray-50 rounded-md transition-colors">
             <div className="w-8 h-8 bg-gray-200 rounded-full flex items-center justify-center">
-              views
+              👀
             </div>
             <span className="text-xs text-gray-600">356</span>
           </button>
         </div>
       </div>
 
-      <div className="flex gap-8">
+      <div className="flex flex-col md:flex-row gap-8">
         {/* 왼쪽: 이미지 */}
-        <div className="flex-shrink-0">
+        <div className="flex justify-center flex-shrink-0">
           <div className="w-72 h-96 bg-gray-100 rounded-lg overflow-hidden">
             <img
               src={data.img ?? undefined}
@@ -58,12 +77,12 @@ function DetailInfo({ data }: DetailInfoProps) {
         <div className="flex-1">
           {/* 제목 */}
           <div className="flex justify-between items-start mb-6">
-            <h1 className="text-2xl font-bold text-gray-900 leading-tight">{data.title}</h1>
+            <h1 className="text-2xl font-bold leading-tight">{data.title}</h1>
           </div>
 
           {/* 정보 테이블 */}
           <div className="space-y-4 mb-8">
-            <div className="grid grid-cols-2 gap-8">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
               {/* 왼쪽 컬럼 */}
               <div className="space-y-4">
                 <InfoRow label="주최사" value={data.organizer} />
@@ -74,7 +93,7 @@ function DetailInfo({ data }: DetailInfoProps) {
                   label="관심분야"
                   value={
                     <div className="flex gap-2">
-                      <span className="bg-gray-100 px-3 py-1 rounded-full text-sm">
+                      <span className="bg-gray-100 text-gray-700 px-3 py-1 rounded-full text-sm">
                         {data.contest_tag}
                       </span>
                     </div>
@@ -83,7 +102,7 @@ function DetailInfo({ data }: DetailInfoProps) {
                 <InfoRow
                   label="활동분야"
                   value={
-                    <div className="flex gap-2">
+                    <div className="flex gap-2 text-gray-700">
                       <span className="bg-gray-100 px-3 py-1 rounded-full text-sm">서포터즈</span>
                       <span className="bg-gray-100 px-3 py-1 rounded-full text-sm">기자단</span>
                     </div>
@@ -102,7 +121,7 @@ function DetailInfo({ data }: DetailInfoProps) {
                       href={data.homepage}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="text-blue-500 hover:underline"
+                      className="text-blue-500 hover:underline block truncate"
                     >
                       {data.homepage}
                     </a>
@@ -112,9 +131,18 @@ function DetailInfo({ data }: DetailInfoProps) {
             </div>
           </div>
 
-          <div className="flex gap-8 mb-6 items-center">
+          <div className="flex flex-col md:flex-row gap-8 md:gap-8 md:mb-6 items-center flex-wrap">
             {/* 지원하기 */}
-            <Button intent="sky" type="button" size="lg" onClickFnc={() => {}}>
+            <Button
+              intent="sky"
+              type="button"
+              size="lg"
+              onClickFnc={() => {
+                if (data.homepage) {
+                  window.open(data.homepage, "_blank", "noopener,noreferrer");
+                }
+              }}
+            >
               홈페이지 지원
             </Button>
 
@@ -125,6 +153,10 @@ function DetailInfo({ data }: DetailInfoProps) {
                   key={button.name}
                   className={`w-10 h-10 rounded-md ${button.color} text-white flex items-center justify-center hover:opacity-80 transition-opacity`}
                   title={button.name}
+                  onClick={() => {
+                    const url = window.location.href; // 현재 페이지 URL
+                    window.open(button.url(url), "_blank", "noopener,noreferrer");
+                  }}
                 >
                   {button.icon}
                 </button>
@@ -145,9 +177,9 @@ interface InfoRowProps {
 
 function InfoRow({ label, value }: InfoRowProps) {
   return (
-    <div className="flex">
-      <dt className="w-20 flex-shrink-0 text-sm font-medium text-gray-600">{label}</dt>
-      <dd className="text-sm text-gray-900 flex-1">{value}</dd>
+    <div className="flex w-full">
+      <dt className="w-20 flex-shrink-0 text-sm font-medium">{label}</dt>
+      <dd className="text-sm flex-1 truncate">{value}</dd>
     </div>
   );
 }
