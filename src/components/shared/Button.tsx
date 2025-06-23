@@ -1,3 +1,4 @@
+import React from "react";
 import { button, type ButtonVariants } from "../style/button";
 
 /**
@@ -13,6 +14,7 @@ import { button, type ButtonVariants } from "../style/button";
  * -------------------------------------------------------
  *
  *        2025/05/31           이철욱               신규작성
+ *        2025/06/20           이철욱             useMemo 적용
  *
  * @param intent 버튼의 색상 의도 (예: primary, sky, orange 등)
  * @param size 버튼의 크기 옵션 (예: sm, lg 등)
@@ -38,4 +40,4 @@ const Button = ({
   );
 };
 
-export default Button;
+export default React.memo(Button);

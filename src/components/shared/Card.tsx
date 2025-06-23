@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import { card, type CardVariants } from "../style/card";
 import Badge from "./Badge";
+import { useState } from "react";
 
 /**
  *
@@ -17,6 +18,8 @@ import Badge from "./Badge";
  * -------------------------------------------------------
  *
  *        2025/05/31           이철욱               신규작성
+ *        2025/06/19           이철욱               img 스켈레톤 UI 적용
+ *        2025/06/20           이철욱               day Badge z-index
  *
  * @param id 공모전 고유 ID로, 해당 값을 링크 경로로 사용
  * @param dday 마감일까지 남은 기간을 나타내는 문자열 (예: "D-3")
@@ -41,20 +44,27 @@ const Card = ({ id, dday, img, title, text, size, intent, className }: CardProps
   const combinedClass =
     `relative w-full h-full ${card({ size, intent })} ${className ?? ""}`.trim(); // 👉 w-full, h-full 강제
 
+  const [isImageLoaded, setIsImageLoaded] = useState(false);
+
   return (
     <Link to={`/contest/${id}`}>
       <div className={combinedClass}>
-        <div className="p-4 flex justify-end absolute w-full">
+        <div className="p-4 flex justify-end absolute w-full z-2">
           <Badge intent="default">D-{dday}</Badge>
         </div>
-        <figure>
-          {img ? (
-            <img src={img} alt={title} className="aspect-[4/3] w-full object-cover object-top" />
-          ) : (
+        <figure className="relative w-full aspect-[4/3]">
+          {!isImageLoaded && (
+            <div className="absolute top-0 left-0 w-full h-full bg-gray-200 animate-pulse rounded" />
+          )}
+          {img && (
             <img
-              src={"대체이미지"}
+              src={img}
               alt={title}
-              className="aspect-[4/3] w-full object-cover object-top"
+              loading="lazy"
+              onLoad={() => setIsImageLoaded(true)}
+              className={`absolute top-0 left-0 w-full h-full object-cover object-top transition-opacity duration-300 ${
+                isImageLoaded ? "opacity-100" : "opacity-0"
+              }`}
             />
           )}
         </figure>

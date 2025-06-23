@@ -1,6 +1,7 @@
+import React from "react";
 import { Link } from "react-router-dom";
 interface TitleProps {
-  linkSrc: string;
+  linkSrc?: string;
   titleText: string;
   className?: string;
 }
@@ -8,10 +9,8 @@ interface TitleProps {
 const Title = ({ linkSrc, titleText, className }: TitleProps) => {
   const combinedClass = `text-2xl font-semibold ${className}`.trim();
   return (
-    <h2 className={combinedClass}>
-      <Link to={linkSrc}>{titleText}</Link>
-    </h2>
+    <h2 className={combinedClass}>{linkSrc ? <Link to={linkSrc}>{titleText}</Link> : titleText}</h2>
   );
 };
 
-export default Title;
+export default React.memo(Title);

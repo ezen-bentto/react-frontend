@@ -1,14 +1,14 @@
 // style/pagination.ts
 import { cva, type VariantProps } from "class-variance-authority";
 
-export const joinGroup = cva("join");
+export const joinGroup = cva("join w-full justify-center");
 
 export const joinButton = cva("join-item btn", {
   variants: {
     intent: {
       default: "",
       primary: "theme-bg theme-text border-gray-200",
-      ghost: "btn-ghost",
+      active: "bg-blue-500 text-white",
     },
     size: {
       sm: "btn-sm",

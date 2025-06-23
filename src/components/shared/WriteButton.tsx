@@ -37,7 +37,7 @@ const WriteButton = () => {
 
   return (
     <button
-      onClick={() => navigate("/write")}
+      onClick={() => navigate("/community/write")}
       aria-label="Write post"
       className={fixedCircleBtn({ color: "write" })}
     >

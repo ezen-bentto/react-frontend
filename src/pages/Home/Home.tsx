@@ -2,7 +2,8 @@ import ContestSlider from "@/components/home/ContestSlider";
 import MainBanner from "../../components/home/MainBanner";
 import PopularContestList from "@/components/home/PopularContestList";
 import PolicySider from "@/components/home/PolicySider";
-import ListItem from "@/components/shared/ListItem";
+import CommunityList from "@/components/home/CommunityList";
+
 const Home = () => {
   return (
     <div className="flex justify-center flex-col mt-19 md:mt-20  items-center gap-8">
@@ -22,21 +23,8 @@ const Home = () => {
       <section className="main-policy w-full">
         <PolicySider />
       </section>
-      <section className="main-community w-full flex justify-start flex-col gap-4">
-        <ListItem
-          type="community"
-          linkSrc="/"
-          comment={2}
-          description="테스트"
-          likes={123}
-          title="테스트 제목"
-          writer="작성자"
-          intent={"default"}
-          size={"lg"}
-          endDate={"2025-06-30"}
-          region=""
-          communityType="1"
-        />
+      <section className="w-full">
+        <CommunityList />
       </section>
     </div>
   );

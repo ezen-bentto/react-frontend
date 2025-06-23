@@ -8,9 +8,9 @@ import {
   mobileMenu,
 } from "@/components/style/header";
 import { v4 as uuidv4 } from "uuid";
-import { Link } from "react-router-dom";
+import { Link, NavLink, useLocation } from "react-router-dom";
 import { ThemeToggle } from "./ThemeToggle";
-import { useThemeStore } from "@/store/themeStore";
+import { useThemeStore } from "@/features/common/themeStore";
 
 /**
  *
@@ -30,6 +30,8 @@ import { useThemeStore } from "@/store/themeStore";
  *
  *        2025/05/31           이철욱               신규작성
  *        2025/06/10           김혜미               커뮤니티 메뉴 분리
+ *        2025/06/20           이철욱               해당 페이지 접속시 해당 메뉴 버튼 활성화 표시
+ *        2025/06/21           이철욱               커뮤니티 및 하위 메뉴에도 활성화 적용
  *
  * @param opacityEffect 높이에 따른 header 컴포넌트 투명화 매개변수다.
  * 바닐라 프로젝트 초창기에 구현하였으나 디자인상 불필요하여 현재는 쓰이지 않는다.
@@ -45,7 +47,6 @@ interface HeaderMenu {
 const headerMenus: HeaderMenu[] = [
   { name: "공모전", src: "/contest", id: "" },
   { name: "청년정책", src: "/policy", id: "" },
-  { name: "통계", src: "#", id: "" },
   {
     name: "커뮤니티",
     src: "#",
@@ -68,6 +69,12 @@ export const Header = ({ opacityEffect = false }: HeaderProps) => {
   const [isLoggedIn, setIsLoggedIn] = useState<boolean>(!!localStorage.getItem("isLoggedIn"));
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
   const { initTheme } = useThemeStore();
+
+  const location = useLocation();
+  console.info(location.pathname);
+  const currentPath = location.pathname + location.search;
+
+  const isSubActive = (src: string) => currentPath === src;
 
   // UUID 생성을 useMemo로 최적화하여 리렌더링 시에도 동일한 ID 유지
   const items = useMemo(() => headerMenus.map(item => ({ ...item, id: uuidv4() })), []);
@@ -122,27 +129,28 @@ export const Header = ({ opacityEffect = false }: HeaderProps) => {
               }}
             >
               {item.subMenus ? (
-                <div className={`${headerLinkHover({ highlight: true })} cursor-pointer`}>
+                <div
+                  className={`${headerLinkHover({ highlight: location.pathname.includes("community") })} cursor-pointer`}
+                >
                   {item.name}
                 </div>
               ) : (
-                <Link to={item.src} className={headerLinkHover({ highlight: true })}>
+                <NavLink
+                  to={item.src}
+                  className={({ isActive }) =>
+                    `${headerLinkHover({ highlight: isActive })} transition-colors`
+                  }
+                >
                   {item.name}
-                </Link>
+                </NavLink>
               )}
 
               {/* 드롭다운 메뉴 */}
               {item.subMenus && (
                 <div
-                  className={`absolute top-full left-0 bg-white border border-gray-200 rounded-md shadow-xl min-w-[140px] z-[9999] py-1 ${
+                  className={`absolute top-full left-0 theme-bg border box-border shadow-xl min-w-[140px] z-[9999] py-1 ${
                     activeDropdown === item.id ? "block" : "hidden"
                   }`}
-                  style={{
-                    backgroundColor: "white",
-                    border: "1px solid #e5e7eb",
-                    boxShadow:
-                      "0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)",
-                  }}
                   onMouseEnter={() => {
                     setActiveDropdown(item.id);
                   }}
@@ -154,7 +162,7 @@ export const Header = ({ opacityEffect = false }: HeaderProps) => {
                     <Link
                       key={index}
                       to={subItem.src}
-                      className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors duration-150"
+                      className={`${headerLinkHover({ highlight: isSubActive(subItem.src) })} block px-4 py-2 text-sm duration-150`}
                       onClick={() => setActiveDropdown(null)}
                     >
                       {subItem.name}
@@ -169,28 +177,52 @@ export const Header = ({ opacityEffect = false }: HeaderProps) => {
         <nav className="hidden items-center md:flex gap-4 text-sm ">
           {!isLoggedIn ? (
             <>
-              <Link to={"/login"} className={headerLinkHover()}>
+              <NavLink
+                to={"/login"}
+                className={({ isActive }) =>
+                  `${headerLinkHover({ highlight: isActive })} transition-colors`
+                }
+              >
                 로그인
-              </Link>
-              <Link to={"/signup"} className={headerLinkHover()}>
+              </NavLink>
+
+              <NavLink
+                to={"/signup"}
+                className={({ isActive }) =>
+                  `${headerLinkHover({ highlight: isActive })} transition-colors`
+                }
+              >
                 회원가입
-              </Link>
+              </NavLink>
             </>
           ) : (
             <>
-              <Link to={"/mypage"} className={headerLinkHover()}>
+              <NavLink
+                to={"/mypage"}
+                className={({ isActive }) =>
+                  `${headerLinkHover({ highlight: isActive })} transition-colors`
+                }
+              >
                 마이페이지
-              </Link>
-              <Link to={"/logout"} className={headerLinkHover()}>
+              </NavLink>
+              <NavLink
+                to={"/logout"}
+                className={({ isActive }) =>
+                  `${headerLinkHover({ highlight: isActive })} transition-colors`
+                }
+                onClick={() => {
+                  handleLogout();
+                }}
+              >
                 로그아웃
-              </Link>
+              </NavLink>
             </>
           )}
           <ThemeToggle />
         </nav>
 
         {/* Mobile Toggle Button */}
-        <div className="md:hidden cursor-pointer" onClick={() => setIsMobileOpen(!isMobileOpen)}>
+        <div className="md:hidden cursor-pointer" onClick={() => setIsMobileOpen(prev => !prev)}>
           <div className={`${hamBtn()} ${isMobileOpen ? "rotate-45 translate-y-2" : ""}`} />
           <div className={`${hamBtn()} ${isMobileOpen ? "opacity-0" : ""}`} />
           <div className={`${hamBtn()} ${isMobileOpen ? "-rotate-45 -translate-y-2" : ""}`} />
@@ -200,49 +232,89 @@ export const Header = ({ opacityEffect = false }: HeaderProps) => {
       {/* Mobile Menu */}
       {isMobileOpen && (
         <div className={mobileMenu({ theme: "w" })}>
-          {!isLoggedIn ? (
-            <>
-              <Link to={"/login"} className={headerLinkHover()}>
-                로그인
-              </Link>
-              <Link to={"/signup"} className={headerLinkHover()}>
-                회원가입
-              </Link>
-            </>
-          ) : (
-            <>
-              <Link to={"/mypage"} className={headerLinkHover()}>
-                마이페이지
-              </Link>
-              <Link to={"/logout"} className={headerLinkHover()} onClick={handleLogout}>
-                로그아웃
-              </Link>
-            </>
-          )}
-          {items.map(item => (
-            <div key={item.id}>
-              {item.subMenus ? (
-                <>
-                  <div className={`${headerLinkHover({ highlight: true })} cursor-default`}>
+          <div className="flex flex-col gap-4">
+            {!isLoggedIn ? (
+              <>
+                <NavLink
+                  to={"/login"}
+                  className={({ isActive }) =>
+                    `${headerLinkHover({ highlight: isActive })} transition-colors`
+                  }
+                  onClick={() => setIsMobileOpen(prev => !prev)}
+                >
+                  로그인
+                </NavLink>
+                <NavLink
+                  to={"/signup"}
+                  className={({ isActive }) =>
+                    `${headerLinkHover({ highlight: isActive })} transition-colors`
+                  }
+                  onClick={() => setIsMobileOpen(prev => !prev)}
+                >
+                  회원가입
+                </NavLink>
+              </>
+            ) : (
+              <>
+                <NavLink
+                  to={"/mypage"}
+                  className={({ isActive }) =>
+                    `${headerLinkHover({ highlight: isActive })} transition-colors`
+                  }
+                  onClick={() => setIsMobileOpen(prev => !prev)}
+                >
+                  마이페이지
+                </NavLink>
+
+                <NavLink
+                  to={"/logout"}
+                  className={({ isActive }) =>
+                    `${headerLinkHover({ highlight: isActive })} transition-colors`
+                  }
+                  onClick={() => {
+                    setIsMobileOpen(prev => !prev);
+                    handleLogout();
+                  }}
+                >
+                  로그아웃
+                </NavLink>
+              </>
+            )}
+            {items.map(item => (
+              <div key={item.id}>
+                {item.subMenus ? (
+                  <>
+                    <div className={`${headerLinkHover({ highlight: false })} cursor-default`}>
+                      {item.name}
+                    </div>
+                    {item.subMenus.map((subItem, index) => (
+                      <Link
+                        key={index}
+                        to={subItem.src}
+                        className={`${headerLinkHover({ highlight: false })} pl-4 text-sm`}
+                        onClick={() => setIsMobileOpen(prev => !prev)}
+                      >
+                        └ {subItem.name}
+                      </Link>
+                    ))}
+                  </>
+                ) : (
+                  <NavLink
+                    to={item.src}
+                    className={({ isActive }) =>
+                      `${headerLinkHover({ highlight: isActive })} transition-colors`
+                    }
+                    onClick={() => setIsMobileOpen(prev => !prev)}
+                  >
                     {item.name}
-                  </div>
-                  {item.subMenus.map((subItem, index) => (
-                    <Link
-                      key={index}
-                      to={subItem.src}
-                      className={`${headerLinkHover()} pl-4 text-sm`}
-                    >
-                      └ {subItem.name}
-                    </Link>
-                  ))}
-                </>
-              ) : (
-                <Link to={item.src} className={headerLinkHover({ highlight: true })}>
-                  {item.name}
-                </Link>
-              )}
-            </div>
-          ))}
+                  </NavLink>
+                )}
+              </div>
+            ))}
+          </div>
+          <div className="flex justify-end [margin-bottom:50%]">
+            <ThemeToggle />
+          </div>
         </div>
       )}
     </header>

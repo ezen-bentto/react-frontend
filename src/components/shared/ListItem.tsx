@@ -125,7 +125,8 @@ const ListItem = ({
                 {communityType !== undefined ? getCommunityTypeLabel(communityType) : "기타"}
               </Badge>
               <Badge intent={"orange"} size={"sm"}>
-                D-{countDate(endDate ? endDate : "error")}
+                {/* D- */}
+                {countDate(endDate ?? "error") <= 0 ? "마감" : `D-${countDate(endDate ?? "error")}`}
               </Badge>
             </div>
           )}
@@ -135,8 +136,9 @@ const ListItem = ({
           <h3 className="justify-start text-2xl font-black truncate">{title}</h3>
         </div>
 
-        <div className="w-full flex-default">
-          <div className="flex-default flex-col min-h-[48px]">
+        <div className="flex-default w-full">
+          <div className="flex justify-center items-start flex-col min-h-[48px]">
+
             {type === "community" ? (
               <p
                 className="flex-1 text-base list-col-wrap"

@@ -6,42 +6,15 @@ import "swiper/css/pagination";
 import Card from "../shared/Card";
 import Title from "../shared/Title";
 import SwiperNavBtn from "./SwiperNavBtn";
-import axios from "axios";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import countDate from "@/utils/countDate";
-
-export interface ContestItem {
-  id: number;
-  writer_id: number;
-  title: string;
-  img: string;
-  organizer: string;
-  organizer_type: string;
-  participants: string;
-  prize: string;
-  start_date: string;
-  end_date: string;
-  homepage: string;
-  benefits: string;
-  contest_tag: string;
-  article: string;
-}
+import { useContestStore } from "@/features/contest/store";
 
 const ContestSlider = () => {
-  const [items, setItems] = useState<ContestItem[]>([]);
-
-  const fetchData = async () => {
-    try {
-      const response = await axios.get<ContestItem[]>("/data/contests-list.json");
-      const slicedWithId = response.data.slice(0, 10);
-      setItems(slicedWithId);
-    } catch (error) {
-      console.error("공모전 데이터 로딩 오류:", error);
-    }
-  };
+  const { latestContests, fetchContest } = useContestStore();
 
   useEffect(() => {
-    fetchData();
+    fetchContest();
   }, []);
 
   return (
@@ -65,12 +38,12 @@ const ContestSlider = () => {
           640: { slidesPerView: 1 },
         }}
       >
-        {items.map(item => (
+        {latestContests.map(item => (
           <SwiperSlide key={item.id}>
             <Card
               dday={countDate(item.end_date).toString()}
               id={item.id}
-              img={item.img}
+              img={item.img ? item.img : ""}
               text={item.organizer}
               title={item.title}
               intent="neutral"

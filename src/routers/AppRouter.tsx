@@ -12,6 +12,8 @@ import MyPage from "@/pages/MyPage/MyPage";
 import SignUpTypeSelect from "@/pages/SignUp/SignUpTypeSelect";
 import SignUpPersonal from "@/pages/SignUp/SignUpPersonal";
 import SignUpCompany from "@/pages/SignUp/SignUpCompany";
+import ContestList from "@/pages/Contest/ContestList";
+import ContestDetail from "@/pages/Contest/ContestDetail";
 
 const AppRouter = () => {
   return (
@@ -24,6 +26,8 @@ const AppRouter = () => {
         <Route path="/community/write" element={<CommunityWrite />} />
         <Route path="/community/content/:communityId" element={<CommunityContent />} />
         <Route path="/community/list" element={<CommunityList />} />
+        <Route path="/contest" element={<ContestList />} />
+        <Route path="/contest/:contestId" element={<ContestDetail />} />
         <Route path="/login" element={<Login />} />
         <Route path="/mypage" element={<MyPage />} />
         <Route path="/signup" element={<SignUpTypeSelect />} />
