@@ -28,7 +28,7 @@ export const getMyPosts = async () => {
 
 export const getMyBookmarks = async () => {
   try {
-    const config = getAuthHeaders();
+    // const config = getAuthHeaders();
     // const response = await axios.get('/api/mypage/bookmarks', config);
     // return response.data.data;
     console.log("북마크 API 호출 (백엔드 기능은 아직 없음)");

@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
-import { getMyPosts, getMyBookmarks } from "../../api/mypage/mypage";
+import { getMyPosts } from "../../api/mypage/mypage";
 
 import Avatar from "@/components/shared/Avatar";
 import Button from "@/components/shared/Button";
@@ -22,7 +22,7 @@ const PersonalMypage = () => {
 
   const [activeTab, setActiveTab] = useState("my-posts");
   const [myPosts, setMyPosts] = useState<MyPost[]>([]);
-  const [bookmarks, setBookmarks] = useState([]);
+  // const [bookmarks, setBookmarks] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -54,23 +54,23 @@ const PersonalMypage = () => {
         <div className="max-w-[1400px] mx-auto px-4">
           <div className="flex flex-col lg:flex-row justify-between items-center gap-6 lg:gap-0">
             <div className="flex flex-col lg:flex-row items-center gap-8">
-              <Avatar
-                src={user?.profileImage || "/images/default-avatar.png"}
-                shape="circle"
-                size="xl"
-              />
+              <Avatar src={"/images/default-avatar.png"} shape="circle" size="xl" />
               <div className="flex flex-col gap-2 text-center lg:text-left">
                 <h2 className="text-3xl font-bold text-gray-900 dark:text-white">
                   {user?.nickname}
                 </h2>
-                <p className="text-lg text-gray-600 dark:text-gray-400">{user?.email}</p>
+                {/* <p className="text-lg text-gray-600 dark:text-gray-400">{user?.email}</p> */}
               </div>
             </div>
             <div className="flex gap-2">
-              <Button type="button" onClick={() => navigate("/community/write")} intent="primary">
+              <Button
+                type="button"
+                onClickFnc={() => navigate("/community/write")}
+                intent="primary"
+              >
                 글쓰기
               </Button>
-              <Button type="button" onClick={() => navigate("/mypage/edit")} intent="secondary">
+              <Button type="button" onClickFnc={() => navigate("/mypage/edit")} intent="primary">
                 프로필 수정
               </Button>
             </div>
