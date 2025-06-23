@@ -2,7 +2,7 @@ import { CheckboxGroup } from "@/components/contest/Checkbox";
 import { FormField } from "@/components/contest/FormField";
 import { TextInput } from "@/components/contest/TextInput";
 import Button from "@/components/shared/Button";
-import ReactQuill from "react-quill-new";
+
 import { contestFilterData } from "@/constants/ContestFilterData";
 import { DateRange } from "@/components/contest/DateRange";
 import { fetchContestEdit, fetchContestWrite } from "@/api/contest/contestApi";
@@ -10,6 +10,7 @@ import { RadioGroup } from "@/components/contest/RadioGroup";
 import { useContestStore } from "@/store/ContestFormStore";
 import { useNavigate, useParams } from "react-router-dom";
 import { useEffect } from "react";
+import ReactQuillEditor from "@/components/shared/ReactQuillEditor";
 
 const ContestForm = () => {
   const { id } = useParams();
@@ -142,12 +143,18 @@ const ContestForm = () => {
         {/* 상세정보 */}
         <FormField label="상세정보" required>
           <div className="w-full ">
-            <ReactQuill
+            {/* <ReactQuill
               value={contestFormData.article}
               onChange={value => updateContestFormData({ article: value })}
               theme="snow"
               className="h-[400px] mb-4"
               placeholder=""
+            />
+            */}
+            <ReactQuillEditor
+              value={contestFormData.article}
+              onChange={value => updateContestFormData({ article: value })}
+              className="h-[400px] mb-4"
             />
           </div>
         </FormField>
