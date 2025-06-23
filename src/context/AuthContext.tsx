@@ -6,6 +6,7 @@ import { jwtDecode } from "jwt-decode";
 interface AuthUser {
   id: number;
   nickname: string;
+  userType: string; // '1': 개인, '2': 기업, '3': 관리자
 }
 
 interface AuthContextType {
@@ -17,6 +18,11 @@ interface AuthContextType {
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
+interface DecodedToken {
+  userId: number;
+  nickname: string;
+  userType: string;
+}
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -26,8 +32,12 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     const token = localStorage.getItem("accessToken");
     if (token) {
       try {
-        const decodedUser: { userId: number; nickname: string } = jwtDecode(token);
-        setUser({ id: Number(decodedUser.userId), nickname: decodedUser.nickname });
+        const decodedUser: DecodedToken = jwtDecode(token);
+        setUser({
+          id: Number(decodedUser.userId),
+          nickname: decodedUser.nickname,
+          userType: decodedUser.userType,
+        });
         setIsLoggedIn(true);
       } catch (error) {
         console.error("Invalid token:", error);
@@ -36,12 +46,16 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     }
   }, []);
 
-  const login = (accessToken: string, refreshToken: string) => {
+  const login = (accessToken: string, _refreshToken: string) => {
     localStorage.setItem("accessToken", accessToken);
-    localStorage.setItem("refreshToken", refreshToken);
+    localStorage.setItem("refreshToken", _refreshToken);
     try {
-      const decodedUser: { userId: number; nickname: string } = jwtDecode(accessToken);
-      setUser({ id: Number(decodedUser.userId), nickname: decodedUser.nickname });
+      const decodedUser: DecodedToken = jwtDecode(accessToken);
+      setUser({
+        id: Number(decodedUser.userId),
+        nickname: decodedUser.nickname,
+        userType: decodedUser.userType,
+      });
       setIsLoggedIn(true);
     } catch (error) {
       console.error("Invalid token on login:", error);

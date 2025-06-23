@@ -14,6 +14,7 @@ import SignUpPersonal from "@/pages/SignUp/SignUpPersonal";
 import SignUpCompany from "@/pages/SignUp/SignUpCompany";
 import ContestList from "@/pages/Contest/ContestList";
 import ContestDetail from "@/pages/Contest/ContestDetail";
+import { ProtectedRoute } from "@/routers/ProtectedRoute";
 
 const AppRouter = () => {
   return (
@@ -29,7 +30,14 @@ const AppRouter = () => {
         <Route path="/contest" element={<ContestList />} />
         <Route path="/contest/:contestId" element={<ContestDetail />} />
         <Route path="/login" element={<Login />} />
-        <Route path="/mypage" element={<MyPage />} />
+        <Route
+          path="/mypage"
+          element={
+            <ProtectedRoute>
+              <MyPage />
+            </ProtectedRoute>
+          }
+        />
         <Route path="/signup" element={<SignUpTypeSelect />} />
         <Route path="/signup/personal" element={<SignUpPersonal />} />
         <Route path="/signup/company" element={<SignUpCompany />} />

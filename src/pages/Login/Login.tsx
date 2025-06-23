@@ -113,7 +113,6 @@ const Login = () => {
 
         {tab === "personal" && (
           <div className="flex flex-col gap-3">
-            {/* [수정] 다크모드 hover시 톤 다운된 색상 적용 */}
             <button
               type="button"
               onClick={() => handleSocialLogin("카카오")}
@@ -176,7 +175,6 @@ const Login = () => {
                 required
               />
             </div>
-            {/* [수정] 다크모드 버튼 색상 변경 */}
             <button
               type="submit"
               className="mt-2 w-full rounded-lg bg-blue-600 px-6 py-3 text-lg font-semibold text-white transition-all duration-200 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:focus:ring-offset-2 dark:bg-gray-600 dark:hover:bg-gray-700"
