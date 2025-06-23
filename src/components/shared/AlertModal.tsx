@@ -1,4 +1,4 @@
-// src/components/ui/AlertModal.tsx
+// src/components/shared/AlertModal.tsx
 import React from "react";
 import { modal, type ModalVariants } from "@/components/style/alertModal";
 
