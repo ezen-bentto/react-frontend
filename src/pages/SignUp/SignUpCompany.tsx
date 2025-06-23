@@ -1,7 +1,7 @@
-// src/components/SignUpCompany.tsx
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import { signUpCompany, type CompanySignUpPayload } from "../../api/auth";
 
 interface SignUpForm {
   email: string;
@@ -21,17 +21,18 @@ const SignUpCompany = () => {
     phoneNumber: "",
   });
   const [passwordMatch, setPasswordMatch] = useState<boolean | null>(null);
+  const [passwordValid, setPasswordValid] = useState<boolean | null>(null);
   const [errorMessage, setErrorMessage] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
 
-  const API_BASE_URL = "http://localhost:8080/api";
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  const passwordRegex = /^(?=.*[0-9])(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{8,}$/;
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    // e: React.ChangeEvent<HTMLInputElement>으로 타입 명시
     const { name, value } = e.target;
     setForm({ ...form, [name]: value });
 
-    if (name === "confirmPassword" || name === "password") {
+    if (name === "password" || name === "confirmPassword") {
       const pwd = name === "password" ? value : form.password;
       const confirmPwd = name === "confirmPassword" ? value : form.confirmPassword;
 
@@ -40,14 +41,29 @@ const SignUpCompany = () => {
       } else {
         setPasswordMatch(null);
       }
+
+      if (pwd) {
+        setPasswordValid(passwordRegex.test(pwd));
+      } else {
+        setPasswordValid(null);
+      }
     }
   };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    // e: React.FormEvent<HTMLFormElement>으로 타입 명시
     e.preventDefault();
     setErrorMessage("");
     setSuccessMessage("");
+
+    if (!emailRegex.test(form.email)) {
+      setErrorMessage("유효한 이메일 주소를 입력해주세요.");
+      return;
+    }
+
+    if (!passwordRegex.test(form.password)) {
+      setErrorMessage("비밀번호는 8자 이상이며 숫자와 특수문자를 포함해야 합니다.");
+      return;
+    }
 
     if (form.password !== form.confirmPassword) {
       setErrorMessage("비밀번호가 일치하지 않습니다.");
@@ -55,23 +71,24 @@ const SignUpCompany = () => {
     }
 
     try {
-      const response = await axios.post(`${API_BASE_URL}/auth/signup/company`, {
+      const payload: CompanySignUpPayload = {
         email: form.email,
         password: form.password,
         companyName: form.companyName,
         phoneNumber: form.phoneNumber,
-      });
+      };
 
-      if (response.data.success) {
-        setSuccessMessage(response.data.message || "회원가입이 완료되었습니다.");
+      const response = await signUpCompany(payload);
+
+      if (response.success) {
+        setSuccessMessage(response.message || "회원가입이 완료되었습니다.");
         setTimeout(() => {
           navigate("/login");
         }, 2000);
       } else {
-        setErrorMessage(response.data.message || "회원가입 실패");
+        setErrorMessage(response.message || "회원가입 실패");
       }
     } catch (error: unknown) {
-      // error: unknown으로 변경 후 instanceof AxiosError로 체크
       if (axios.isAxiosError(error)) {
         console.error("기업 회원가입 에러:", error.response?.data || error.message);
         setErrorMessage(error.response?.data?.message || "회원가입 중 오류가 발생했습니다.");
@@ -128,12 +145,25 @@ const SignUpCompany = () => {
               <input
                 type="password"
                 name="password"
-                className={getInputStyle()}
+                className={getInputStyle(passwordValid === false, passwordValid === true)}
                 placeholder="비밀번호를 입력하세요"
                 value={form.password}
                 onChange={handleChange}
                 required
               />
+              {passwordValid !== null && (
+                <p
+                  className={`text-xs mt-1 ${
+                    passwordValid
+                      ? "text-green-600 dark:text-green-400"
+                      : "text-red-600 dark:text-red-400"
+                  }`}
+                >
+                  {passwordValid
+                    ? "✓ 비밀번호 형식이 올바릅니다"
+                    : "✗ 비밀번호는 8자 이상, 숫자와 특수문자를 포함해야 합니다"}
+                </p>
+              )}
             </div>
 
             <div className="mb-4">
@@ -151,7 +181,11 @@ const SignUpCompany = () => {
               />
               {passwordMatch !== null && (
                 <p
-                  className={`text-xs mt-1 ${passwordMatch ? "text-green-600 dark:text-green-400" : "text-red-600 dark:text-red-400"}`}
+                  className={`text-xs mt-1 ${
+                    passwordMatch
+                      ? "text-green-600 dark:text-green-400"
+                      : "text-red-600 dark:text-red-400"
+                  }`}
                 >
                   {passwordMatch ? "✓ 비밀번호가 일치합니다" : "✗ 비밀번호가 일치하지 않습니다"}
                 </p>
