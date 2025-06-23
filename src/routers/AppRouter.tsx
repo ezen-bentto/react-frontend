@@ -15,11 +15,13 @@ import SignUpCompany from "@/pages/SignUp/SignUpCompany";
 import ContestList from "@/pages/Contest/ContestList";
 import ContestDetail from "@/pages/Contest/ContestDetail";
 import { ProtectedRoute } from "@/routers/ProtectedRoute";
+import { PublicRoute } from "@/routers/PublicRoute";
 
 const AppRouter = () => {
   return (
     <Routes>
       <Route element={<MainLayout />}>
+        {/* --- 누구나 접근 가능한 페이지 --- */}
         <Route path="/" element={<Home />} />
         <Route path="*" element={<NotFound />} />
         <Route path="/policy" element={<Policy />} />
@@ -29,7 +31,8 @@ const AppRouter = () => {
         <Route path="/community/list" element={<CommunityList />} />
         <Route path="/contest" element={<ContestList />} />
         <Route path="/contest/:contestId" element={<ContestDetail />} />
-        <Route path="/login" element={<Login />} />
+
+        {/* --- 로그인 한 사람만 접근 가능한 페이지 --- */}
         <Route
           path="/mypage"
           element={
@@ -38,9 +41,40 @@ const AppRouter = () => {
             </ProtectedRoute>
           }
         />
-        <Route path="/signup" element={<SignUpTypeSelect />} />
-        <Route path="/signup/personal" element={<SignUpPersonal />} />
-        <Route path="/signup/company" element={<SignUpCompany />} />
+
+        {/* --- 로그인 안 한 사람만 접근 가능한 페이지 --- */}
+        <Route
+          path="/login"
+          element={
+            <PublicRoute>
+              <Login />
+            </PublicRoute>
+          }
+        />
+        <Route
+          path="/signup"
+          element={
+            <PublicRoute>
+              <SignUpTypeSelect />
+            </PublicRoute>
+          }
+        />
+        <Route
+          path="/signup/personal"
+          element={
+            <PublicRoute>
+              <SignUpPersonal />
+            </PublicRoute>
+          }
+        />
+        <Route
+          path="/signup/company"
+          element={
+            <PublicRoute>
+              <SignUpCompany />
+            </PublicRoute>
+          }
+        />
 
         {/*
         [ 예제: 게시글 목록 및 게시글 상세 페이지 라우터 설정 ]
