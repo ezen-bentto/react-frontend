@@ -22,6 +22,7 @@ export default function PolicyList() {
           linkSrc={`/policy/${item.link}`}
           comment={0}
           description={item.description}
+          category={item.category}
           likes={0}
           title={item.title}
           writer="청년정책과"
