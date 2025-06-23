@@ -37,4 +37,4 @@ export const getMyBookmarks = async () => {
     console.error("북마크 조회 API 에러:", error);
     throw error;
   }
-}; 
+};
