@@ -11,6 +11,7 @@ import { v4 as uuidv4 } from "uuid";
 import { Link, NavLink, useLocation } from "react-router-dom";
 import { ThemeToggle } from "./ThemeToggle";
 import { useThemeStore } from "@/features/common/themeStore";
+import { useAuth } from "../../context/AuthContext";
 
 /**
  *
@@ -64,9 +65,12 @@ interface HeaderProps {
 }
 
 export const Header = ({ opacityEffect = false }: HeaderProps) => {
+  // 전역 상태를 가져옴
+  const { isLoggedIn, logout } = useAuth();
+
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileOpen, setIsMobileOpen] = useState(false);
-  const [isLoggedIn, setIsLoggedIn] = useState<boolean>(!!localStorage.getItem("isLoggedIn"));
+  // const [isLoggedIn, setIsLoggedIn] = useState<boolean>(!!localStorage.getItem("isLoggedIn"));
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
   const { initTheme } = useThemeStore();
 
@@ -93,14 +97,20 @@ export const Header = ({ opacityEffect = false }: HeaderProps) => {
     return () => window.removeEventListener("scroll", onScroll);
   }, [opacityEffect]);
 
-  // 로그아웃시 localstorage 삭제
+  // 로그아웃 핸들러가 전역 logout 함수를 호출하고, 홈으로 이동시킴
   const handleLogout = () => {
-    localStorage.removeItem("isLoggedIn");
-    localStorage.removeItem("loginProvider");
-    localStorage.removeItem("userType");
-    setIsLoggedIn(false);
-    window.location.href = "/pages/main/main.html";
+    logout();
+    alert("로그아웃 되었습니다.");
   };
+
+  // // 로그아웃시 localstorage 삭제
+  // const handleLogout = () => {
+  //   localStorage.removeItem("isLoggedIn");
+  //   localStorage.removeItem("loginProvider");
+  //   localStorage.removeItem("userType");
+  //   setIsLoggedIn(false);
+  //   window.location.href = "/pages/main/main.html";
+  // };
 
   // 사용자가 설정한 테마값
   useEffect(() => {
@@ -185,7 +195,6 @@ export const Header = ({ opacityEffect = false }: HeaderProps) => {
               >
                 로그인
               </NavLink>
-
               <NavLink
                 to={"/signup"}
                 className={({ isActive }) =>
@@ -206,7 +215,7 @@ export const Header = ({ opacityEffect = false }: HeaderProps) => {
                 마이페이지
               </NavLink>
               <NavLink
-                to={"/logout"}
+                to={"/"}
                 className={({ isActive }) =>
                   `${headerLinkHover({ highlight: isActive })} transition-colors`
                 }
@@ -267,7 +276,7 @@ export const Header = ({ opacityEffect = false }: HeaderProps) => {
                 </NavLink>
 
                 <NavLink
-                  to={"/logout"}
+                  to={"/"}
                   className={({ isActive }) =>
                     `${headerLinkHover({ highlight: isActive })} transition-colors`
                   }

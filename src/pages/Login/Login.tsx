@@ -1,25 +1,29 @@
 // src/pages/Login/Login.tsx
+
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import axios from "axios"; // 기본 axios import로 변경
-import { login, getKakaoLoginUrl, type LoginPayload } from "../../api/auth"; // 절대 경로 대신 상대 경로 사용
+import axios from "axios";
+import { login as loginApi, getKakaoLoginUrl, type LoginPayload } from "../../api/auth";
+import { useAuth } from "../../context/AuthContext";
 
 const Login = () => {
   const navigate = useNavigate();
+  const { login } = useAuth(); // login 함수를 가져오기
+
   const [tab, setTab] = useState<"personal" | "company">("personal");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
 
   useEffect(() => {
+    // 소셜 로그인 후 리다이렉트 처리
     const params = new URLSearchParams(window.location.search);
     const token = params.get("token");
     const refresh = params.get("refresh");
     const error = params.get("error");
 
     if (token && refresh) {
-      localStorage.setItem("accessToken", token);
-      localStorage.setItem("refreshToken", refresh);
+      login(token, refresh); // context의 login 함수로 로그인 상태 업데이트
       alert("로그인 성공!");
       navigate("/");
     } else if (error) {
@@ -27,45 +31,33 @@ const Login = () => {
         error === "kakao_login_failed" ? "카카오 로그인에 실패했습니다." : "로그인에 실패했습니다."
       );
     }
-  }, [navigate]);
+  }, [navigate, login]);
 
   const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setErrorMessage("");
 
-    // 유효성 검사
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    const passwordRegex = /^(?=.*[0-9])(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{8,}$/;
-
     if (!emailRegex.test(email)) {
       setErrorMessage("유효한 이메일 주소를 입력해주세요.");
       return;
     }
 
-    if (!passwordRegex.test(password)) {
-      setErrorMessage("비밀번호는 8자 이상이며 숫자와 특수문자를 포함해야 합니다.");
-      return;
-    }
-
     try {
       const payload: LoginPayload = { email, password };
-      const loginData = await login(payload);
+      const loginData = await loginApi(payload); // 백엔드에 로그인 요청
 
-      localStorage.setItem("accessToken", loginData.accessToken);
-      if (loginData.refreshToken) {
-        localStorage.setItem("refreshToken", loginData.refreshToken);
+      // [수정] localStorage 대신 context의 login 함수를 호출하여 전역 상태를 업데이트
+      if (loginData.accessToken && loginData.refreshToken) {
+        login(loginData.accessToken, loginData.refreshToken);
+        alert("로그인 성공!");
+        navigate("/");
       }
-
-      alert("로그인 성공!");
-      navigate("/");
     } catch (error: unknown) {
       if (axios.isAxiosError(error)) {
-        console.error("기업 로그인 에러:", error);
-        // 서버에서 반환된 에러 메시지 처리
         const errorMsg = error.response?.data?.message || "로그인에 실패했습니다.";
         setErrorMessage(errorMsg);
       } else {
-        console.error("알 수 없는 에러:", error);
         setErrorMessage("알 수 없는 오류가 발생했습니다.");
       }
     }
@@ -76,14 +68,9 @@ const Login = () => {
       try {
         const loginUrl = await getKakaoLoginUrl();
         window.location.href = loginUrl;
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
       } catch (error: unknown) {
-        if (axios.isAxiosError(error)) {
-          console.error("카카오 로그인 URL 요청 에러:", error);
-          setErrorMessage("카카오 로그인 연동 중 오류가 발생했습니다.");
-        } else {
-          console.error("알 수 없는 에러:", error);
-          setErrorMessage("알 수 없는 오류가 발생했습니다.");
-        }
+        setErrorMessage("카카오 로그인 연동 중 오류가 발생했습니다.");
       }
     } else {
       alert(`${provider} 소셜 로그인은 아직 구현 중입니다.`);
