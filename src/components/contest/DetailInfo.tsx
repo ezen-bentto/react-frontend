@@ -2,6 +2,7 @@ import type { Contest } from "@/types/contestType";
 import countDate from "@/utils/countDate";
 import Badge from "../shared/Badge";
 import Button from "../shared/Button";
+import { featBookmark } from "@/api/contest/list";
 
 interface DetailInfoProps {
   data?: Contest;
@@ -46,7 +47,10 @@ function DetailInfo({ data }: DetailInfoProps) {
 
         {/* 조회수 찜 */}
         <div className="flex items-center gap-4">
-          <button className="flex flex-col items-center gap-1 p-2 hover:bg-gray-50 rounded-md transition-colors">
+          <button
+            className="flex flex-col items-center gap-1 p-2 hover:bg-gray-50 rounded-md transition-colors"
+            onClick={() => featBookmark(data.id)}
+          >
             <div className="w-8 h-8 bg-gray-200 rounded-full flex items-center justify-center">
               ⭐
             </div>
