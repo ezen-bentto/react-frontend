@@ -64,8 +64,7 @@ export default function Policy() {
   };
 
   return (
-    // <div className="flex flex-col items-center justify-center gap-4 mt-20 min-w-[360px]">
-    <div className="flex flex-col gap-5 mt-28">
+    <div className="flex flex-col justify-center gap-5 mt-28 min-w-[360px]">
       <Title titleText="청년정책" linkSrc="" />
       <section className="w-full py-5">
         <Fillter
