@@ -138,7 +138,6 @@ const ListItem = ({
 
         <div className="flex-default w-full">
           <div className="flex justify-center items-start flex-col min-h-[48px]">
-
             {type === "community" ? (
               <p
                 className="flex-1 text-base list-col-wrap"

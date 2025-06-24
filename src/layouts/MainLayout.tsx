@@ -5,9 +5,9 @@ import { Outlet } from "react-router-dom";
 
 const MainLayout = () => {
   return (
-    <div className="theme-text theme-bg w-full overflow-hidden font-pretendard">
+    <div className="w-full overflow-hidden theme-text theme-bg font-pretendard">
       <Header />
-      <main className="px-6 py-4 max-w-[1400px] mx-auto">
+      <main className="px-6 py-4 max-w-[1400px] min-w-[360px] mx-auto">
         <Outlet />
         <TopButton />
       </main>
