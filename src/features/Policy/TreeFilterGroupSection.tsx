@@ -36,47 +36,49 @@ const TreeFilterGroupSection = ({
 
   return (
     <fieldset>
-      <span className="font-semibold">{group.label}</span>
+      <div className="flex flex-wrap items-center gap-4">
+        <span className="font-semibold">{group.label}</span>
 
-      {/* 부모 & 1뎁스 */}
-      <ul className="flex flex-wrap gap-2">
-        {group.options.map(option => (
-          <Button
-            key={option.value}
-            type="button"
-            onClickFnc={() => {
-              if (option.children) {
-                onParentSelect(option.value);
-              } else {
-                // 자식 없는 Flat 버튼이면 FilterGroupSection 방식처럼 선택 적용
-                onChildToggle(option.value); 
-              }
-            }}
-            intent={
-              selectedParent === option.value || selectedChildren.includes(option.value)
-                ? "orange"
-                : "fillter"
-            }
-          >
-            {option.label}
-          </Button>
-        ))}
-      </ul>
-
-      {activeParent.children && (
-        <ul className="flex flex-wrap gap-2 mt-2">
-          {activeParent.children.map(child => (
+        {/* 부모 & 1뎁스 */}
+        <ul className="flex flex-wrap gap-2">
+          {group.options.map(option => (
             <Button
-              key={child.value}
+              key={option.value}
               type="button"
-              onClickFnc={() => onChildToggle(child.value)}
-              intent={selectedChildren.includes(child.value) ? "orange" : "fillter"}
+              onClickFnc={() => {
+                if (option.children) {
+                  onParentSelect(option.value);
+                } else {
+                  // 자식 없는 Flat 버튼이면 FilterGroupSection 방식처럼 선택 적용
+                  onChildToggle(option.value); 
+                }
+              }}
+              intent={
+                selectedParent === option.value || selectedChildren.includes(option.value)
+                  ? "orange"
+                  : "fillter"
+              }
             >
-              {child.label}
+              {option.label}
             </Button>
           ))}
         </ul>
-      )}
+
+        {activeParent.children && (
+          <ul className="flex flex-wrap gap-2 mt-2">
+            {activeParent.children.map(child => (
+              <Button
+                key={child.value}
+                type="button"
+                onClickFnc={() => onChildToggle(child.value)}
+                intent={selectedChildren.includes(child.value) ? "orange" : "fillter"}
+              >
+                {child.label}
+              </Button>
+            ))}
+          </ul>
+        )}
+      </div>
     </fieldset>
   );
 };
