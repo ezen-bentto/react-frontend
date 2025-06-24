@@ -23,28 +23,23 @@ const filterGroups: FilterGroup[] = [
     multiSelect: false, // 단일 선택
   },
   {
-    name: "region",
+    name: "regionFlat",
     label: "지역",
     options: [
-      {
-        label: "전국",
-        value: "전국",
-      },
+      { label: "전국", value: "전국" },
       {
         label: "지역구",
         value: "지역구",
         children: koreaRegions.map(r => ({ label: r, value: r })),
       },
-      {
-        label: "서울시",
-        value: "서울",
-      },
+      { label: "서울시", value: "서울" },
       {
         label: "서울구",
         value: "서울구",
         children: seoulRegions.map(r => ({ label: r, value: r })),
       },
     ],
+    multiSelect: false,
   },
 ];
 
@@ -62,7 +57,6 @@ export default function Policy() {
 
   // Fillter 에서 선택된 필터 값 받기
   const handleFilterChange = (groupName: string, selected: string[]) => {
-    console.log("✅ Filter change:", groupName, selected);
     setSelectedFilters(prev => ({
       ...prev,
       [groupName]: selected,
@@ -74,7 +68,7 @@ export default function Policy() {
     const categoryMatch =
       !selectedFilters.category.length || selectedFilters.category.includes(policy.category);
 
-    const regionAll = [...(selectedFilters.regionParent || []),...(selectedFilters.regionFlat || []),];
+    const regionAll = [...(selectedFilters.regionFlat || []), ...(selectedFilters.regionParent || [])];
     const regionMatch = !regionAll.length || regionAll.includes(policy.region);
 
     return categoryMatch && regionMatch;
