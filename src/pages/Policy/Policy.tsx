@@ -64,7 +64,7 @@ export default function Policy() {
   };
 
   return (
-    <div className="flex flex-col justify-center gap-5 mt-28 min-w-[360px]">
+    <div className="flex flex-col justify-center gap-5 mt-28">
       <Title titleText="청년정책" linkSrc="" />
       <section className="w-full py-5">
         <Fillter
@@ -81,7 +81,7 @@ export default function Policy() {
           }}
         />
       </section>
-      <section className="py-5">
+      <section className="py-5 ">
           <PolicyList policies={currentItems} />
       </section>
       <div>
