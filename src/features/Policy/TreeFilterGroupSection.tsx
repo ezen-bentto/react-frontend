@@ -28,10 +28,6 @@ const TreeFilterGroupSection = ({
   onParentSelect,
   onChildToggle,
 }: TreeFilterProps) => {
-    console.log("✅ TreeFilterGroupSection rendering!");
-    console.log("group.options:", group.options);
-    console.log("selectedParent:", selectedParent);
-    console.log("selectedChildren:", selectedChildren);
 
   const activeParent =
     group.options.find(opt => opt.value === selectedParent) || group.options[0];

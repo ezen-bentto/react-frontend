@@ -33,8 +33,6 @@ export default function PolicyList({ policies }: PolicyListProps) {
         const linkHref = getPolicyLink(item.region, item.link);
         const category = item.category ?  item.category : "분류없음";
         
-        // console.log(item)
-        // console.log(`linkHref: ${linkHref} | category: ${category} | region: ${region}`)
         return (
           <ListItem
             key={item.link}

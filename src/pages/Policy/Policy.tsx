@@ -57,7 +57,6 @@ export default function Policy() {
 
   // Fillter 에서 선택된 필터 값 받기
   const handleFilterChange = (groupName: string, selected: string[]) => {
-    console.log("✅ Filter change:", groupName, selected);
     setSelectedFilters(prev => ({
       ...prev,
       [groupName]: selected,
