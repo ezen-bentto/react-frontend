@@ -50,6 +50,7 @@ export default function Policy() {
     regionParent: [],
     regionFlat: [],
   });
+  const [searchText, setSearchText] = useState("");
 
   useEffect(() => {
     fetchAllPolicies().then(setPolicies);
@@ -63,7 +64,7 @@ export default function Policy() {
     }));
   };
 
-  // 선택된 필터로 policies 필터링
+  // 선택된 필터로 policies 필터링 및 검색
   const filteredPolicies = policies.filter(policy => {
     const categoryMatch =
       !selectedFilters.category.length || selectedFilters.category.includes(policy.category);
@@ -71,7 +72,12 @@ export default function Policy() {
     const regionAll = [...(selectedFilters.regionFlat || []), ...(selectedFilters.regionParent || [])];
     const regionMatch = !regionAll.length || regionAll.includes(policy.region);
 
-    return categoryMatch && regionMatch;
+    const searchMatch =
+      searchText.trim() === "" ||
+      policy.title.toLowerCase().includes(searchText.toLowerCase());
+
+
+    return categoryMatch && regionMatch && searchMatch;
   });
 
   return (
@@ -82,7 +88,15 @@ export default function Policy() {
         <Fillter
           filters={filterGroups}
           onFilterChange={handleFilterChange}
-          onSearchSubmit={() => {}}
+          onSearchSubmit={setSearchText}
+          onResetFilters={() => {
+            setSelectedFilters({
+              category: [],
+              regionParent: [],
+              regionFlat: [],
+            });
+            setSearchText(""); // ✅ 검색어도 초기화
+          }}
         />
       </section>
       <section>
