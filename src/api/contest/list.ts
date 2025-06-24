@@ -20,3 +20,19 @@ export const fetchContestPage = async () => {
   const response = await axios.get<Contest[]>("/data/contest.json");
   return response.data;
 };
+
+export const featBookmark = async (target_id: number) => {
+  const token = localStorage.getItem("accessToken");
+
+  const response = await axios.post(
+    `${import.meta.env.VITE_API_URL}/api/contest/bookmark?id=${target_id}`,
+    {},
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    }
+  );
+
+  return response.data.data;
+};

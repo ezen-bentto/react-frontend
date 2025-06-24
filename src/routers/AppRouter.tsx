@@ -2,7 +2,6 @@ import { Routes, Route } from "react-router-dom";
 import Home from "@/pages/Home/Home";
 import NotFound from "@/pages/NotFound";
 import Policy from "@/pages/Policy/Policy";
-import Stats from "@/pages/Stats/Stats";
 import MainLayout from "@/layouts/MainLayout";
 import CommunityWrite from "@/pages/Community/CommunityWrite";
 import CommunityContent from "@/pages/Community/CommunityContent";
