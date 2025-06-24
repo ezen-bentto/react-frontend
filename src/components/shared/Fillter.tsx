@@ -3,6 +3,7 @@ import Button from "./Button";
 import SearchInput from "./SearchInput";
 import { ReloadOutlined } from "@ant-design/icons";
 import FilterGroupSection from "./FilterGroupSection";
+import TreeFilterGroupSection, { type TreeFilterGroup } from "@/features/Policy/TreeFilterGroupSection";
 
 /**
  *
@@ -19,9 +20,10 @@ import FilterGroupSection from "./FilterGroupSection";
  *           변경일             작성자             변경내용
  * -------------------------------------------------------
  *
- *        2025/06/09           이철욱               신규작성
- *        2025/06/21           이철욱               태그 추가 고정 레이아웃
- *        2025/06/21           이철욱               리팩토링
+ *        2025/06/09           이철욱           신규작성
+ *        2025/06/21           이철욱           태그 추가 고정 레이아웃
+ *        2025/06/21           이철욱           리팩토링
+ *        2025/06/24           김수연           뎁스2 필터 적용
  *
  * @param filters 필터 그룹 배열. 그룹마다 라벨, 이름, 옵션, 다중선택 여부 포함
  * @param onFilterChange 필터 선택 변경 시 호출되는 콜백 (groupName, selectedValues[])
@@ -29,10 +31,17 @@ import FilterGroupSection from "./FilterGroupSection";
  *
  */
 
-interface FilterOption {
+export interface FilterOptionBase {
   label: string;
   value: string;
 }
+
+export interface TreeFilterOption extends FilterOptionBase {
+  children?: TreeFilterOption[];
+}
+
+export type FilterOption = FilterOptionBase | TreeFilterOption;
+
 
 export interface FilterGroup {
   name: string;
@@ -56,6 +65,9 @@ const Fillter = ({ filters, onFilterChange, onSearchSubmit, onResetFilters }: Fi
     {}
   );
 
+  const [selectedParentRegion, setSelectedParentRegion] = useState<string | null>(null);
+  const [selectedChildRegions, setSelectedChildRegions] = useState<string[]>([]);
+
   useEffect(() => {
     // 모든 그룹의 선택 상태가 바뀔 때마다 콜백 실행
     Object.entries(selectedFilters).forEach(([groupName, valueObj]) => {
@@ -63,6 +75,12 @@ const Fillter = ({ filters, onFilterChange, onSearchSubmit, onResetFilters }: Fi
       onFilterChange(groupName, selectedValues);
     });
   }, [selectedFilters]);
+
+  // 청년 정책 자식 노드 관련 useEffet
+  useEffect(() => {
+    const selected = [selectedParentRegion, ...selectedChildRegions].filter(Boolean);
+    onFilterChange("region", selected as string[]);
+  }, [selectedParentRegion, selectedChildRegions]);
 
   const handleFilterClick = (groupName: string, value: string, multiSelect = false) => {
     setSelectedFilters(prev => {
@@ -95,6 +113,19 @@ const Fillter = ({ filters, onFilterChange, onSearchSubmit, onResetFilters }: Fi
     });
   };
 
+ // 청년 정책 부모 노드 선택 핸들러
+  const handleParentRegionSelect = (parent: string) => {
+    setSelectedParentRegion(parent);
+    setSelectedChildRegions([]); // 부모 변경 시 자식 초기화
+  };
+
+  // 청년 정책 자식 노드 선택 핸들러
+  const handleChildRegionToggle = (child: string) => {
+    setSelectedChildRegions(prev =>
+      prev.includes(child) ? prev.filter(c => c !== child) : [...prev, child]
+    );
+  };
+
   const createRemoveHandler = useCallback(
     (groupName: string, value: string) => {
       const multiSelect = filters.find(f => f.name === groupName)?.multiSelect ?? false;
@@ -105,27 +136,52 @@ const Fillter = ({ filters, onFilterChange, onSearchSubmit, onResetFilters }: Fi
 
   return (
     <form
-      className="p-4 box-border-black space-y-6"
+      className="p-4 space-y-6 box-border-black"
       onSubmit={e => {
         e.preventDefault();
         onSearchSubmit(searchText);
       }}
     >
       {/* 각 필드 내에 속성들 뿌리기 */}
-      {filters.map(group => (
-        <FilterGroupSection
-          key={group.name}
-          group={group}
-          selected={selectedFilters[group.name] || {}}
-          onClick={(value: string) => handleFilterClick(group.name, value, group.multiSelect)}
-        />
-      ))}
+      {filters.map(group => {
+        // children 가진 region인지 확인
+        const isTreeGroup = group.options.some(
+          opt => "children" in opt && opt.children && opt.children.length > 0
+        );
+
+        if (group.name === "regionParent" && isTreeGroup) {
+          return (
+            <TreeFilterGroupSection
+              key={group.name}
+              group={group as TreeFilterGroup}
+              selectedParent={selectedParentRegion}
+              selectedChildren={selectedChildRegions}
+              onParentSelect={handleParentRegionSelect}
+              onChildToggle={handleChildRegionToggle}
+            />
+          );
+        } else {
+          return (
+            <FilterGroupSection
+              key={group.name}
+              group={group}
+              selected={selectedFilters[group.name] || {}}
+              onClick={(value: string) =>
+                handleFilterClick(group.name, value, group.multiSelect)
+              }
+            />
+          );
+        }
+      })}
+
       {/* 적용된 태그 나열 */}
       <div className="flex flex-wrap gap-2 mt-4 items-center min-h-[48px]">
         <span>적용된 검색조건</span>
         <ReloadOutlined
           onClick={() => {
             setSelectedFilters({});
+            setSelectedParentRegion(null); // ✅ 트리 상태도 초기화!
+            setSelectedChildRegions([]);
             onResetFilters?.();
           }}
           className="text-xl cursor-pointer"
@@ -133,30 +189,55 @@ const Fillter = ({ filters, onFilterChange, onSearchSubmit, onResetFilters }: Fi
 
         {Object.entries(selectedFilters).some(([, values]) =>
           Object.values(values).some(Boolean)
-        ) ? (
-          Object.entries(selectedFilters).map(([groupName, values]) =>
-            Object.entries(values).map(([value, isSelected]) => {
-              if (!isSelected) return null;
+        ) || selectedParentRegion || selectedChildRegions.length ? (
+          <>
+            {/* Flat 상태 표시 */}
+            {Object.entries(selectedFilters).map(([groupName, values]) =>
+              Object.entries(values).map(([value, isSelected]) => {
+                if (!isSelected) return null;
 
-              const optionLabel =
-                filters.find(f => f.name === groupName)?.options.find(opt => opt.value === value)
-                  ?.label || value;
+                const optionLabel =
+                  filters.find(f => f.name === groupName)?.options.find(opt => opt.value === value)
+                    ?.label || value;
 
-              return (
-                <Button
-                  key={`${groupName}-${value}`}
-                  type="button"
-                  intent="orange"
-                  onClickFnc={createRemoveHandler(groupName, value)}
-                >
-                  {optionLabel} ✕
-                </Button>
-              );
-            })
-          )
+                return (
+                  <Button
+                    key={`${groupName}-${value}`}
+                    type="button"
+                    intent="orange"
+                    onClickFnc={createRemoveHandler(groupName, value)}
+                  >
+                    {optionLabel} ✕
+                  </Button>
+                );
+              })
+            )}
+
+            {/* ✅ 트리 상태 표시 */}
+            {selectedParentRegion && (
+              <Button
+                type="button"
+                intent="orange"
+                onClickFnc={() => setSelectedParentRegion(null)}
+              >
+                {selectedParentRegion} ✕
+              </Button>
+            )}
+            {selectedChildRegions.map(child => (
+              <Button
+                key={`region-${child}`}
+                type="button"
+                intent="orange"
+                onClickFnc={() =>
+                  setSelectedChildRegions(prev => prev.filter(c => c !== child))
+                }
+              >
+                {child} ✕
+              </Button>
+            ))}
+          </>
         ) : (
-          // 선택된 필터가 없을 때 빈 상태 (스켈레톤처럼 보이게)
-          <div className="w-24 h-8 bg-muted rounded animate-pulse opacity-30 ml-2" />
+          <div className="w-24 h-8 ml-2 rounded bg-muted animate-pulse opacity-30" />
         )}
       </div>
 
@@ -172,3 +253,4 @@ const Fillter = ({ filters, onFilterChange, onSearchSubmit, onResetFilters }: Fi
 };
 
 export default Fillter;
+
