@@ -46,7 +46,7 @@ export default function PolicyList({ policies }: PolicyListProps) {
             title={item.title}
             writer="청년정책과"
             intent="default"
-            size="md"
+            size="min"
           />
         );
       })}
