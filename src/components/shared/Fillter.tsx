@@ -3,7 +3,9 @@ import Button from "./Button";
 import SearchInput from "./SearchInput";
 import { ReloadOutlined } from "@ant-design/icons";
 import FilterGroupSection from "./FilterGroupSection";
-import TreeFilterGroupSection, { type TreeFilterGroup } from "@/features/Policy/TreeFilterGroupSection";
+import TreeFilterGroupSection, {
+  type TreeFilterGroup,
+} from "@/features/Policy/TreeFilterGroupSection";
 
 /**
  *
@@ -41,7 +43,6 @@ export interface TreeFilterOption extends FilterOptionBase {
 }
 
 export type FilterOption = FilterOptionBase | TreeFilterOption;
-
 
 export interface FilterGroup {
   name: string;
@@ -113,7 +114,7 @@ const Fillter = ({ filters, onFilterChange, onSearchSubmit, onResetFilters }: Fi
     });
   };
 
- // 청년 정책 부모 노드 선택 핸들러
+  // 청년 정책 부모 노드 선택 핸들러
   const handleParentRegionSelect = (parent: string) => {
     setSelectedParentRegion(parent);
     setSelectedChildRegions([]); // 부모 변경 시 자식 초기화
@@ -166,9 +167,7 @@ const Fillter = ({ filters, onFilterChange, onSearchSubmit, onResetFilters }: Fi
               key={group.name}
               group={group}
               selected={selectedFilters[group.name] || {}}
-              onClick={(value: string) =>
-                handleFilterClick(group.name, value, group.multiSelect)
-              }
+              onClick={(value: string) => handleFilterClick(group.name, value, group.multiSelect)}
             />
           );
         }
@@ -189,7 +188,9 @@ const Fillter = ({ filters, onFilterChange, onSearchSubmit, onResetFilters }: Fi
 
         {Object.entries(selectedFilters).some(([, values]) =>
           Object.values(values).some(Boolean)
-        ) || selectedParentRegion || selectedChildRegions.length ? (
+        ) ||
+        selectedParentRegion ||
+        selectedChildRegions.length ? (
           <>
             {/* Flat 상태 표시 */}
             {Object.entries(selectedFilters).map(([groupName, values]) =>
@@ -228,9 +229,7 @@ const Fillter = ({ filters, onFilterChange, onSearchSubmit, onResetFilters }: Fi
                 key={`region-${child}`}
                 type="button"
                 intent="orange"
-                onClickFnc={() =>
-                  setSelectedChildRegions(prev => prev.filter(c => c !== child))
-                }
+                onClickFnc={() => setSelectedChildRegions(prev => prev.filter(c => c !== child))}
               >
                 {child} ✕
               </Button>
@@ -253,4 +252,3 @@ const Fillter = ({ filters, onFilterChange, onSearchSubmit, onResetFilters }: Fi
 };
 
 export default Fillter;
-

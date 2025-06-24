@@ -30,9 +30,7 @@ const TreeFilterGroupSection = ({
   onParentSelect,
   onChildToggle,
 }: TreeFilterProps) => {
-
-  const activeParent =
-    group.options.find(opt => opt.value === selectedParent) || group.options[0];
+  const activeParent = group.options.find(opt => opt.value === selectedParent) || group.options[0];
 
   return (
     <fieldset>
@@ -50,7 +48,7 @@ const TreeFilterGroupSection = ({
                   onParentSelect(option.value);
                 } else {
                   // 자식 없는 Flat 버튼이면 FilterGroupSection 방식처럼 선택 적용
-                  onChildToggle(option.value); 
+                  onChildToggle(option.value);
                 }
               }}
               intent={

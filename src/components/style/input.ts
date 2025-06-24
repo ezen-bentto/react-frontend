@@ -1,5 +1,5 @@
 // style/nameField.ts
-import { cva } from "class-variance-authority";
+import { cva, type VariantProps } from "class-variance-authority";
 
 export const fieldset = cva(
   "fieldset w-full max-w-xl text-lg text-brand-primary! dark:text-white!"
@@ -22,3 +22,5 @@ export const input = cva(
     },
   }
 );
+
+export type InputVariants = VariantProps<typeof input>;
