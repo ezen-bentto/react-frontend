@@ -6,8 +6,6 @@ import  Fillter, {type FilterGroup } from "@/components/shared/Fillter";
 import { koreaRegions, seoulRegions } from "@/features/Policy/filters";
 import Title from "@/components/shared/Title";
 
-
-// ✅ Filter JSON 선언
 const filterGroups: FilterGroup[] = [
   {
     name: "category",
@@ -95,7 +93,7 @@ export default function Policy() {
               regionParent: [],
               regionFlat: [],
             });
-            setSearchText(""); // ✅ 검색어도 초기화
+            setSearchText(""); // 검색어 초기화
           }}
         />
       </section>
