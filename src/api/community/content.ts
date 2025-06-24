@@ -23,6 +23,7 @@ export interface CommunityDetail {
   author_id: number;
   reg_date: string;
   recruitment_detail_list: RecruitmentDetail[];
+  scrap_yn: boolean;
 }
 
 /**
@@ -37,9 +38,12 @@ export interface CommunityDetail {
  * -------------------------------------------------------
  *
  *        2025/06/11           김혜미               신규작성
+ *        2025/06/24           김혜미               scrap_yn 추가
  * @param communityId
  */
-export const fetchCommunityDetail = async (communityId: number): Promise<CommunityDetail> => {
+export const fetchCommunityDetail = async (
+  communityId: number
+): Promise<CommunityDetail> => {
   const response = await axios.get<{ data: CommunityDetail }>(
     `${import.meta.env.VITE_API_URL}/api/community/getDetail?communityId=${communityId}`
   );

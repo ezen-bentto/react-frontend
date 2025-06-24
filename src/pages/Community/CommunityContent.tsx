@@ -11,6 +11,7 @@ import Badge from "@/components/shared/Badge";
 import { fetchCategory, type Category } from "@/api/common/category";
 import { modifyComment } from "@/api/comment/modify";
 import { useAuth } from "@/context/AuthContext";
+import { toggleScrap } from "@/api/scrap/toggle";
 import {
   ClockCircleOutlined,
   CalendarOutlined,
@@ -53,8 +54,24 @@ const CommunityContent = () => {
   const [editedContent, setEditedContent] = useState<string>("");
   const [countdown, setCountdown] = useState<string>("");
   const [isDarkMode, setIsDarkMode] = useState(false);
-  const [liked, setLiked] = useState(false);
-  const [likeCount, setLikeCount] = useState(24);
+
+
+  const handleToggleScrap = async () => {
+    if (!isLoggedIn) {
+      alert("로그인이 필요한 서비스입니다.");
+      navigate("/login");
+      return;
+    }
+    if (!community) return;
+
+    try {
+      const { scrap_yn } = await toggleScrap(community.community_id);
+      setCommunity(prev => prev ? { ...prev, scrap_yn } : prev);
+    } catch (err) {
+      console.error("스크랩 토글 실패:", err);
+      alert("스크랩 처리 중 오류가 발생했습니다.");
+    }
+  };
 
   // HTML에 dark 클래스 추가/제거하는 useEffect 추가
   useEffect(() => {
@@ -269,7 +286,7 @@ const CommunityContent = () => {
       }
     };
     loadData();
-  }, [communityId]);
+  }, [communityId, community?.scrap_yn]);
 
   // 댓글 등록
   const handleCommentSubmit = async (e: React.FormEvent) => {
@@ -385,11 +402,6 @@ const CommunityContent = () => {
     }
   };
 
-  const handleLike = () => {
-    setLiked(!liked);
-    setLikeCount(prev => liked ? prev - 1 : prev + 1);
-  };
-
   if (isLoading) {
     return (
       <div className="min-h-screen bg-white dark:bg-[#2B2B2B] text-gray-900 dark:text-white transition-all duration-300">
@@ -471,18 +483,19 @@ const CommunityContent = () => {
                       <EyeOutlined />
                       <span className="text-sm">조회수</span>
                     </div>
+
                     <div className="flex items-center gap-2">
                       <button
-                        onClick={handleLike}
-                        className={`flex items-center gap-1 px-3 py-1 rounded-full transition-all ${liked
+                        onClick={handleToggleScrap}
+                        className={`flex items-center justify-center p-2 rounded-full transition-all ${community?.scrap_yn
                           ? "bg-red-500 text-white"
                           : "bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-300"
                           }`}
                       >
-                        {liked ? <HeartFilled /> : <HeartOutlined />}
-                        <span className="text-sm">{likeCount}</span>
+                        {community.scrap_yn ? <HeartFilled /> : <HeartOutlined />}
                       </button>
                     </div>
+
                   </div>
                 </div>
 

@@ -6,9 +6,11 @@ import Fillter, { type FilterGroup } from "@/components/shared/Fillter";
 import ListItem from "@/components/shared/ListItem";
 import WriteButton from "@/components/shared/WriteButton";
 import Pagination from "@/components/shared/Pagination";
-import { useSearchParams, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { DARK_NOT_ITEM, LiGHT_NOT_ITEM } from "@/constants/ImageSrc";
 import { useAuth } from "@/context/AuthContext";
+import { toggleScrap } from "@/api/scrap/toggle"; // 새로 만든 API
+
 
 const CommunityList = () => {
   const [posts, setPosts] = useState<CommunityItem[]>([]);
@@ -23,9 +25,29 @@ const CommunityList = () => {
 
   const urlParams = new URLSearchParams(window.location.search);
   const communityType = urlParams.get("communityType") || "1";
-  const [searchParams] = useSearchParams();
+
   const navigate = useNavigate();
   const { isLoggedIn } = useAuth();
+  const handleScrapToggle = async (postId: number) => {
+    if (!isLoggedIn) {
+      alert("스크랩은 로그인 후 이용 가능합니다.");
+      navigate("/login");
+      return;
+    }
+    try {
+      const res = await toggleScrap(postId);
+      setPosts(prev =>
+        prev.map(p =>
+          p.community_id === postId
+            ? { ...p, scrap_yn: res.data.scrapped ? "Y" : "N", scrap_count: res.data.scrapped ? (p.scrap_count ?? 0) + 1 : Math.max((p.scrap_count ?? 1) - 1, 0) }
+            : p
+        )
+      );
+    } catch (err) {
+      console.error("스크랩 토글 실패", err);
+      alert("스크랩 처리 중 오류가 발생했습니다.");
+    }
+  };
 
   // 모바일 감지
   useEffect(() => {
@@ -62,25 +84,19 @@ const CommunityList = () => {
     loadCategories();
   }, []);
 
-  // 데이터 로드
+  // 데이터 로드 - 클라이언트 페이지네이션으로 통일
   useEffect(() => {
     const loadList = async () => {
       try {
-        if (viewMode === "card") {
-          const urlPage = parseInt(searchParams.get("page") || "1", 10);
-          const data = await fetchCommunityList(communityType, urlPage, postsPerPage);
-          setPosts(data.list);
-          setCurrentPage(data.page);
-        } else {
-          const data = await fetchCommunityList(communityType, 1, 100);
-          setPosts(data.list);
-        }
+        // 카드형, 리스트형 관계없이 모든 데이터 가져오기
+        const data = await fetchCommunityList(communityType, 1, 100);
+        setPosts(data.list);
       } catch (err) {
         console.error("커뮤니티 목록 조회 실패:", err);
       }
     };
     loadList();
-  }, [communityType, viewMode, searchParams]);
+  }, [communityType]);
 
   useEffect(() => {
     if (isMobile) setViewMode("card");
@@ -127,14 +143,15 @@ const CommunityList = () => {
     return result;
   }, [posts, filters, searchText]);
 
-  // 페이지
+  // 페이지네이션 계산 (카드형일 때만)
   const indexOfLast = currentPage * postsPerPage;
   const indexOfFirst = indexOfLast - postsPerPage;
   const currentPosts = viewMode === "card"
-    ? posts
-    : processedPosts.slice(indexOfFirst, indexOfLast);
+    ? processedPosts.slice(indexOfFirst, indexOfLast)  // 카드형: 페이지네이션
+    : processedPosts;  // 리스트형: 모든 데이터 표시
   const totalPages = Math.max(1, Math.ceil(processedPosts.length / postsPerPage));
 
+  // 필터나 검색이 변경되면 첫 페이지로 이동
   useEffect(() => {
     setCurrentPage(1);
   }, [processedPosts]);
@@ -293,11 +310,14 @@ const CommunityList = () => {
                     intent="primary"
                     division={post.category_type ?? 0}
                     communityType={post.community_type}
+                    scrapYn={post.scrap_yn as "Y" | "N"}  // 서버에서 scrap_yn 내려주므로
+                    onScrapClick={() => handleScrapToggle(post.community_id)}
                   />
                 ))}
               </div>
 
-              {viewMode === "list" && (
+              {/* 카드형일 때만 페이지네이션 표시 */}
+              {viewMode === "card" && (
                 <div className="flex justify-center mt-8">
                   <Pagination
                     currentPage={currentPage}
