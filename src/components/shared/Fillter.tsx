@@ -79,7 +79,7 @@ const Fillter = ({ filters, onFilterChange, onSearchSubmit, onResetFilters }: Fi
   // 청년 정책 자식 노드 관련 useEffet
   useEffect(() => {
     const selected = [selectedParentRegion, ...selectedChildRegions].filter(Boolean);
-    onFilterChange("region", selected as string[]);
+    onFilterChange("regionParent", selected as string[]);
   }, [selectedParentRegion, selectedChildRegions]);
 
   const handleFilterClick = (groupName: string, value: string, multiSelect = false) => {

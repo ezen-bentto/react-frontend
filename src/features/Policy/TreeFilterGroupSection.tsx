@@ -51,7 +51,7 @@ const TreeFilterGroupSection = ({
                 {option.label}
               </Button>
 
-              {option.children && selectedParent === option.value && (
+              {option.children?.length && selectedParent === option.value && (
                 <ul className="flex flex-wrap gap-1 ml-4">
                   {option.children.map(child => (
                     <li key={child.value}>

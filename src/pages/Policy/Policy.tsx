@@ -4,6 +4,7 @@ import { fetchAllPolicies } from "@/features/Policy/api";
 import type { PolicyType } from "@/features/Policy/types";
 import  Fillter, {type FilterGroup } from "@/components/shared/Fillter";
 import { koreaRegions, seoulRegions } from "@/features/Policy/filters";
+import Title from "@/components/shared/Title";
 
 
 // ✅ Filter JSON 선언
@@ -17,6 +18,7 @@ const filterGroups: FilterGroup[] = [
       { label: "복지.문화", value: "복지.문화" },
       { label: "참여.권리", value: "참여.권리" },
       { label: "교육", value: "교육" },
+      { label: "분류없음", value: "분류없음" },
     ],
     multiSelect: false, // 단일 선택
   },
@@ -25,13 +27,8 @@ const filterGroups: FilterGroup[] = [
     label: "지역",
     options: [
       {
-        label: "서울구",
-        value: "서울구",
-        children: seoulRegions.map(r => ({ label: r, value: r })),
-      },
-      {
-        label: "서울시",
-        value: "서울시",
+        label: "전국",
+        value: "전국",
       },
       {
         label: "지역구",
@@ -39,10 +36,14 @@ const filterGroups: FilterGroup[] = [
         children: koreaRegions.map(r => ({ label: r, value: r })),
       },
       {
-        label: "전국",
-        value: "전국",
+        label: "서울시",
+        value: "서울",
       },
-      
+      {
+        label: "서울구",
+        value: "서울구",
+        children: seoulRegions.map(r => ({ label: r, value: r })),
+      },
     ],
   },
 ];
@@ -73,16 +74,17 @@ export default function Policy() {
     const categoryMatch =
       !selectedFilters.category.length || selectedFilters.category.includes(policy.category);
 
-    const regionAll = [...(selectedFilters.regionParent || []), ...(selectedFilters.regionFlat || [])];
-    const regionMatch =
-      !regionAll.length || regionAll.includes(policy.region);
+    const regionAll = [...(selectedFilters.regionParent || []),...(selectedFilters.regionFlat || []),];
+    const regionMatch = !regionAll.length || regionAll.includes(policy.region);
 
     return categoryMatch && regionMatch;
   });
 
   return (
-    <div className="flex flex-col items-center justify-center gap-4 mt-20 min-w-[360px]">
-      <section className="w-full">
+    // <div className="flex flex-col items-center justify-center gap-4 mt-20 min-w-[360px]">
+    <div className="flex flex-col gap-5 mt-28">
+      <Title titleText="청년정책" linkSrc="" />
+      <section className="w-full py-5">
         <Fillter
           filters={filterGroups}
           onFilterChange={handleFilterChange}
