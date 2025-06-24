@@ -1,47 +1,11 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import PolicyList from "./PolicyList";
 import { fetchAllPolicies } from "@/features/Policy/api";
 import type { PolicyType } from "@/features/Policy/types";
-import  Fillter, {type FilterGroup } from "@/components/shared/Fillter";
-import { koreaRegions, seoulRegions } from "@/features/Policy/filters";
 import Title from "@/components/shared/Title";
-
-
-// ✅ Filter JSON 선언
-const filterGroups: FilterGroup[] = [
-  {
-    name: "category",
-    label: "카테고리",
-    options: [
-      { label: "일자리", value: "일자리" },
-      { label: "주거", value: "주거" },
-      { label: "복지.문화", value: "복지.문화" },
-      { label: "참여.권리", value: "참여.권리" },
-      { label: "교육", value: "교육" },
-      { label: "분류없음", value: "분류없음" },
-    ],
-    multiSelect: false, // 단일 선택
-  },
-  {
-    name: "regionFlat",
-    label: "지역",
-    options: [
-      { label: "전국", value: "전국" },
-      {
-        label: "지역구",
-        value: "지역구",
-        children: koreaRegions.map(r => ({ label: r, value: r })),
-      },
-      { label: "서울시", value: "서울" },
-      {
-        label: "서울구",
-        value: "서울구",
-        children: seoulRegions.map(r => ({ label: r, value: r })),
-      },
-    ],
-    multiSelect: false,
-  },
-];
+import { filterGroups } from "@/features/Policy/filterGroups";
+import Fillter from "@/components/shared/Fillter";
+import Pagination from "@/components/shared/Pagination";
 
 export default function Policy() {
   const [policies, setPolicies] = useState<PolicyType[]>([]);
@@ -50,10 +14,46 @@ export default function Policy() {
     regionParent: [],
     regionFlat: [],
   });
+  const [searchText, setSearchText] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
 
+  const itemsPerPage = 24;
+
+  // 데이터 fetch
   useEffect(() => {
     fetchAllPolicies().then(setPolicies);
   }, []);
+
+  // 선택된 필터로 policies 필터링 및 검색
+  const filteredPolicies = useMemo(() => {
+    return policies.filter(policy => {
+      const categoryMatch =
+        !selectedFilters.category.length || selectedFilters.category.includes(policy.category);
+
+      const regionAll = [
+        ...(selectedFilters.regionFlat || []),
+        ...(selectedFilters.regionParent || []),
+      ];
+      const regionMatch = !regionAll.length || regionAll.includes(policy.region);
+
+      const searchMatch =
+        searchText.trim() === "" ||
+        policy.title.toLowerCase().includes(searchText.toLowerCase());
+
+      return categoryMatch && regionMatch && searchMatch;
+    });
+  }, [policies, selectedFilters, searchText]);
+
+  // 페이지네이션
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const currentItems = filteredPolicies.slice(indexOfFirstItem, indexOfLastItem);
+  const totalPages = Math.ceil(filteredPolicies.length / itemsPerPage);
+
+  // 페이지 초기화 시 페이지네이션 초기화
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [filteredPolicies]);
 
   // Fillter 에서 선택된 필터 값 받기
   const handleFilterChange = (groupName: string, selected: string[]) => {
@@ -63,17 +63,6 @@ export default function Policy() {
     }));
   };
 
-  // 선택된 필터로 policies 필터링
-  const filteredPolicies = policies.filter(policy => {
-    const categoryMatch =
-      !selectedFilters.category.length || selectedFilters.category.includes(policy.category);
-
-    const regionAll = [...(selectedFilters.regionFlat || []), ...(selectedFilters.regionParent || [])];
-    const regionMatch = !regionAll.length || regionAll.includes(policy.region);
-
-    return categoryMatch && regionMatch;
-  });
-
   return (
     // <div className="flex flex-col items-center justify-center gap-4 mt-20 min-w-[360px]">
     <div className="flex flex-col gap-5 mt-28">
@@ -82,16 +71,42 @@ export default function Policy() {
         <Fillter
           filters={filterGroups}
           onFilterChange={handleFilterChange}
-          onSearchSubmit={() => {}}
+          onSearchSubmit={setSearchText}
+          onResetFilters={() => {
+            setSelectedFilters({
+              category: [],
+              regionParent: [],
+              regionFlat: [],
+            });
+            setSearchText(""); // 검색어 초기화
+          }}
         />
       </section>
-      <section>
-        <div>
-          <PolicyList policies={filteredPolicies} />
-        </div>
-        {/* pagenation */}
-        <div></div>
+      <section className="py-5">
+          <PolicyList policies={currentItems} />
       </section>
+      <div>
+        {totalPages > 1 && (
+          <Pagination
+            currentPage={currentPage}
+            totalPages={totalPages}
+            onPrevious={() => {
+              setCurrentPage(prev => Math.max(prev - 1, 1));
+              window.scrollTo({ top: 0, behavior: "smooth" });
+            }}
+            onNext={() => {
+              setCurrentPage(prev => Math.min(prev + 1, totalPages));
+              window.scrollTo({ top: 0, behavior: "smooth" });
+            }}
+            onPageChange={page => {
+              setCurrentPage(page);
+              window.scrollTo({ top: 0, behavior: "smooth" });
+            }}
+            intent="primary"
+            size="sm" 
+          />
+        )}
+        </div>
     </div>
   );
 }

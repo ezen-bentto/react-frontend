@@ -38,7 +38,7 @@ const TreeFilterGroupSection = ({
     <fieldset>
       <span className="font-semibold">{group.label}</span>
 
-      {/* ✅ 부모 1뎁스 */}
+      {/* 부모 & 1뎁스 */}
       <ul className="flex flex-wrap gap-2">
         {group.options.map(option => (
           <Button
