@@ -17,6 +17,7 @@ export interface CommunityItem {
   mod_date: string;
   scrap_count: number;
   comment_count: number;
+  scrap_yn: "Y" | "N";
 }
 
 export interface CommunityListResponse {

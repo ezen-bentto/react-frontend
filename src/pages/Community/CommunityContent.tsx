@@ -7,10 +7,28 @@ import { useNavigate, useParams } from "react-router-dom";
 import { deleteComment } from "@/api/comment/delete";
 import Avatar from "@/components/shared/Avatar";
 import Button from "@/components/shared/Button";
+import Badge from "@/components/shared/Badge";
 import { fetchCategory, type Category } from "@/api/common/category";
 import { modifyComment } from "@/api/comment/modify";
+import { useAuth } from "@/context/AuthContext";
+import { toggleScrap } from "@/api/scrap/toggle";
+import {
+  ClockCircleOutlined,
+  CalendarOutlined,
+  TeamOutlined,
+  MessageOutlined,
+  EditOutlined,
+  DeleteOutlined,
+  UserOutlined,
+  EyeOutlined,
+  HeartOutlined,
+  BulbOutlined,
+  FireOutlined,
+  HeartFilled
+} from "@ant-design/icons";
 
 const CommunityContent = () => {
+  const { user, isLoggedIn } = useAuth();
   const { communityId } = useParams<{ communityId: string }>();
   const [community, setCommunity] = useState<CommunityDetail | null>(null);
   const [comments, setComments] = useState<CommentRow[]>([]);
@@ -35,6 +53,34 @@ const CommunityContent = () => {
   const [editingCommentId, setEditingCommentId] = useState<number | null>(null);
   const [editedContent, setEditedContent] = useState<string>("");
   const [countdown, setCountdown] = useState<string>("");
+  const [isDarkMode, setIsDarkMode] = useState(false);
+
+
+  const handleToggleScrap = async () => {
+    if (!isLoggedIn) {
+      alert("로그인이 필요한 서비스입니다.");
+      navigate("/login");
+      return;
+    }
+    if (!community) return;
+
+    try {
+      const { scrap_yn } = await toggleScrap(community.community_id);
+      setCommunity(prev => prev ? { ...prev, scrap_yn } : prev);
+    } catch (err) {
+      console.error("스크랩 토글 실패:", err);
+      alert("스크랩 처리 중 오류가 발생했습니다.");
+    }
+  };
+
+  // HTML에 dark 클래스 추가/제거하는 useEffect 추가
+  useEffect(() => {
+    if (isDarkMode) {
+      document.documentElement.classList.add("dark");
+    } else {
+      document.documentElement.classList.remove("dark");
+    }
+  }, [isDarkMode]);
 
   // 실시간 디데이 계산 Hook
   useEffect(() => {
@@ -97,7 +143,7 @@ const CommunityContent = () => {
     setEditedContent("");
   };
 
-  // ✅ 실제 수정 API 호출
+  // 실제 수정 API 호출
   const submitEdit = async (commentId: number) => {
     if (!editingCommentId || !editedContent.trim()) return;
 
@@ -240,11 +286,16 @@ const CommunityContent = () => {
       }
     };
     loadData();
-  }, [communityId]);
+  }, [communityId, community?.scrap_yn]);
 
   // 댓글 등록
   const handleCommentSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!isLoggedIn) {
+      // 로그인 안 했으면 로그인 페이지로 이동
+      navigate("/login");
+      return;
+    }
 
     if (!commentContent.trim()) {
       alert("댓글 내용을 입력해주세요.");
@@ -353,37 +404,44 @@ const CommunityContent = () => {
 
   if (isLoading) {
     return (
-      <main className="pt-14">
-        <div className="max-w-[1400px] mx-auto">
-          <div className="flex justify-center items-center h-64">
-            <div className="text-lg text-gray-500">로딩 중...</div>
+      <div className="min-h-screen bg-white dark:bg-[#2B2B2B] text-gray-900 dark:text-white transition-all duration-300">
+        <main className="pt-14">
+          <div className="max-w-4xl mx-auto px-4 py-8">
+            <div className="flex justify-center items-center h-64">
+              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 dark:border-blue-400"></div>
+              <div className="ml-4 text-lg text-gray-500 dark:text-gray-300">로딩 중...</div>
+            </div>
           </div>
-        </div>
-      </main>
+        </main>
+      </div>
     );
   }
 
   if (error) {
     return (
-      <main className="pt-14">
-        <div className="max-w-[1400px] mx-auto">
-          <div className="flex justify-center items-center h-64">
-            <div className="text-lg text-red-500">{error}</div>
+      <div className="min-h-screen bg-white dark:bg-[#2B2B2B] text-gray-900 dark:text-white transition-all duration-300">
+        <main className="pt-14">
+          <div className="max-w-4xl mx-auto px-4 py-8">
+            <div className="flex justify-center items-center h-64">
+              <div className="text-lg text-red-500">{error}</div>
+            </div>
           </div>
-        </div>
-      </main>
+        </main>
+      </div>
     );
   }
 
   if (!community) {
     return (
-      <main className="pt-14">
-        <div className="max-w-[1400px] mx-auto">
-          <div className="flex justify-center items-center h-64">
-            <div className="text-lg text-gray-500">커뮤니티 정보를 찾을 수 없습니다.</div>
+      <div className="min-h-screen bg-white dark:bg-[#2B2B2B] text-gray-900 dark:text-white transition-all duration-300">
+        <main className="pt-14">
+          <div className="max-w-4xl mx-auto px-4 py-8">
+            <div className="flex justify-center items-center h-64">
+              <div className="text-lg text-gray-500 dark:text-gray-300">커뮤니티 정보를 찾을 수 없습니다.</div>
+            </div>
           </div>
-        </div>
-      </main>
+        </main>
+      </div>
     );
   }
 
@@ -395,235 +453,338 @@ const CommunityContent = () => {
   };
 
   return (
-    <main className="pt-14">
-      <div className="max-w-[1400px] mx-auto">
-        {/* 게시글 헤더 */}
-        <section className="pt-6">
-          <div className="flex flex-col gap-2">
-            <div className="flex gap-4 pt-8">
-              <span className="px-2 py-1 border rounded bg-gray-800 text-white text-sm truncate">
-                {getCategoryName(Number(community.category_type))}
-              </span>
-              <span className="text-xl font-bold truncate">{community.title || "제목 없음"}</span>
-            </div>
-            <div className="flex justify-end gap-4 text-sm">
-              <span>{community.nickname}</span>
-              <span>{community.reg_date?.slice(0, 10)}</span>
-            </div>
-          </div>
-        </section>
+    <div className="min-h-screen bg-white dark:bg-[#2B2B2B] text-gray-900 dark:text-white transition-all duration-300">
+      {/* 다크모드 토글 */}
+      <div className="fixed top-4 right-4 z-50">
+        <button
+          onClick={() => setIsDarkMode(!isDarkMode)}
+          className={`p-3 rounded-full shadow-lg transition-all duration-300 ${isDarkMode
+            ? "bg-yellow-500 text-gray-900 hover:bg-yellow-400"
+            : "bg-[#2B2B2B] text-white hover:bg-gray-700"
+            }`}
+        >
+          {isDarkMode ? <FireOutlined /> : <BulbOutlined />}
+        </button>
+      </div>
 
-        {/* 모집 정보 */}
-        <section className="py-6">
-          <div className="border-t-2 border-gray-200 py-5">
-            {/* 상단 우측 버튼 */}
-            <div className="flex justify-end text-xs text-gray-500 gap-2">
-              <button
-                className="cursor-pointer"
-                onClick={() => navigate(`/community/write?mode=edit&id=${communityId}`)}
-              >
-                수정
-              </button>
-              <button className="cursor-pointer" onClick={showDeleteConfirmModal}>
-                삭제
-              </button>
-            </div>
+      <main className="pt-14">
+        <div className="max-w-[1400px] mx-auto px-4 py-8">
+          {/* 통합된 메인 컨텐츠 카드 */}
+          <div className="bg-white dark:bg-[#2B2B2B] border-gray-200 dark:border-gray-700 rounded-2xl mb-8 overflow-hidden">
+            {/* 헤더 섹션 */}
+            <div className="p-6">
+              <div className="flex flex-col gap-4">
+                <div className="flex items-center justify-between">
+                  <Badge intent="primary" size="sm">
+                    {getCategoryName(Number(community.category_type))}
+                  </Badge>
+                  <div className="flex items-center gap-4">
+                    <div className="flex items-center gap-2 text-gray-600 dark:text-gray-400">
+                      <EyeOutlined />
+                      <span className="text-sm">조회수</span>
+                    </div>
 
-            {/* 2단 정보 영역 */}
-            <div className="flex flex-col md:flex-row gap-4">
-              {/* 왼쪽 열 */}
-              <div className="flex flex-col gap-4 w-full md:w-1/2">
-                <div className="flex">
-                  <span className="w-28 text-gray-600 font-semibold">활동 유형</span>
-                  <span className="text-black">
-                    {community.community_type === "1" ? "공모전" : "기타"}
-                  </span>
+                    <div className="flex items-center gap-2">
+                      <button
+                        onClick={handleToggleScrap}
+                        className={`flex items-center justify-center p-2 rounded-full transition-all ${community?.scrap_yn
+                          ? "bg-red-500 text-white"
+                          : "bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-300"
+                          }`}
+                      >
+                        {community.scrap_yn ? <HeartFilled /> : <HeartOutlined />}
+                      </button>
+                    </div>
+
+                  </div>
                 </div>
-                <div className="flex">
-                  <span className="w-28 text-gray-600 font-semibold">모집 연령</span>
-                  <span className="text-black">{ageGroupLabel[community.age_group] ?? "-"}</span>
+
+                <h1 className="text-2xl md:text-3xl font-bold leading-tight text-gray-900 dark:text-white">
+                  {community.title || "제목 없음"}
+                </h1>
+
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-4">
+                    <div className="flex items-center gap-2">
+                      <div className="w-8 h-8 rounded-full flex items-center justify-center bg-gray-100 dark:bg-gray-700">
+                        <UserOutlined className="text-gray-600 dark:text-gray-300" />
+                      </div>
+                      <span className="font-medium text-gray-700 dark:text-gray-200">{community.nickname}</span>
+                    </div>
+                    <span className="text-gray-500 dark:text-gray-400">{community.reg_date?.slice(0, 10)}</span>
+                  </div>
                 </div>
               </div>
+            </div>
 
-              {/* 오른쪽 열 */}
-              <div className="flex flex-col gap-4 w-full md:w-1/2">
-                <div className="flex">
-                  <span className="w-28 text-gray-600 font-semibold">진행 일정</span>
-                  <span className="text-black">
-                    {community.start_date ? community.start_date.slice(0, 10) : "-"} ~{" "}
-                    {community.end_date ? community.end_date.slice(0, 10) : "-"}
-                  </span>
+            {/* 액션 버튼들 */}
+            {user && user.id === community.author_id && (
+              <div className="border-gray-200 dark:border-gray-700 pb-1">
+                <div className="flex justify-end gap-1">
+                  <button
+                    className="flex items-center gap-1 px-2 py-1 text-xs rounded transition-all text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700"
+                    onClick={() => navigate(`/community/write?mode=edit&id=${communityId}`)}
+                  >
+                    <EditOutlined />
+                    수정
+                  </button>
+                  <button
+                    className="flex items-center gap-1 px-2 py-1 text-xs rounded transition-all text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700"
+                    onClick={showDeleteConfirmModal}
+                  >
+                    <DeleteOutlined />
+                    삭제
+                  </button>
                 </div>
-                <div className="flex items-baseline">
-                  <span className="w-28 text-gray-600 font-semibold">모집 종료</span>
-                  {community.recruit_end_date && countdown && (
-                    <span
-                      className={`text-sm font-medium ${countdown.includes("모집 종료") ? "text-red-500" : "text-black-600"}`}
-                    >
+              </div>
+            )}
+
+            {/* 모집 정보 섹션 */}
+            <div className="p-6 border-t border-gray-200 dark:border-gray-700">
+              <h2 className="text-xl font-bold mb-6 flex items-center gap-2 text-gray-900 dark:text-white">
+                <TeamOutlined />
+                모집 정보
+              </h2>
+
+              {/* 카운트다운 */}
+              {community.recruit_end_date && countdown && (
+                <div className="mb-6 p-4 bg-gradient-to-r from-orange-500 to-red-500 rounded-xl text-white">
+                  <div className="text-center">
+                    <div className="flex items-center justify-center gap-2 mb-2">
+                      <ClockCircleOutlined />
+                      <span className="font-semibold">모집 마감까지</span>
+                    </div>
+                    <div className={`text-2xl font-bold tracking-wider ${countdown.includes("모집 종료") ? "text-red-200" : ""}`}>
                       {countdown}
-                    </span>
-                  )}
+                    </div>
+                  </div>
                 </div>
-              </div>
-            </div>
-          </div>
+              )}
 
-          {/* 모집 상세 */}
-          <div className="min-h-[14rem]">
-            {recruitment_detail_list.length > 0 && (
-              <div className="flex flex-col gap-4 border-t-2 border-gray-200 px-2 py-3">
-                <div className="flex flex-wrap gap-6">
-                  <span className="font-bold">모집 상세</span>
-                  <div className="flex gap-8 flex-wrap">
-                    <div className="flex flex-col gap-2 text-sm">
-                      {recruitment_detail_list.map(detail => (
-                        <div key={detail.recruitment_detail_id}>
-                          <span className="font-bold mr-2">{detail.role}</span>
-                          <span>{detail.count}명</span>
-                        </div>
-                      ))}
+              {/* 정보 그리드 */}
+              <div className="grid md:grid-cols-2 gap-6 mb-6">
+                <div className="space-y-4">
+                  <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 rounded-lg flex items-center justify-center bg-blue-100 dark:bg-blue-900/30">
+                      <TeamOutlined className="text-blue-600 dark:text-blue-400" />
+                    </div>
+                    <div>
+                      <div className="text-sm text-gray-600 dark:text-gray-400">활동 유형</div>
+                      <div className="font-semibold text-gray-900 dark:text-white">
+                        {community.community_type === "1" ? "공모전" : "기타"}
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 rounded-lg flex items-center justify-center bg-purple-100 dark:bg-purple-900/30">
+                      <UserOutlined className="text-purple-600 dark:text-purple-400" />
+                    </div>
+                    <div>
+                      <div className="text-sm text-gray-600 dark:text-gray-400">모집 연령</div>
+                      <div className="font-semibold text-gray-900 dark:text-white">
+                        {ageGroupLabel[community.age_group] ?? "-"}
+                      </div>
                     </div>
                   </div>
                 </div>
 
-                <div className="flex flex-wrap gap-6">
-                  <span className="font-bold">상세 설명</span>
-                  <div
-                    className="text-sm leading-relaxed"
-                    dangerouslySetInnerHTML={{ __html: community.content }}
-                  />
-                </div>
-              </div>
-            )}
-          </div>
-        </section>
-
-        {/* 댓글 섹션 */}
-        <section className="py-6 border-t border-gray-200">
-          <div className="mb-6">
-            <h3 className="text-sm font-semibold mb-1">댓글 {comments?.length || 0}개</h3>
-
-            {/* 댓글 목록 */}
-            <div className="space-y-1">
-              {comments &&
-                comments.map(comment => {
-                  const isEditing = editingCommentId === comment.comment_id;
-                  const isDeleted = comment.del_yn === "Y";
-
-                  return (
-                    <div key={comment.comment_id} className="flex gap-3 items-start p-2 rounded-lg">
-                      <Avatar
-                        src="/assets/icons/iconmonstr-user-circle-thin.svg"
-                        size="md"
-                        shape="circle"
-                      />
-                      <div className="flex-1">
-                        <div className="flex items-center justify-between mb-2">
-                          <div className="flex items-center gap-2">
-                            <span className="font-semibold text-gray-900">{comment.nickname}</span>
-                            <span className="text-sm text-gray-500">
-                              {formatDate(comment.reg_date)}
-                            </span>
-                          </div>
-
-                          {!isDeleted && (
-                            <div className="flex justify-end text-xs text-gray-500 gap-2">
-                              {isEditing ? (
-                                <>
-                                  <button onClick={() => submitEdit(Number(comment.comment_id))}>
-                                    수정
-                                  </button>
-                                  <button onClick={cancelEditing}>취소</button>
-                                </>
-                              ) : (
-                                <>
-                                  <button
-                                    onClick={() =>
-                                      startEditing(comment.comment_id, comment.content)
-                                    }
-                                  >
-                                    수정
-                                  </button>
-                                  <button
-                                    onClick={() =>
-                                      showCommentDeleteConfirmModal(comment.comment_id)
-                                    }
-                                  >
-                                    삭제
-                                  </button>
-                                </>
-                              )}
-                            </div>
-                          )}
-                        </div>
-
-                        {isEditing ? (
-                          <textarea
-                            className="w-full border border-gray-300 rounded-md p-2 text-sm focus:outline-none resize-none"
-                            value={editedContent}
-                            onChange={e => setEditedContent(e.target.value)}
-                          />
-                        ) : (
-                          <p className="text-gray-700 leading-relaxed">
-                            {isDeleted ? "삭제된 댓글입니다." : comment.content}
-                          </p>
-                        )}
+                <div className="space-y-4">
+                  <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 rounded-lg flex items-center justify-center bg-green-100 dark:bg-green-900/30">
+                      <CalendarOutlined className="text-green-600 dark:text-green-400" />
+                    </div>
+                    <div>
+                      <div className="text-sm text-gray-600 dark:text-gray-400">진행 일정</div>
+                      <div className="font-semibold text-gray-900 dark:text-white">
+                        {community.start_date ? community.start_date.slice(0, 10) : "-"} ~ {community.end_date ? community.end_date.slice(0, 10) : "-"}
                       </div>
                     </div>
-                  );
-                })}
+                  </div>
+                </div>
+              </div>
 
-              {comments?.length === 0 && (
-                <div className="text-center py-8 text-gray-500">첫 번째 댓글을 작성해보세요!</div>
+              {/* 모집 상세 */}
+              {recruitment_detail_list.length > 0 && (
+                <div className="border-t pt-6 border-gray-200 dark:border-gray-700">
+                  <h3 className="font-semibold mb-4 text-gray-900 dark:text-white">모집 상세</h3>
+                  <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                    {recruitment_detail_list.map((detail, index) => (
+                      <div key={detail.recruitment_detail_id || index} className="p-4 rounded-xl text-center bg-gray-50 dark:bg-gray-700">
+                        <div className="text-2xl font-bold text-blue-600 mb-1">
+                          {detail.count}
+                        </div>
+                        <div className="text-sm font-medium text-gray-700 dark:text-gray-300">{detail.role}</div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
+
+            {/* 상세 설명 섹션 */}
+            <div className="p-6 border-t border-gray-200 dark:border-gray-700">
+              <h2 className="text-xl font-bold mb-4 text-gray-900 dark:text-white">상세 설명</h2>
+              <div
+                className="prose max-w-none min-h-[200px] prose-gray dark:prose-invert dark:prose-headings:text-white dark:prose-p:text-gray-300 dark:prose-strong:text-white dark:prose-li:text-gray-300"
+                dangerouslySetInnerHTML={{ __html: community.content || "<p>상세 설명이 없습니다.</p>" }}
+              />
+            </div>
+          </div>
+
+          {/* 댓글 섹션 */}
+          <div className="bg-white dark:bg-[#2B2B2B] border-gray-200 dark:border-gray-700 rounded-2xl shadow-xl border backdrop-blur-sm">
+            <div className="p-6">
+              <div className="flex items-center gap-2 mb-6 text-gray-900 dark:text-white">
+                <MessageOutlined />
+                <h2 className="text-xl font-bold">댓글 {comments?.length || 0}개</h2>
+              </div>
+
+              {/* 댓글 목록 */}
+              <div className="space-y-4 mb-6">
+                {comments &&
+                  comments.map(comment => {
+                    const isEditing = editingCommentId === comment.comment_id;
+                    const isDeleted = comment.del_yn === "Y";
+
+                    return (
+                      <div
+                        key={comment.comment_id}
+                        className="p-4 rounded-xl hover:shadow-md transition-all duration-200 border bg-gray-50 dark:bg-gray-700/50 border-gray-200 dark:border-gray-600 hover:border-blue-200 dark:hover:border-blue-700"
+                      >
+                        <div className="flex items-start gap-3">
+                          <Avatar
+                            src="/assets/icons/iconmonstr-user-circle-thin.svg"
+                            size="md"
+                            shape="circle"
+                          />
+
+                          <div className="flex-1">
+                            <div className="flex items-center justify-between mb-2">
+                              <div className="flex items-center gap-2">
+                                <span className="font-semibold text-gray-900 dark:text-white">{comment.nickname}</span>
+                                <span className="text-sm text-gray-500 dark:text-gray-400">
+                                  {formatDate(comment.reg_date)}
+                                </span>
+                              </div>
+
+                              {user && user.id === comment.user_id && !isDeleted && (
+                                <div className="flex items-center gap-2">
+                                  {isEditing ? (
+                                    <>
+                                      <button
+                                        className="p-1 transition-colors text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300"
+                                        onClick={() => submitEdit(Number(comment.comment_id))}
+                                      >
+                                        <EditOutlined />
+                                      </button>
+                                      <button
+                                        className="p-1 transition-colors text-gray-400 hover:text-gray-600 dark:hover:text-gray-300"
+                                        onClick={cancelEditing}
+                                      >
+                                        취소
+                                      </button>
+                                    </>
+                                  ) : (
+                                    <>
+                                      <button
+                                        className="p-1 transition-colors text-gray-400 hover:text-blue-600 dark:hover:text-blue-400"
+                                        onClick={() => startEditing(comment.comment_id, comment.content)}
+                                      >
+                                        <EditOutlined />
+                                      </button>
+                                      <button
+                                        className="p-1 transition-colors text-gray-400 hover:text-red-600 dark:hover:text-red-400"
+                                        onClick={() => showCommentDeleteConfirmModal(comment.comment_id)}
+                                      >
+                                        <DeleteOutlined />
+                                      </button>
+                                    </>
+                                  )}
+                                </div>
+                              )}
+                            </div>
+
+                            {isEditing ? (
+                              <textarea
+                                className="w-full border rounded-md p-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none bg-white dark:bg-[#2B2B2B] border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400"
+                                value={editedContent}
+                                onChange={e => setEditedContent(e.target.value)}
+                              />
+                            ) : (
+                              <p className="leading-relaxed text-gray-700 dark:text-gray-200">
+                                {isDeleted ? "삭제된 댓글입니다." : comment.content}
+                              </p>
+                            )}
+                          </div>
+                        </div>
+                      </div>
+                    );
+                  })}
+
+                {comments?.length === 0 && (
+                  <div className="text-center py-8 text-gray-500 dark:text-gray-400">
+                    첫 번째 댓글을 작성해보세요!
+                  </div>
+                )}
+              </div>
+
+              {/* 댓글 작성 폼 */}
+              {isLoggedIn && (
+                <form
+                  onSubmit={handleCommentSubmit}
+                  className="p-4 rounded-xl border-2 border-dashed bg-blue-50/50 dark:bg-gray-700/30 border-blue-200 dark:border-blue-700"
+                >
+                  <div className="flex items-start gap-3">
+                    <div className="w-16 h-16 rounded-full overflow-hidden shrink-0">
+                      <img
+                        src="/assets/icons/iconmonstr-user-circle-thin.svg"
+                        alt="프로필"
+                        className="w-full h-full object-cover"
+                      />
+                    </div>
+
+                    <div className="flex-1">
+                      <textarea
+                        value={commentContent}
+                        onChange={e => setCommentContent(e.target.value)}
+                        placeholder="댓글을 입력해주세요..."
+                        className="w-full p-3 border rounded-lg resize-none focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white dark:bg-[#2B2B2B] border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400"
+                        rows={3}
+                        disabled={isSubmitting}
+                      />
+
+                      <div className="flex justify-end gap-2 mt-2">
+                        <Button type="button" intent="primary" size="sm" onClickFnc={handleCommentCancel}>
+                          취소
+                        </Button>
+                        <Button type="submit" intent="orange" size="sm" onClickFnc={() => { }}>
+                          {isSubmitting ? "등록중..." : "등록"}
+                        </Button>
+                      </div>
+                    </div>
+                  </div>
+                </form>
               )}
             </div>
           </div>
-
-          {/* 댓글 작성 폼 */}
-          <form
-            onSubmit={handleCommentSubmit}
-            className="flex items-start gap-3 bg-white border border-gray-200 rounded-lg p-4"
-          >
-            <div className="w-16 h-16 rounded-full overflow-hidden shrink-0">
-              <img
-                src="/assets/icons/iconmonstr-user-circle-thin.svg"
-                alt="프로필"
-                className="w-full h-full object-cover"
-              />
-            </div>
-            <div className="flex-1">
-              <textarea
-                value={commentContent}
-                onChange={e => setCommentContent(e.target.value)}
-                placeholder="댓글을 입력해주세요..."
-                className="w-full p-3 border border-gray-300 rounded-lg resize-none focus:outline-none focus:ring-2"
-                rows={3}
-                disabled={isSubmitting}
-              />
-              <div className="flex justify-end gap-2 mt-2">
-                <Button type="button" intent="primary" size="sm" onClickFnc={handleCommentCancel}>
-                  취소
-                </Button>
-                <Button type="submit" intent="orange" size="sm" onClickFnc={() => {}}>
-                  {isSubmitting ? "등록중..." : "등록"}
-                </Button>
-              </div>
-            </div>
-          </form>
-        </section>
-      </div>
+        </div>
+      </main>
 
       {/* 커뮤니티 삭제 확인 모달 */}
       <dialog id="delete_modal" className="modal">
-        <div className="modal-box">
-          <h3 className="font-bold text-lg">삭제 확인</h3>
-          <p className="py-4 whitespace-pre-line">{deleteModalState.message}</p>
+        <div className="modal-box border bg-white dark:bg-[#2B2B2B] text-gray-900 dark:text-white border-gray-200 dark:border-gray-700">
+          <h3 className="font-bold text-lg text-gray-900 dark:text-white">삭제 확인</h3>
+          <p className="py-4 whitespace-pre-line text-gray-700 dark:text-gray-300">{deleteModalState.message}</p>
           <div className="modal-action">
-            <button className="btn" onClick={() => closeModal("delete_modal")}>
+            <button
+              className="btn border bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-200 border-gray-300 dark:border-gray-600"
+              onClick={() => closeModal("delete_modal")}
+            >
               아니요
             </button>
             <button
-              className="btn bg-red-500 hover:bg-red-600 text-white"
+              className="btn bg-red-500 dark:bg-red-600 hover:bg-red-600 dark:hover:bg-red-700 text-white"
               onClick={() => {
                 closeModal("delete_modal");
                 handleDelete();
@@ -637,25 +798,25 @@ const CommunityContent = () => {
 
       {/* 커뮤니티 삭제 결과 안내 모달 (성공/실패) */}
       <dialog id="result_modal" className="modal">
-        <div className="modal-box">
+        <div className="modal-box border bg-white dark:bg-[#2B2B2B] text-gray-900 dark:text-white border-gray-200 dark:border-gray-700">
           <h3
-            className={`font-bold text-lg ${
-              deleteModalState.type === "success" ? "text-green-600" : "text-red-600"
-            }`}
+            className={`font-bold text-lg ${deleteModalState.type === "success"
+              ? "text-green-600"
+              : "text-red-600"
+              }`}
           >
             {deleteModalState.type === "success" ? "삭제 완료" : "삭제 실패"}
           </h3>
-          <p className="py-4">{deleteModalState.message}</p>
+          <p className="py-4 text-gray-700 dark:text-gray-300">{deleteModalState.message}</p>
           {deleteModalState.type === "success" && (
-            <p className="text-sm text-gray-500">잠시 후 목록으로 이동합니다...</p>
+            <p className="text-sm text-gray-500 dark:text-gray-400">잠시 후 목록으로 이동합니다...</p>
           )}
           <div className="modal-action">
             <button
-              className={`btn ${
-                deleteModalState.type === "success"
-                  ? "bg-green-500 hover:bg-green-600 text-white"
-                  : "bg-red-500 hover:bg-red-600 text-white"
-              }`}
+              className={`btn ${deleteModalState.type === "success"
+                ? "bg-green-500 hover:bg-green-600 text-white"
+                : "bg-red-500 dark:bg-red-600 hover:bg-red-600 dark:hover:bg-red-700 text-white"
+                }`}
               onClick={() => {
                 closeModal("result_modal");
                 if (deleteModalState.type === "error") {
@@ -672,15 +833,18 @@ const CommunityContent = () => {
 
       {/* 댓글 삭제 확인 모달 */}
       <dialog id="comment_delete_modal" className="modal">
-        <div className="modal-box">
-          <h3 className="font-bold text-lg">댓글 삭제 확인</h3>
-          <p className="py-4 whitespace-pre-line">{commentDeleteModalState.message}</p>
+        <div className="modal-box border bg-white dark:bg-[#2B2B2B] text-gray-900 dark:text-white border-gray-200 dark:border-gray-700">
+          <h3 className="font-bold text-lg text-gray-900 dark:text-white">댓글 삭제 확인</h3>
+          <p className="py-4 whitespace-pre-line text-gray-700 dark:text-gray-300">{commentDeleteModalState.message}</p>
           <div className="modal-action">
-            <button className="btn" onClick={() => closeModal("comment_delete_modal")}>
+            <button
+              className="btn border bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-200 border-gray-300 dark:border-gray-600"
+              onClick={() => closeModal("comment_delete_modal")}
+            >
               아니요
             </button>
             <button
-              className="btn bg-red-500 hover:bg-red-600 text-white"
+              className="btn bg-red-500 dark:bg-red-600 hover:bg-red-600 dark:hover:bg-red-700 text-white"
               onClick={() => {
                 closeModal("comment_delete_modal");
                 handleCommentDelete();
@@ -694,22 +858,22 @@ const CommunityContent = () => {
 
       {/* 댓글 삭제 결과 안내 모달 (성공/실패) */}
       <dialog id="comment_result_modal" className="modal">
-        <div className="modal-box">
+        <div className="modal-box border bg-white dark:bg-[#2B2B2B] text-gray-900 dark:text-white border-gray-200 dark:border-gray-700">
           <h3
-            className={`font-bold text-lg ${
-              commentDeleteModalState.type === "success" ? "text-green-600" : "text-red-600"
-            }`}
+            className={`font-bold text-lg ${commentDeleteModalState.type === "success"
+              ? "text-green-600"
+              : "text-red-600"
+              }`}
           >
             {commentDeleteModalState.type === "success" ? "삭제 완료" : "삭제 실패"}
           </h3>
-          <p className="py-4">{commentDeleteModalState.message}</p>
+          <p className="py-4 text-gray-700 dark:text-gray-300">{commentDeleteModalState.message}</p>
           <div className="modal-action">
             <button
-              className={`btn ${
-                commentDeleteModalState.type === "success"
-                  ? "bg-green-500 hover:bg-green-600 text-white"
-                  : "bg-red-500 hover:bg-red-600 text-white"
-              }`}
+              className={`btn ${commentDeleteModalState.type === "success"
+                ? "bg-green-500 hover:bg-green-600 text-white"
+                : "bg-red-500 dark:bg-red-600 hover:bg-red-600 dark:hover:bg-red-700 text-white"
+                }`}
               onClick={() => {
                 closeModal("comment_result_modal");
                 // 모달 상태 초기화
@@ -721,7 +885,7 @@ const CommunityContent = () => {
           </div>
         </div>
       </dialog>
-    </main>
+    </div>
   );
 };
 

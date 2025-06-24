@@ -34,9 +34,9 @@ import countDate from "@/utils/countDate";
  * @param linkSrc a 태그 href
  * @param region policy 지역
  * @param endDate community 공모전 종료 날짜
-
  * @param division 공모전 분류
  * @param communityType 커뮤니티 분류(공모전, 스터디, 자유)
+ * @param scrapYn 스크랩 여부 (Y/N)
  */
 
 const getDivisionLabel = (division: number): string => {
@@ -75,6 +75,8 @@ interface ListItemProps extends ListItemVariants {
   endDate?: string;
   division?: number;
   communityType?: string;
+  scrapYn?: "Y" | "N";
+  onScrapClick?: () => void;
 }
 
 const ListItem = ({
@@ -93,8 +95,19 @@ const ListItem = ({
   endDate,
   division,
   communityType,
+  scrapYn,
+  onScrapClick,
 }: ListItemProps) => {
   const combinedClass = `${listItem({ size, intent })} ${className ?? ""}`.trim();
+
+  const handleScrapClick = (e: React.MouseEvent) => {
+    e.preventDefault(); // Link 클릭 방지
+    e.stopPropagation();
+
+    if (onScrapClick) {
+      onScrapClick();
+    }
+  };
 
   return (
     <li className={combinedClass}>
@@ -158,7 +171,7 @@ const ListItem = ({
                 <span>{comment}</span>
               </button>
 
-              <button className="btn btn-ghost">
+              <button className="btn btn-ghost" onClick={handleScrapClick}>
                 <svg
                   className="size-[1.2em]"
                   xmlns="http://www.w3.org/2000/svg"
@@ -168,7 +181,7 @@ const ListItem = ({
                     strokeLinejoin="round"
                     strokeLinecap="round"
                     strokeWidth="2"
-                    fill="none"
+                    fill={type === "community" && scrapYn === "Y" ? "currentColor" : "none"}
                     stroke="currentColor"
                   >
                     <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z" />
