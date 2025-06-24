@@ -3,11 +3,19 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import { login as loginApi, getKakaoLoginUrl, type LoginPayload } from "../../api/auth";
+import {
+  login as loginApi,
+  getKakaoLoginUrl,
+  getNaverLoginUrl,
+  getGoogleLoginUrl,
+  type LoginPayload,
+} from "../../api/auth";
 import { useAuth } from "../../context/AuthContext";
 import Title from "@/components/shared/Title";
 import Button from "@/components/shared/Button";
 import Input from "@/components/shared/Input";
+
+type Provider = "카카오" | "네이버" | "구글";
 
 const Login = () => {
   const navigate = useNavigate();
@@ -29,9 +37,7 @@ const Login = () => {
       alert("로그인 성공!");
       navigate("/");
     } else if (error) {
-      setErrorMessage(
-        error === "kakao_login_failed" ? "카카오 로그인에 실패했습니다." : "로그인에 실패했습니다."
-      );
+      setErrorMessage("소셜 로그인에 실패했습니다. 다시 시도해 주세요.");
     }
   }, [navigate, login]);
 
@@ -65,17 +71,24 @@ const Login = () => {
     }
   };
 
-  const handleSocialLogin = async (provider: string) => {
-    if (provider === "카카오") {
-      try {
-        const loginUrl = await getKakaoLoginUrl();
-        window.location.href = loginUrl;
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      } catch (error: unknown) {
-        setErrorMessage("카카오 로그인 연동 중 오류가 발생했습니다.");
+  const handleSocialLogin = async (provider: Provider) => {
+    try {
+      setErrorMessage("");
+      let loginUrl = "";
+      if (provider === "카카오") {
+        loginUrl = await getKakaoLoginUrl();
+      } else if (provider === "네이버") {
+        loginUrl = await getNaverLoginUrl();
+      } else if (provider === "구글") {
+        loginUrl = await getGoogleLoginUrl();
+      } else {
+        alert(`${provider} 소셜 로그인은 아직 구현 중입니다.`);
+        return;
       }
-    } else {
-      alert(`${provider} 소셜 로그인은 아직 구현 중입니다.`);
+      window.location.href = loginUrl;
+    } catch (error) {
+      setErrorMessage(`${provider} 로그인 연동 중 오류가 발생했습니다.`);
+      console.error(error);
     }
   };
 

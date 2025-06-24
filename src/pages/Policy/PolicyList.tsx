@@ -14,9 +14,9 @@ export default function PolicyList({ policies }: PolicyListProps) {
   const [imgSrc, setImgSrc] = useState(LiGHT_NOT_ITEM);
 
   useEffect(
-      () => (theme === "light" ? setImgSrc(LiGHT_NOT_ITEM) : setImgSrc(DARK_NOT_ITEM)),
-      [theme]
-    );
+    () => (theme === "light" ? setImgSrc(LiGHT_NOT_ITEM) : setImgSrc(DARK_NOT_ITEM)),
+    [theme]
+  );
 
   // 리스트에 들어오는 데이터가 없는 경우
   if (policies.length === 0) {
@@ -26,13 +26,13 @@ export default function PolicyList({ policies }: PolicyListProps) {
       </div>
     );
   }
-  
+
   return (
     <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 min-w-[360px]">
       {policies.map(item => {
         const linkHref = getPolicyLink(item.region, item.link);
-        const category = item.category ?  item.category : "분류없음";
-        
+        const category = item.category ? item.category : "분류없음";
+
         return (
           <ListItem
             key={item.link}

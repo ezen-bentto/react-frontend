@@ -41,3 +41,25 @@ export const getKakaoLoginUrl = async (): Promise<string> => {
   );
   return response.data.data.loginUrl;
 };
+
+/**
+ * 네이버 로그인 URL 조회
+ * @returns Promise<string> 네이버 로그인 URL
+ */
+export const getNaverLoginUrl = async (): Promise<string> => {
+  const response = await axios.get<{ data: { loginUrl: string } }>(
+    `${import.meta.env.VITE_API_URL}/api/auth/naver/login-url`
+  );
+  return response.data.data.loginUrl;
+};
+
+/**
+ * 구글 로그인 URL 조회
+ * @returns Promise<string> 구글 로그인 URL
+ */
+export const getGoogleLoginUrl = async (): Promise<string> => {
+  const response = await axios.get<{ data: { loginUrl: string } }>(
+    `${import.meta.env.VITE_API_URL}/api/auth/google/login-url`
+  );
+  return response.data.data.loginUrl;
+};

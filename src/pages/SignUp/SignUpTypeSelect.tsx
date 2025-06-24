@@ -14,7 +14,6 @@ const SignUpTypeSelect = () => {
             <div className="mb-4 text-4xl">👤</div>
             <h3 className="mb-4 text-xl font-semibold text-gray-900 dark:text-white">개인 회원</h3>
             <p className="mb-6 text-gray-600 dark:text-gray-400">소셜 로그인으로 간편하게</p>
-            {/* [수정] 다크모드 버튼 색상 변경 */}
             <button
               type="button"
               onClick={() => navigate("/signup/personal")}
@@ -27,7 +26,6 @@ const SignUpTypeSelect = () => {
             <div className="mb-4 text-4xl">🏢</div>
             <h3 className="mb-4 text-xl font-semibold text-gray-900 dark:text-white">기업 회원</h3>
             <p className="mb-6 text-gray-600 dark:text-gray-400">기업 정보로 회원가입</p>
-            {/* [수정] 이 버튼은 이미 회색 계열이라 그대로 두어도 자연스럽습니다. */}
             <button
               type="button"
               onClick={() => navigate("/signup/company")}

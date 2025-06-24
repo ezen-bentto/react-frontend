@@ -17,7 +17,7 @@ export interface SignUpResponse {
 }
 
 // 카카오 로그인 URL 응답 타입
-export interface KakaoUrlResponse {
+export interface SocialUrlResponse {
   success: boolean;
   data: {
     loginUrl: string;
@@ -34,10 +34,11 @@ export const signUpCompany = async (payload: CompanySignUpPayload): Promise<Sign
   return response.data;
 };
 
-// 카카오 회원가입/로그인 URL 조회
-
+/**
+ * 카카오 회원가입/로그인 URL 조회
+ */
 export const getKakaoSignUpUrl = async (): Promise<string> => {
-  const response = await axios.get<KakaoUrlResponse>(
+  const response = await axios.get<SocialUrlResponse>(
     `${import.meta.env.VITE_API_URL}/api/auth/kakao/login-url`
   );
 
@@ -45,5 +46,35 @@ export const getKakaoSignUpUrl = async (): Promise<string> => {
     return response.data.data.loginUrl;
   } else {
     throw new Error("카카오 회원가입 URL을 가져오지 못했습니다.");
+  }
+};
+
+/**
+ * 네이버 회원가입/로그인 URL 조회
+ */
+export const getNaverSignUpUrl = async (): Promise<string> => {
+  const response = await axios.get<SocialUrlResponse>(
+    `${import.meta.env.VITE_API_URL}/api/auth/naver/login-url`
+  );
+
+  if (response.data.success && response.data.data.loginUrl) {
+    return response.data.data.loginUrl;
+  } else {
+    throw new Error("네이버 회원가입 URL을 가져오지 못했습니다.");
+  }
+};
+
+/**
+ * 구글 회원가입/로그인 URL 조회
+ */
+export const getGoogleSignUpUrl = async (): Promise<string> => {
+  const response = await axios.get<SocialUrlResponse>(
+    `${import.meta.env.VITE_API_URL}/api/auth/google/login-url`
+  );
+
+  if (response.data.success && response.data.data.loginUrl) {
+    return response.data.data.loginUrl;
+  } else {
+    throw new Error("구글 회원가입 URL을 가져오지 못했습니다.");
   }
 };

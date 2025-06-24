@@ -37,8 +37,7 @@ export default function Policy() {
       const regionMatch = !regionAll.length || regionAll.includes(policy.region);
 
       const searchMatch =
-        searchText.trim() === "" ||
-        policy.title.toLowerCase().includes(searchText.toLowerCase());
+        searchText.trim() === "" || policy.title.toLowerCase().includes(searchText.toLowerCase());
 
       return categoryMatch && regionMatch && searchMatch;
     });
@@ -82,7 +81,7 @@ export default function Policy() {
         />
       </section>
       <section className="py-5">
-          <PolicyList policies={currentItems} />
+        <PolicyList policies={currentItems} />
       </section>
       <div>
         {totalPages > 1 && (
@@ -102,10 +101,10 @@ export default function Policy() {
               window.scrollTo({ top: 0, behavior: "smooth" });
             }}
             intent="primary"
-            size="sm" 
+            size="sm"
           />
         )}
-        </div>
+      </div>
     </div>
   );
 }
