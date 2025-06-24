@@ -17,7 +17,9 @@ interface TreeFilterProps {
   group: TreeFilterGroup;
   selectedParent: string | null;
   selectedChildren: string[];
+  // eslint-disable-next-line no-unused-vars
   onParentSelect: (value: string) => void;
+  // eslint-disable-next-line no-unused-vars
   onChildToggle: (value: string) => void;
 }
 

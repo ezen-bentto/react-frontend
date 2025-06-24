@@ -5,6 +5,7 @@ import type { FilterGroup } from "@/components/shared/Fillter";
 interface Props {
   group: FilterGroup;
   selected: Record<string, boolean>;
+  // eslint-disable-next-line no-unused-vars
   onClick: (value: string) => void;
 }
 
