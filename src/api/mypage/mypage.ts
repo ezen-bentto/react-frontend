@@ -31,7 +31,7 @@ export const getMyBookmarks = async () => {
     // const config = getAuthHeaders();
     // const response = await axios.get('/api/mypage/bookmarks', config);
     // return response.data.data;
-    console.log("북마크 API 호출 (백엔드 기능은 아직 없음)");
+    // console.log("북마크 API 호출 (백엔드 기능은 아직 없음)");
     return []; // 임시로 빈 배열 반환
   } catch (error) {
     console.error("북마크 조회 API 에러:", error);

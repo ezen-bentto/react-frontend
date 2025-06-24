@@ -8,7 +8,6 @@ export const PublicRoute = ({ children }: { children: ReactNode }) => {
   const { isLoggedIn } = useAuth();
 
   if (isLoggedIn) {
-    alert("이미 로그인한 상태입니다.");
     return <Navigate to="/" replace />;
   }
 

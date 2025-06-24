@@ -13,11 +13,11 @@ const MyPage = () => {
   }
 
   switch (user.userType) {
-    case "1":
+    case "개인":
       return <PersonalMypage />;
-    case "2":
+    case "기업":
       return <CompanyMypage />;
-    case "3":
+    case "관리자":
       return <AdminDashboard />;
     default:
       return <div className="pt-24 text-center">알 수 없는 사용자 유형입니다.</div>;

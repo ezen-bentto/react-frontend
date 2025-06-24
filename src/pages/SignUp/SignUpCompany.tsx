@@ -189,7 +189,7 @@ const SignUpCompany = () => {
             <Input
               legendText="회사명"
               type="text"
-              name="nickname"
+              name="companyName"
               placeholder="회사명을 입력하세요 (닉네임으로 사용됩니다)"
               value={form.companyName}
               onChange={handleChange}

@@ -63,11 +63,7 @@ const CompanyMypage = () => {
               </div>
             </div>
             <div className="flex gap-2">
-              <Button
-                type="button"
-                onClickFnc={() => navigate("/community/write")}
-                intent="primary"
-              >
+              <Button type="button" onClickFnc={() => navigate("/contest/new")} intent="primary">
                 글쓰기
               </Button>
               <Button type="button" onClickFnc={() => navigate("/mypage/edit")} intent="primary">
