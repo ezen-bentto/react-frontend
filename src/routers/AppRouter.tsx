@@ -28,7 +28,6 @@ const AppRouter = () => {
         <Route path="/" element={<Home />} />
         <Route path="*" element={<NotFound />} />
         <Route path="/policy" element={<Policy />} />
-        <Route path="/stats" element={<Stats />} />
         <Route path="/community/content/:communityId" element={<CommunityContent />} />
         <Route path="/community/list" element={<CommunityList />} />
         <Route path="/contest" element={<ContestList />} />
