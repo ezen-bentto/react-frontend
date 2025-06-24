@@ -149,7 +149,7 @@ const Fillter = ({ filters, onFilterChange, onSearchSubmit, onResetFilters }: Fi
           opt => "children" in opt && opt.children && opt.children.length > 0
         );
 
-        if (group.name === "regionParent" && isTreeGroup) {
+        if (group.name === "regionFlat" && isTreeGroup) {
           return (
             <TreeFilterGroupSection
               key={group.name}
