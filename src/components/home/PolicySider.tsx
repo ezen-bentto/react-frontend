@@ -9,14 +9,11 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import ListItem from "../shared/ListItem";
 import { v4 as uuidv4 } from "uuid";
+import { getPolicyLink } from "@/features/Policy/getPolicyLink";
+import type { PolicyType } from "@/features/Policy/types";
 
-interface PolicyItem {
-  title: string;
-  category: string;
-  region: string;
-  description: string;
-  fullLink: string;
-  link: string;
+interface PolicyItem extends PolicyType {
+  id: string;
 }
 
 const PolicySider = () => {
@@ -24,10 +21,11 @@ const PolicySider = () => {
 
   const fetchData = async () => {
     try {
-      const response = await axios.get<Omit<PolicyItem, "id">[]>("/data/korea-policy-list.json");
+      const response = await axios.get<PolicyType[]>("/data/korea-policy-list.json");
       const slicedWithId = response.data.slice(0, 10).map(item => ({
         ...item,
         id: uuidv4(),
+        fullLink: item.fullLink,
       }));
       setItems(slicedWithId);
     } catch (error) {
@@ -61,19 +59,22 @@ const PolicySider = () => {
         }}
       >
         {items &&
-          items.map((item, idx) => (
-            <SwiperSlide key={idx}>
-              <ListItem
-                type="policy"
-                linkSrc={item.fullLink}
-                description={item.description}
-                title={item.title}
-                intent={"default"}
-                size={"md"}
-                region={item.region}
-              />
-            </SwiperSlide>
-          ))}
+          items.map(item => {
+            const linkHref = getPolicyLink(item.region, item.link);
+            return (
+              <SwiperSlide key={item.id}>
+                <ListItem
+                  type="policy"
+                  linkSrc={linkHref}
+                  description={item.description}
+                  title={item.title}
+                  intent={"default"}
+                  size={"md"}
+                  region={item.region}
+                />
+              </SwiperSlide>
+            );
+          })}
       </Swiper>
     </div>
   );
