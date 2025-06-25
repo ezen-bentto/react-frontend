@@ -336,6 +336,7 @@ const CommunityWrite = () => {
         // 수정 API 호출
         const modifyData = {
           communityId: Number(editId),
+          communityType: formData.communityType,
           contestId: clean(formData.contestId) ? Number(formData.contestId) : null,
           categoryType: clean(formData.categoryType) ? Number(formData.categoryType) : null,
           ageGroup: clean(formData.ageGroup),
@@ -355,6 +356,8 @@ const CommunityWrite = () => {
                 })),
         };
         result = await modifyCommunity(modifyData);
+        // eslint-disable-next-line no-console
+        console.log("modifyData" + modifyData);
       } else {
         // 등록 API 호출
         result = await registerCommunity(payload);
@@ -414,31 +417,49 @@ const CommunityWrite = () => {
             {/* 라디오 버튼 섹션 */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
               {[
-                { value: "1", label: "공모전", icon: "🏆", color: "from-yellow-400 to-orange-500" },
-                { value: "2", label: "스터디", icon: "📚", color: "from-green-400 to-blue-500" },
-                { value: "3", label: "자유", icon: "💬", color: "from-purple-400 to-pink-500" }
+                {
+                  value: "1",
+                  label: "공모전",
+                  icon: "🏆",
+                  color: "from-yellow-400 to-orange-500",
+                },
+                {
+                  value: "2",
+                  label: "스터디",
+                  icon: "📚",
+                  color: "from-green-400 to-blue-500",
+                },
+                {
+                  value: "3",
+                  label: "자유",
+                  icon: "💬",
+                  color: "from-purple-400 to-pink-500",
+                },
               ].map((option) => (
                 <label
                   key={option.value}
-                  className={`relative flex items-center p-6 border-2 rounded-xl cursor-pointer transition-all duration-300 hover:scale-105 ${selectedOption === option.value
-                    ? "border-blue-500 shadow-lg"
-                    : "border-gray-200 dark:border-gray-600 hover:border-gray-300 dark:hover:border-gray-500"
-                    } ${isEditMode ? "opacity-50 cursor-not-allowed" : ""}`}
+                  className={`relative flex items-center p-6 border-2 rounded-xl cursor-pointer transition-all duration-300 hover:scale-105
+        ${selectedOption === option.value ? "border-blue-500 shadow-lg" : "border-gray-200 dark:border-gray-600 hover:border-gray-300 dark:hover:border-gray-500"}
+        ${isEditMode ? "opacity-50 cursor-not-allowed" : ""}`}
                 >
                   <input
                     type="radio"
-                    name="option"
+                    name="communityType"
                     value={option.value}
                     onChange={() => setSelectedOption(option.value as "1" | "2" | "3")}
                     checked={selectedOption === option.value}
                     disabled={isEditMode}
                     className="sr-only"
                   />
-                  <div className={`w-12 h-12 bg-gradient-to-r ${option.color} rounded-xl flex items-center justify-center text-2xl mr-4`}>
+                  <div
+                    className={`w-12 h-12 bg-gradient-to-r ${option.color} rounded-xl flex items-center justify-center text-2xl mr-4`}
+                  >
                     {option.icon}
                   </div>
                   <div>
-                    <div className="font-semibold text-gray-800 dark:text-gray-200 text-lg transition-colors duration-300">{option.label}</div>
+                    <div className="font-semibold text-gray-800 dark:text-gray-200 text-lg transition-colors duration-300">
+                      {option.label}
+                    </div>
                     <div className="text-sm text-gray-500 dark:text-gray-500 transition-colors duration-300">
                       {option.value === "1" && "공모전 팀원을 모집해보세요"}
                       {option.value === "2" && "함께 공부할 팀원을 찾아보세요"}
@@ -452,6 +473,11 @@ const CommunityWrite = () => {
                   )}
                 </label>
               ))}
+
+              {/* 👇 수정 모드일 때 숨겨진 input으로 값 전달 */}
+              {isEditMode && (
+                <input type="hidden" name="communityType" value={selectedOption} />
+              )}
             </div>
 
             {/* 분야/참여 선택 */}

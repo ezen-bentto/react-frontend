@@ -284,7 +284,6 @@ const CommunityList = () => {
           {currentPosts.length === 0 ? (
             <div className="flex flex-col items-center mt-8">
               <img src={imgSrc} alt="게시글 없음" className="w-64 md:w-80 h-auto" />
-              <p className="mt-4">게시글이 없습니다.</p>
             </div>
           ) : (
             <>

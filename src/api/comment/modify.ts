@@ -1,4 +1,4 @@
-import axios from "axios";
+import axios from "@/api/axiosInstance";
 
 // 댓글 수정 요청 타입
 export interface CommentModifyRequest {
@@ -28,7 +28,7 @@ export interface CommentResponse {
  */
 export const modifyComment = async (data: CommentModifyRequest): Promise<CommentResponse> => {
   try {
-    const response = await axios.post(`${import.meta.env.VITE_API_URL}/api/comment/modify`, data);
+    const response = await axios.post("/api/comment/modify", data);
     return response.data;
   } catch (error) {
     console.error("댓글 수정 실패:", error);

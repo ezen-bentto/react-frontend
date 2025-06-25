@@ -1,4 +1,4 @@
-import axios from "axios";
+import axios from "@/api/axiosInstance";
 
 // 댓글 삭제 요청 타입
 export interface CommentDeleteRequest {
@@ -27,7 +27,7 @@ export interface CommentResponse {
  */
 export const deleteComment = async (data: CommentDeleteRequest): Promise<CommentResponse> => {
   try {
-    const response = await axios.post(`${import.meta.env.VITE_API_URL}/api/comment/delete`, data);
+    const response = await axios.post("/api/comment/delete", data);
     return response.data.data;
   } catch (error) {
     console.error("댓글 삭제 실패:", error);

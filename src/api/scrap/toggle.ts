@@ -1,4 +1,4 @@
-import axios from "axios";
+import axios from "@/api/axiosInstance";
 
 /**
  * 스크랩 토글 요청
@@ -15,7 +15,7 @@ import axios from "axios";
  */
 export const toggleScrap = async (targetId: number) => {
     const response = await axios.post(
-        `${import.meta.env.VITE_API_URL}/api/scrap/toggle`,
+        "/api/scrap/toggle",
         { targetId }
     );
     return response.data;
