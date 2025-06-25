@@ -38,13 +38,19 @@ const ContestForm = () => {
   const handleSubmit = async () => {
     console.info("등록 전 데이터 확인:", contestFormData);
     let response;
+    const transformedData = {
+      ...contestFormData,
+      contest_tag: contestFormData.contest_tag.join(","),
+    };
+
+    console.info(transformedData.contest_tag, "@@@@@@@@");
     try {
       if (isEdit) {
-        response = await fetchContestEdit(contestFormData);
+        response = await fetchContestEdit(transformedData);
         console.info("수정", response.data);
         alert("성공적으로 수정되었습니다.");
       } else {
-        response = await fetchContestWrite(contestFormData);
+        response = await fetchContestWrite(transformedData);
         console.info("등록", response.data);
         alert("성공적으로 등록되었습니다.");
       }
@@ -143,14 +149,6 @@ const ContestForm = () => {
         {/* 상세정보 */}
         <FormField label="상세정보" required>
           <div className="w-full ">
-            {/* <ReactQuill
-              value={contestFormData.article}
-              onChange={value => updateContestFormData({ article: value })}
-              theme="snow"
-              className="h-[400px] mb-4"
-              placeholder=""
-            />
-            */}
             <ReactQuillEditor
               value={contestFormData.article}
               onChange={value => updateContestFormData({ article: value })}

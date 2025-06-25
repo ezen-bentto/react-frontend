@@ -1,5 +1,5 @@
 import type { ContestWithCommunity } from "@/types/contestDetailType";
-import type { Contest, ContestDetail, ContestFormData } from "@/types/contestType";
+import type { Contest, ContestDetail, transformedData } from "@/types/contestType";
 import axios from "axios";
 
 export const fetchContestList = async () => {
@@ -21,7 +21,7 @@ export const fetchContestPage = async () => {
   return response.data;
 };
 
-export const fetchContestWrite = async (contestData: ContestFormData) => {
+export const fetchContestWrite = async (contestData: transformedData) => {
   const response = await axios.post<{ data: Contest }>(
     `${import.meta.env.VITE_API_URL}/api/contest/register`,
     contestData
@@ -29,7 +29,7 @@ export const fetchContestWrite = async (contestData: ContestFormData) => {
   return response.data;
 };
 
-export const fetchContestEdit = async (contestData: ContestFormData) => {
+export const fetchContestEdit = async (contestData: transformedData) => {
   const response = await axios.post<{ data: Contest }>(
     `${import.meta.env.VITE_API_URL}/api/contest/modify`,
     contestData

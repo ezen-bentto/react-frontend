@@ -36,6 +36,10 @@ export type ContestFormData = {
   article: string;
 };
 
+export interface transformedData extends Omit<ContestFormData, "contest_tag"> {
+  contest_tag: string; // string 타입으로 변경
+}
+
 export interface ContestStore {
   contests: Contest[];
   popularContests: Contest[];
