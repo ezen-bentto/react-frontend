@@ -2,7 +2,7 @@ import type { Contest } from "@/types/contestType";
 import countDate from "@/utils/countDate";
 import Badge from "../shared/Badge";
 import Button from "../shared/Button";
-import { useBookmark, useBookmarkMutation } from "@/features/contest/useBookmark";
+import { useBookmark, useBookmarkCnt, useBookmarkMutation } from "@/features/contest/useBookmark";
 import { StarOutlined } from "@ant-design/icons";
 
 interface DetailInfoProps {
@@ -13,8 +13,10 @@ function DetailInfo({ data }: DetailInfoProps) {
   if (!data) {
     return <div>로딩 중...</div>;
   }
-  const { bookmarkCount, isBookmarked } = useBookmark(data.id);
+  const { bookmarkCount } = useBookmarkCnt(data.id);
   const { mutate, isPending } = useBookmarkMutation(data.id);
+  // 로그인 되어 있다면
+  const { isBookmarked } = useBookmark(data.id);
 
   const shareButtons = [
     {
@@ -39,7 +41,6 @@ function DetailInfo({ data }: DetailInfoProps) {
         `https://share.naver.com/web/shareView.nhn?url=${encodeURIComponent(pageUrl)}&title=${encodeURIComponent("페이지 제목")}`,
     },
   ];
-  console.info("@@@@", isBookmarked);
 
   return (
     <div className="rounded-lg shadow-sm border p-6 mb-20">
