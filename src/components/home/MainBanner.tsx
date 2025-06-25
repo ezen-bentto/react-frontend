@@ -13,8 +13,8 @@ const MainBanner = () => {
       {
         id: 106,
         image: "/images/banner_1.png",
-        bgColor: "bg-[#FFFFFF]",
-        textColor: "black",
+        bgColor: "bg-[#f2f2f2]",
+        textColor: "brand-primary",
         duration: "2025.05.28 ~ 2025.06.26",
         title: "대구광역시 신청사 건립사업 국제설계 공모",
         summary: "대구광역시 신청사 건립사업 국제설계 공모",
