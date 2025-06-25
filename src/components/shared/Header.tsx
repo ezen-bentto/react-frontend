@@ -100,7 +100,6 @@ export const Header = ({ opacityEffect = false }: HeaderProps) => {
   // 로그아웃 핸들러가 전역 logout 함수를 호출하고, 홈으로 이동시킴
   const handleLogout = () => {
     logout();
-    alert("로그아웃 되었습니다.");
   };
 
   // // 로그아웃시 localstorage 삭제

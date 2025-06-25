@@ -18,7 +18,7 @@ const SignUpPersonal = () => {
       } else if (provider === "구글") {
         loginUrl = await getGoogleSignUpUrl();
       } else {
-        alert(`${provider} 소셜 회원가입은 아직 구현 중입니다.`);
+        alert(`${provider} 알 수 없는 오류가 발생했습니다..`);
         return;
       }
       window.location.href = loginUrl;
