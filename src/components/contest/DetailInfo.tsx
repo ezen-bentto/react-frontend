@@ -39,6 +39,7 @@ function DetailInfo({ data }: DetailInfoProps) {
         `https://share.naver.com/web/shareView.nhn?url=${encodeURIComponent(pageUrl)}&title=${encodeURIComponent("페이지 제목")}`,
     },
   ];
+  console.info("@@@@", isBookmarked);
 
   return (
     <div className="rounded-lg shadow-sm border p-6 mb-20">

@@ -10,7 +10,7 @@ export const useBookmark = (constetId: number) => {
     placeholderData: keepPreviousData,
     staleTime: 1000 * 60 * 10,
   });
-  const bookmarkCount = data?.isBookmarked;
+  const bookmarkCount = data?.bookmarkCount;
   const isBookmarked = data?.isBookmarked;
   return { bookmarkCount, isBookmarked };
 };
@@ -21,25 +21,49 @@ export const useBookmarkMutation = (contestId: number) => {
 
   const mutation = useMutation({
     mutationFn: () => fetchBookmark(contestId),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["bookmark-check", contestId] });
+
+    onMutate: async () => {
+      await queryClient.cancelQueries({ queryKey: ["bookmark", contestId] });
+
+      const previous = queryClient.getQueryData<{
+        isBookmarked: boolean;
+        bookmarkCount: number;
+      }>(["bookmark", contestId]);
+
+      if (previous) {
+        queryClient.setQueryData(["bookmark", contestId], {
+          isBookmarked: !previous.isBookmarked,
+          bookmarkCount: previous.isBookmarked
+            ? previous.bookmarkCount - 1
+            : previous.bookmarkCount + 1,
+        });
+      }
+
+      return { previous };
     },
-    onError: () => {
-      queryClient.invalidateQueries({ queryKey: ["bookmark-check", contestId] });
+
+    onError: (_err, _vars, context) => {
+      if (context?.previous) {
+        queryClient.setQueryData(["bookmark", contestId], context.previous);
+      }
+    },
+
+    onSettled: () => {
+      queryClient.invalidateQueries({ queryKey: ["bookmark", contestId] });
     },
   });
 
   const debounceMutate = () => {
-    // 이전 클릭 무시
     if (timerRef.current) {
       clearTimeout(timerRef.current);
     }
-
-    // 마지막 클릭만 300ms 후 실행
     timerRef.current = setTimeout(() => {
       mutation.mutate();
     }, 300);
   };
 
-  return { mutate: debounceMutate, isPending: mutation.isPending };
+  return {
+    mutate: debounceMutate,
+    isPending: mutation.isPending,
+  };
 };
