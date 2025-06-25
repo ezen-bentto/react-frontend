@@ -34,7 +34,6 @@ const Login = () => {
 
     if (token && refresh) {
       login(token, refresh); // context의 login 함수로 로그인 상태 업데이트
-      alert("로그인 성공!");
       navigate("/");
     } else if (error) {
       setErrorMessage("소셜 로그인에 실패했습니다. 다시 시도해 주세요.");
@@ -58,7 +57,6 @@ const Login = () => {
       // [수정] localStorage 대신 context의 login 함수를 호출하여 전역 상태를 업데이트
       if (loginData.accessToken && loginData.refreshToken) {
         login(loginData.accessToken, loginData.refreshToken);
-        alert("로그인 성공!");
         navigate("/");
       }
     } catch (error: unknown) {
@@ -82,7 +80,7 @@ const Login = () => {
       } else if (provider === "구글") {
         loginUrl = await getGoogleLoginUrl();
       } else {
-        alert(`${provider} 소셜 로그인은 아직 구현 중입니다.`);
+        alert(`${provider} 알 수 없는 오류가 발생했습니다.`);
         return;
       }
       window.location.href = loginUrl;
