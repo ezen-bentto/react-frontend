@@ -137,7 +137,7 @@ const Fillter = ({ filters, onFilterChange, onSearchSubmit, onResetFilters }: Fi
 
   return (
     <form
-      className="p-4 space-y-6 box-border-black min-w-[360px]"
+      className="p-4 space-y-6 box-border-black"
       onSubmit={e => {
         e.preventDefault();
         onSearchSubmit(searchText);

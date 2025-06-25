@@ -28,7 +28,7 @@ export default function PolicyList({ policies }: PolicyListProps) {
   }
 
   return (
-    <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 min-w-[360px]">
+    <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
       {policies.map(item => {
         const linkHref = getPolicyLink(item.region, item.link);
         const category = item.category ? item.category : "분류없음";
