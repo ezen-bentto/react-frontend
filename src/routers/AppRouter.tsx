@@ -17,6 +17,9 @@ import SignUpPersonal from "@/pages/SignUp/SignUpPersonal";
 import SignUpCompany from "@/pages/SignUp/SignUpCompany";
 import ContestList from "@/pages/Contest/ContestList";
 import ContestDetail from "@/pages/Contest/ContestDetail";
+
+import ContestForm from "@/pages/Contest/ContestForm";
+
 import { ProtectedRoute } from "@/routers/ProtectedRoute";
 import { PublicRoute } from "@/routers/PublicRoute";
 
@@ -31,6 +34,16 @@ const AppRouter = () => {
         <Route path="/community/content/:communityId" element={<CommunityContent />} />
         <Route path="/community/list" element={<CommunityList />} />
         <Route path="/contest" element={<ContestList />} />
+
+        <Route path="/contest/:id" element={<ContestDetail />} />
+        <Route path="/contest/new" element={<ContestForm />} />
+        <Route path="/contest/:id/edit" element={<ContestForm />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/mypage" element={<MyPage />} />
+        <Route path="/signup" element={<SignUpTypeSelect />} />
+        <Route path="/signup/personal" element={<SignUpPersonal />} />
+        <Route path="/signup/company" element={<SignUpCompany />} />
+
         <Route path="/contest/:contestId" element={<ContestDetail />} />
 
         {/* --- 로그인 한 사람만 접근 가능한 페이지 --- */}

@@ -35,4 +35,26 @@ export const contestFilterData: FilterGroup[] = [
     ],
     multiSelect: true,
   },
+  {
+    name: "benefits",
+    label: "혜택",
+    options: [
+      { label: "입상시 가산점", value: "입상시 가산점" },
+      { label: "장학금", value: "장학금" },
+      { label: "인턴십", value: "인턴십" },
+      { label: "취업연계", value: "취업연계" },
+      { label: "해외연수", value: "해외연수" },
+      { label: "기타", value: "기타" },
+    ],
+  },
+  {
+    name: "award",
+    label: "시상내역",
+    options: [
+      { label: "1000만원 미만", value: "1000만원 미만" },
+      { label: "1000만원 이상 ~ 3000만원 미만", value: "1000만원 이상 ~ 3000만원 미만" },
+      { label: "3000만원 이상 ~ 5000만원 미만", value: "3000만원 이상 ~ 5000만원 미만" },
+      { label: "5000만원 이상", value: "5000만원 이상" },
+    ],
+  },
 ];
