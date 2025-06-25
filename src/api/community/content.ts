@@ -1,4 +1,4 @@
-import axios from "axios";
+import axios from "@/api/axiosInstance";
 
 // 모집 상세 응답 타입
 export interface RecruitmentDetail {
@@ -45,7 +45,7 @@ export const fetchCommunityDetail = async (
   communityId: number
 ): Promise<CommunityDetail> => {
   const response = await axios.get<{ data: CommunityDetail }>(
-    `${import.meta.env.VITE_API_URL}/api/community/getDetail?communityId=${communityId}`
+    `/api/community/getDetail?communityId=${communityId}`
   );
   return response.data.data;
 };

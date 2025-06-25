@@ -1,4 +1,4 @@
-import axios from "axios";
+import axios from "@/api/axiosInstance";
 
 // 댓글 등록 요청 타입
 export interface CommentRegisterRequest {
@@ -28,7 +28,7 @@ export interface CommentResponse {
  */
 export const registerComment = async (data: CommentRegisterRequest): Promise<CommentResponse> => {
   try {
-    const response = await axios.post(`${import.meta.env.VITE_API_URL}/api/comment/register`, data);
+    const response = await axios.post("/api/comment/register", data);
     return response.data;
   } catch (error) {
     console.error("댓글 등록 실패:", error);

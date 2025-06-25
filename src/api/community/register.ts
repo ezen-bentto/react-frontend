@@ -1,4 +1,4 @@
-import axios from "axios";
+import axios from "@/api/axiosInstance";
 
 // 모집상세 요청 타입
 export interface RecruitmentDetail {
@@ -54,7 +54,7 @@ export const registerCommunity = async (payload: CommunityRegisterPayload) => {
   };
 
   const response = await axios.post(
-    `${import.meta.env.VITE_API_URL}/api/community/register`,
+    "/api/community/register",
     transformedPayload
   );
   return response.data;

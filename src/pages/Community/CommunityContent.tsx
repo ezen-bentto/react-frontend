@@ -24,7 +24,7 @@ import {
   HeartOutlined,
   BulbOutlined,
   FireOutlined,
-  HeartFilled
+  HeartFilled,
 } from "@ant-design/icons";
 
 const CommunityContent = () => {
@@ -55,6 +55,12 @@ const CommunityContent = () => {
   const [countdown, setCountdown] = useState<string>("");
   const [isDarkMode, setIsDarkMode] = useState(false);
 
+  useEffect(() => {
+    // eslint-disable-next-line no-console
+    console.log("✅ user:", user);
+    // eslint-disable-next-line no-console
+    console.log("✅ comment:", comments);
+  }, [user, comments]);
 
   const handleToggleScrap = async () => {
     if (!isLoggedIn) {
@@ -66,7 +72,7 @@ const CommunityContent = () => {
 
     try {
       const { scrap_yn } = await toggleScrap(community.community_id);
-      setCommunity(prev => prev ? { ...prev, scrap_yn } : prev);
+      setCommunity(prev => (prev ? { ...prev, scrap_yn } : prev));
     } catch (err) {
       console.error("스크랩 토글 실패:", err);
       alert("스크랩 처리 중 오류가 발생했습니다.");
@@ -437,7 +443,9 @@ const CommunityContent = () => {
         <main className="pt-14">
           <div className="max-w-4xl mx-auto px-4 py-8">
             <div className="flex justify-center items-center h-64">
-              <div className="text-lg text-gray-500 dark:text-gray-300">커뮤니티 정보를 찾을 수 없습니다.</div>
+              <div className="text-lg text-gray-500 dark:text-gray-300">
+                커뮤니티 정보를 찾을 수 없습니다.
+              </div>
             </div>
           </div>
         </main>
@@ -495,7 +503,6 @@ const CommunityContent = () => {
                         {community.scrap_yn ? <HeartFilled /> : <HeartOutlined />}
                       </button>
                     </div>
-
                   </div>
                 </div>
 
@@ -509,9 +516,13 @@ const CommunityContent = () => {
                       <div className="w-8 h-8 rounded-full flex items-center justify-center bg-gray-100 dark:bg-gray-700">
                         <UserOutlined className="text-gray-600 dark:text-gray-300" />
                       </div>
-                      <span className="font-medium text-gray-700 dark:text-gray-200">{community.nickname}</span>
+                      <span className="font-medium text-gray-700 dark:text-gray-200">
+                        {community.nickname}
+                      </span>
                     </div>
-                    <span className="text-gray-500 dark:text-gray-400">{community.reg_date?.slice(0, 10)}</span>
+                    <span className="text-gray-500 dark:text-gray-400">
+                      {community.reg_date?.slice(0, 10)}
+                    </span>
                   </div>
                 </div>
               </div>
@@ -554,7 +565,9 @@ const CommunityContent = () => {
                       <ClockCircleOutlined />
                       <span className="font-semibold">모집 마감까지</span>
                     </div>
-                    <div className={`text-2xl font-bold tracking-wider ${countdown.includes("모집 종료") ? "text-red-200" : ""}`}>
+                    <div
+                      className={`text-2xl font-bold tracking-wider ${countdown.includes("모집 종료") ? "text-red-200" : ""}`}
+                    >
                       {countdown}
                     </div>
                   </div>
@@ -597,7 +610,8 @@ const CommunityContent = () => {
                     <div>
                       <div className="text-sm text-gray-600 dark:text-gray-400">진행 일정</div>
                       <div className="font-semibold text-gray-900 dark:text-white">
-                        {community.start_date ? community.start_date.slice(0, 10) : "-"} ~ {community.end_date ? community.end_date.slice(0, 10) : "-"}
+                        {community.start_date ? community.start_date.slice(0, 10) : "-"} ~{" "}
+                        {community.end_date ? community.end_date.slice(0, 10) : "-"}
                       </div>
                     </div>
                   </div>
@@ -610,11 +624,14 @@ const CommunityContent = () => {
                   <h3 className="font-semibold mb-4 text-gray-900 dark:text-white">모집 상세</h3>
                   <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                     {recruitment_detail_list.map((detail, index) => (
-                      <div key={detail.recruitment_detail_id || index} className="p-4 rounded-xl text-center bg-gray-50 dark:bg-gray-700">
-                        <div className="text-2xl font-bold text-blue-600 mb-1">
-                          {detail.count}
+                      <div
+                        key={detail.recruitment_detail_id || index}
+                        className="p-4 rounded-xl text-center bg-gray-50 dark:bg-gray-700"
+                      >
+                        <div className="text-2xl font-bold text-blue-600 mb-1">{detail.count}</div>
+                        <div className="text-sm font-medium text-gray-700 dark:text-gray-300">
+                          {detail.role}
                         </div>
-                        <div className="text-sm font-medium text-gray-700 dark:text-gray-300">{detail.role}</div>
                       </div>
                     ))}
                   </div>
@@ -627,7 +644,9 @@ const CommunityContent = () => {
               <h2 className="text-xl font-bold mb-4 text-gray-900 dark:text-white">상세 설명</h2>
               <div
                 className="prose max-w-none min-h-[200px] prose-gray dark:prose-invert dark:prose-headings:text-white dark:prose-p:text-gray-300 dark:prose-strong:text-white dark:prose-li:text-gray-300"
-                dangerouslySetInnerHTML={{ __html: community.content || "<p>상세 설명이 없습니다.</p>" }}
+                dangerouslySetInnerHTML={{
+                  __html: community.content || "<p>상세 설명이 없습니다.</p>",
+                }}
               />
             </div>
           </div>
@@ -662,13 +681,15 @@ const CommunityContent = () => {
                           <div className="flex-1">
                             <div className="flex items-center justify-between mb-2">
                               <div className="flex items-center gap-2">
-                                <span className="font-semibold text-gray-900 dark:text-white">{comment.nickname}</span>
+                                <span className="font-semibold text-gray-900 dark:text-white">
+                                  {comment.nickname}
+                                </span>
                                 <span className="text-sm text-gray-500 dark:text-gray-400">
                                   {formatDate(comment.reg_date)}
                                 </span>
                               </div>
 
-                              {user && user.id === comment.user_id && !isDeleted && (
+                              {user && user.id === Number(comment.user_id) && !isDeleted && (
                                 <div className="flex items-center gap-2">
                                   {isEditing ? (
                                     <>
@@ -689,13 +710,17 @@ const CommunityContent = () => {
                                     <>
                                       <button
                                         className="p-1 transition-colors text-gray-400 hover:text-blue-600 dark:hover:text-blue-400"
-                                        onClick={() => startEditing(comment.comment_id, comment.content)}
+                                        onClick={() =>
+                                          startEditing(comment.comment_id, comment.content)
+                                        }
                                       >
                                         <EditOutlined />
                                       </button>
                                       <button
                                         className="p-1 transition-colors text-gray-400 hover:text-red-600 dark:hover:text-red-400"
-                                        onClick={() => showCommentDeleteConfirmModal(comment.comment_id)}
+                                        onClick={() =>
+                                          showCommentDeleteConfirmModal(Number(comment.comment_id))
+                                        }
                                       >
                                         <DeleteOutlined />
                                       </button>
@@ -755,7 +780,12 @@ const CommunityContent = () => {
                       />
 
                       <div className="flex justify-end gap-2 mt-2">
-                        <Button type="button" intent="primary" size="sm" onClickFnc={handleCommentCancel}>
+                        <Button
+                          type="button"
+                          intent="primary"
+                          size="sm"
+                          onClickFnc={handleCommentCancel}
+                        >
                           취소
                         </Button>
                         <Button type="submit" intent="orange" size="sm" onClickFnc={() => { }}>
@@ -775,7 +805,9 @@ const CommunityContent = () => {
       <dialog id="delete_modal" className="modal">
         <div className="modal-box border bg-white dark:bg-[#2B2B2B] text-gray-900 dark:text-white border-gray-200 dark:border-gray-700">
           <h3 className="font-bold text-lg text-gray-900 dark:text-white">삭제 확인</h3>
-          <p className="py-4 whitespace-pre-line text-gray-700 dark:text-gray-300">{deleteModalState.message}</p>
+          <p className="py-4 whitespace-pre-line text-gray-700 dark:text-gray-300">
+            {deleteModalState.message}
+          </p>
           <div className="modal-action">
             <button
               className="btn border bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-200 border-gray-300 dark:border-gray-600"
@@ -800,16 +832,16 @@ const CommunityContent = () => {
       <dialog id="result_modal" className="modal">
         <div className="modal-box border bg-white dark:bg-[#2B2B2B] text-gray-900 dark:text-white border-gray-200 dark:border-gray-700">
           <h3
-            className={`font-bold text-lg ${deleteModalState.type === "success"
-              ? "text-green-600"
-              : "text-red-600"
+            className={`font-bold text-lg ${deleteModalState.type === "success" ? "text-green-600" : "text-red-600"
               }`}
           >
             {deleteModalState.type === "success" ? "삭제 완료" : "삭제 실패"}
           </h3>
           <p className="py-4 text-gray-700 dark:text-gray-300">{deleteModalState.message}</p>
           {deleteModalState.type === "success" && (
-            <p className="text-sm text-gray-500 dark:text-gray-400">잠시 후 목록으로 이동합니다...</p>
+            <p className="text-sm text-gray-500 dark:text-gray-400">
+              잠시 후 목록으로 이동합니다...
+            </p>
           )}
           <div className="modal-action">
             <button
@@ -835,7 +867,9 @@ const CommunityContent = () => {
       <dialog id="comment_delete_modal" className="modal">
         <div className="modal-box border bg-white dark:bg-[#2B2B2B] text-gray-900 dark:text-white border-gray-200 dark:border-gray-700">
           <h3 className="font-bold text-lg text-gray-900 dark:text-white">댓글 삭제 확인</h3>
-          <p className="py-4 whitespace-pre-line text-gray-700 dark:text-gray-300">{commentDeleteModalState.message}</p>
+          <p className="py-4 whitespace-pre-line text-gray-700 dark:text-gray-300">
+            {commentDeleteModalState.message}
+          </p>
           <div className="modal-action">
             <button
               className="btn border bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-200 border-gray-300 dark:border-gray-600"
@@ -860,9 +894,7 @@ const CommunityContent = () => {
       <dialog id="comment_result_modal" className="modal">
         <div className="modal-box border bg-white dark:bg-[#2B2B2B] text-gray-900 dark:text-white border-gray-200 dark:border-gray-700">
           <h3
-            className={`font-bold text-lg ${commentDeleteModalState.type === "success"
-              ? "text-green-600"
-              : "text-red-600"
+            className={`font-bold text-lg ${commentDeleteModalState.type === "success" ? "text-green-600" : "text-red-600"
               }`}
           >
             {commentDeleteModalState.type === "success" ? "삭제 완료" : "삭제 실패"}

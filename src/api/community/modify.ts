@@ -1,8 +1,9 @@
-import axios from "axios";
+import axios from "@/api/axiosInstance";
 
 // 커뮤니티 수정 요청 타입
 export interface CommunityModifyRequest {
   communityId: number;
+  communityType: string;
   contestId?: number | null;
   categoryType?: number | null;
   startDate?: string | null;
@@ -41,7 +42,8 @@ export const modifyCommunity = async (
   data: CommunityModifyRequest
 ): Promise<CommunityModifyResponse> => {
   try {
-    const response = await axios.post(`${import.meta.env.VITE_API_URL}/api/community/modify`, data);
+    const response = await axios.post("/api/community/modify", data);
+
     return response.data;
   } catch (error) {
     console.error("커뮤니티 수정 실패:", error);
