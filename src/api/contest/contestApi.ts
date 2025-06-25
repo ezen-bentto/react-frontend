@@ -1,5 +1,5 @@
 import type { ContestWithCommunity } from "@/types/contestDetailType";
-import type { Contest, ContestFormData } from "@/types/contestType";
+import type { Contest, ContestDetail, ContestFormData } from "@/types/contestType";
 import axios from "axios";
 
 export const fetchContestList = async () => {
@@ -17,7 +17,7 @@ export const fetchContestDetail = async (id: number) => {
 };
 
 export const fetchContestPage = async () => {
-  const response = await axios.get<Contest[]>("/data/contest.json");
+  const response = await axios.get<ContestDetail[]>("/data/contest.json");
   return response.data;
 };
 

@@ -1,3 +1,5 @@
+import type { CommunityListItem } from "./contestDetailType";
+
 export type Contest = {
   id: number;
   writer_id: number;
@@ -41,4 +43,8 @@ export interface ContestStore {
   contestFormData: ContestFormData;
   // eslint-disable-next-line no-unused-vars
   updateContestFormData: (data: Partial<ContestFormData>) => void;
+}
+
+export interface ContestDetail extends Contest {
+  communityList: CommunityListItem[];
 }
