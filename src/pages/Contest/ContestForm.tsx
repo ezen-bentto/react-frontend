@@ -48,7 +48,7 @@ const ContestForm = () => {
         console.info("등록", response.data);
         alert("성공적으로 등록되었습니다.");
       }
-      navigate(`/contest/${response.data.id}`);
+      navigate(`/contest/${response.data}`);
     } catch (error) {
       console.info("실패", error);
       alert("등록에 실패했습니다.");

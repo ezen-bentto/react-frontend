@@ -2,7 +2,7 @@ import { create } from "zustand";
 import type { ContestFormData, ContestStore } from "@/types/contestType";
 
 const initialContestFormData: ContestFormData = {
-  writer_id: 1,
+  writer_id: "1",
   title: "",
   organizer: "",
   organizer_type: "",
