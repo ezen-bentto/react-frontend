@@ -1,7 +1,6 @@
 import type { FilterGroup } from "@/components/shared/Fillter";
 export const CATEGORY_LIST = ["일자리", "주거", "복지.문화", "참여.권리", "교육", "분류없음"];
 export const koreaRegions = [
-  "서울",
   "경기",
   "부산",
   "인천",
