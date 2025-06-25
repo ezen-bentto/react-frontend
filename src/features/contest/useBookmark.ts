@@ -1,18 +1,29 @@
-import { fetchBookmark, fetchIsBookmark } from "@/api/contest/list";
-import type { bookmark } from "@/types/contestType";
+import { fetchBookmarkCnt, fetchCheckBookmark, fetchIsBookmark } from "@/api/contest/list";
 import { keepPreviousData, useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useRef } from "react";
 
 export const useBookmark = (constetId: number) => {
-  const { data } = useQuery<bookmark>({
-    queryKey: ["bookmark", constetId],
+  const { data, isLoading } = useQuery<boolean>({
+    queryKey: ["bookmarkStatus", constetId],
     queryFn: () => fetchIsBookmark(constetId),
     placeholderData: keepPreviousData,
     staleTime: 1000 * 60 * 10,
   });
-  const bookmarkCount = data?.bookmarkCount;
-  const isBookmarked = data?.isBookmarked;
-  return { bookmarkCount, isBookmarked };
+
+  const isBookmarked = data;
+  return { isBookmarked, isLoading };
+};
+
+export const useBookmarkCnt = (constetId: number) => {
+  const { data, isLoading } = useQuery<string>({
+    queryKey: ["bookmarkCount", constetId],
+    queryFn: () => fetchBookmarkCnt(constetId),
+    placeholderData: keepPreviousData,
+    staleTime: 1000 * 60 * 10,
+  });
+
+  const bookmarkCount = data;
+  return { bookmarkCount, isLoading };
 };
 
 export const useBookmarkMutation = (contestId: number) => {
@@ -20,36 +31,48 @@ export const useBookmarkMutation = (contestId: number) => {
   const timerRef = useRef<NodeJS.Timeout | null>(null);
 
   const mutation = useMutation({
-    mutationFn: () => fetchBookmark(contestId),
+    mutationFn: () => fetchCheckBookmark(contestId),
 
     onMutate: async () => {
-      await queryClient.cancelQueries({ queryKey: ["bookmark", contestId] });
+      await Promise.all([
+        queryClient.cancelQueries({ queryKey: ["bookmarkStatus", contestId] }),
+        queryClient.cancelQueries({ queryKey: ["bookmarkCount", contestId] }),
+      ]);
 
-      const previous = queryClient.getQueryData<{
-        isBookmarked: boolean;
-        bookmarkCount: number;
-      }>(["bookmark", contestId]);
+      const previousStatus = queryClient.getQueryData<boolean>(["bookmarkStatus", contestId]);
+      const previousCount = queryClient.getQueryData<number>(["bookmarkCount", contestId]);
 
-      if (previous) {
-        queryClient.setQueryData(["bookmark", contestId], {
-          isBookmarked: !previous.isBookmarked,
-          bookmarkCount: previous.isBookmarked
-            ? previous.bookmarkCount - 1
-            : previous.bookmarkCount + 1,
-        });
+      if (typeof previousStatus === "boolean") {
+        queryClient.setQueryData(["bookmarkStatus", contestId], !previousStatus);
       }
 
-      return { previous };
+      if (typeof previousCount === "number") {
+        queryClient.setQueryData(
+          ["bookmarkCount", contestId],
+          previousStatus ? previousCount - 1 : previousCount + 1
+        );
+      }
+
+      return {
+        previousStatus,
+        previousCount,
+      };
     },
 
     onError: (_err, _vars, context) => {
-      if (context?.previous) {
-        queryClient.setQueryData(["bookmark", contestId], context.previous);
+      if (context) {
+        if (typeof context.previousStatus === "boolean") {
+          queryClient.setQueryData(["bookmarkStatus", contestId], context.previousStatus);
+        }
+        if (typeof context.previousCount === "number") {
+          queryClient.setQueryData(["bookmarkCount", contestId], context.previousCount);
+        }
       }
     },
 
     onSettled: () => {
-      queryClient.invalidateQueries({ queryKey: ["bookmark", contestId] });
+      queryClient.invalidateQueries({ queryKey: ["bookmarkStatus", contestId] });
+      queryClient.invalidateQueries({ queryKey: ["bookmarkCount", contestId] });
     },
   });
 
