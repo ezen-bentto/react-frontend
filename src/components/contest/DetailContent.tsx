@@ -3,10 +3,6 @@ type DetailContentProps = {
 };
 
 const DetailContent = ({ html }: DetailContentProps) => {
-<<<<<<< HEAD
-=======
-  // console.info(html);
->>>>>>> main
   return <div dangerouslySetInnerHTML={{ __html: html }}></div>;
 };
 
