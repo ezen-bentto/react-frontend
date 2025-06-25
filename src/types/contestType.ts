@@ -19,18 +19,18 @@ export type Contest = {
 
 export type ContestFormData = {
   id?: number;
-  writer_id: number;
+  writer_id: string;
   title: string;
   img?: string | null;
   organizer: string;
   organizer_type: string;
   participants: string;
   prize: string;
+  benefits: string;
+  contest_tag: string[];
   start_date: string;
   end_date: string;
   homepage: string;
-  benefits: string;
-  contest_tag: string[];
   article: string;
 };
 
