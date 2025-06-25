@@ -1,4 +1,5 @@
 import { fieldset, legend, input } from "../style/input";
+import { type InputHTMLAttributes } from "react";
 
 /**
  *
@@ -19,16 +20,19 @@ import { fieldset, legend, input } from "../style/input";
  * @param legendText 입력 필드를 설명하는 레전드 텍스트
  */
 
-type InputProps = {
+type InputProps = InputHTMLAttributes<HTMLInputElement> & {
   status?: "normal" | "error" | "success";
   legendText: string;
 };
 
-const Input = ({ status = "normal", legendText }: InputProps) => {
+const Input = ({ status = "normal", legendText, className, ...props }: InputProps) => {
+  const baseStyle = input({ status });
+  const combinedClass = `${baseStyle} ${className ?? ""}`.trim();
+
   return (
     <fieldset className={fieldset()}>
       <legend className={legend()}>{legendText}</legend>
-      <input type="text" className={input({ status })} placeholder="Type here" />
+      <input className={combinedClass} {...props} />
     </fieldset>
   );
 };

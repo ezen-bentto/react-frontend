@@ -1,4 +1,4 @@
-import axios from "axios";
+import axios from "@/api/axiosInstance";
 
 // 댓글 목록 응답(row)
 export interface CommentRow {
@@ -33,7 +33,7 @@ export interface CommentListResponse {
 export const fetchCommentList = async (postId: number): Promise<CommentListResponse> => {
   try {
     const response = await axios.get(
-      `${import.meta.env.VITE_API_URL}/api/comment/getList?postId=${postId}`
+      `/api/comment/getList?postId=${postId}`
     );
     return response.data.data;
   } catch (error) {

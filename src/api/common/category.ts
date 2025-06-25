@@ -1,4 +1,4 @@
-import axios from "axios";
+import axios from "@/api/axiosInstance";
 
 // 카테고리 반환 타입(row)
 export interface Category {
@@ -37,7 +37,7 @@ export interface CategoryAPIResponse {
  */
 export const fetchCategory = async (): Promise<CategoryAPIResponse> => {
   const response = await axios.get<CategoryAPIResponse>(
-    `${import.meta.env.VITE_API_URL}/api/common/getCategory`
+    "/api/common/getCategory"
   );
   return response.data;
 };

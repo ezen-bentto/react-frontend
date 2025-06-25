@@ -2,6 +2,8 @@ import type { Contest } from "@/types/contestType";
 import countDate from "@/utils/countDate";
 import Badge from "../shared/Badge";
 import Button from "../shared/Button";
+import { useBookmark, useBookmarkMutation } from "@/features/contest/useBookmark";
+import { StarOutlined } from "@ant-design/icons";
 
 interface DetailInfoProps {
   data?: Contest;
@@ -11,6 +13,8 @@ function DetailInfo({ data }: DetailInfoProps) {
   if (!data) {
     return <div>로딩 중...</div>;
   }
+  const { bookmarkCount, isBookmarked } = useBookmark(data.id);
+  const { mutate, isPending } = useBookmarkMutation(data.id);
 
   const shareButtons = [
     {
@@ -35,6 +39,7 @@ function DetailInfo({ data }: DetailInfoProps) {
         `https://share.naver.com/web/shareView.nhn?url=${encodeURIComponent(pageUrl)}&title=${encodeURIComponent("페이지 제목")}`,
     },
   ];
+  console.info("@@@@", isBookmarked);
 
   return (
     <div className="rounded-lg shadow-sm border p-6 mb-20">
@@ -46,11 +51,17 @@ function DetailInfo({ data }: DetailInfoProps) {
 
         {/* 조회수 찜 */}
         <div className="flex items-center gap-4">
-          <button className="flex flex-col items-center gap-1 p-2 hover:bg-gray-50 rounded-md transition-colors">
-            <div className="w-8 h-8 bg-gray-200 rounded-full flex items-center justify-center">
-              ⭐
+          <button
+            className="flex flex-col items-center gap-1 p-2 hover:bg-gray-50 rounded-md transition-colors"
+            onClick={mutate}
+            disabled={isPending}
+          >
+            <div
+              className={`w-8 h-8 bg-gray-200 ${isBookmarked ? "text-yellow-400" : "text-brand-primary"} rounded-full flex items-center justify-center`}
+            >
+              <StarOutlined />
             </div>
-            <span className="text-xs text-gray-600">356</span>
+            <span className="text-xs text-gray-600">{bookmarkCount ? bookmarkCount : 0}</span>
           </button>
           <button className="flex flex-col items-center gap-1 p-2 hover:bg-gray-50 rounded-md transition-colors">
             <div className="w-8 h-8 bg-gray-200 rounded-full flex items-center justify-center">

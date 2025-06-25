@@ -33,7 +33,7 @@ interface Props {
 const FilterGroupSection = ({ group, selected, onClick }: Props) => {
   return (
     <fieldset>
-      <div className="flex items-center gap-4">
+      <div className="flex flex-wrap items-center gap-4 ">
         <span className="font-semibold whitespace-nowrap">{group.label}</span>
         <ul className="flex flex-wrap gap-2">
           {group.options.map(option => (

@@ -39,6 +39,10 @@ export type ContestFormData = {
 export interface transformedData extends Omit<ContestFormData, "contest_tag"> {
   contest_tag: string; // string 타입으로 변경
 }
+export interface bookmark {
+  isBookmarked: boolean;
+  bookmarkCount: number;
+}
 
 export interface ContestStore {
   contests: Contest[];

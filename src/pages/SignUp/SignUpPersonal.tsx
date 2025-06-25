@@ -1,80 +1,84 @@
-// src/components/SignUpPersonal.tsx
+//react-frontend\src\pages\SignUp\SignUpPersonal.tsx
 import { useNavigate } from "react-router-dom";
-import axios from "axios"; // axios 추가
+import axios from "axios";
+import { getKakaoSignUpUrl, getNaverSignUpUrl, getGoogleSignUpUrl } from "../../api/auth";
+
+type Provider = "카카오" | "네이버" | "구글";
 
 const SignUpPersonal = () => {
   const navigate = useNavigate();
-  const API_BASE_URL = "http://localhost:8080/api"; // 백엔드 서버 주소
 
-  const handleSocialSignup = async (provider: string) => {
-    if (provider === "카카오") {
-      try {
-        const response = await axios.get(`${API_BASE_URL}/auth/kakao/login-url`);
-        if (response.data.success && response.data.data.loginUrl) {
-          window.location.href = response.data.data.loginUrl; // 카카오 로그인 페이지로 리다이렉트
-        } else {
-          alert("카카오 회원가입 URL을 가져오지 못했습니다.");
-        }
-      } catch (error: unknown) {
-        // error: unknown으로 변경
-        if (axios.isAxiosError(error)) {
-          // Axios 에러인지 확인
-          console.error("카카오 회원가입 URL 요청 에러:", error.response?.data || error.message);
-          alert("카카오 회원가입 연동 중 오류가 발생했습니다.");
-        } else {
-          console.error("알 수 없는 에러:", error);
-          alert("알 수 없는 오류가 발생했습니다.");
-        }
+  const handleSocialSignup = async (provider: Provider) => {
+    try {
+      let loginUrl = "";
+      if (provider === "카카오") {
+        loginUrl = await getKakaoSignUpUrl();
+      } else if (provider === "네이버") {
+        loginUrl = await getNaverSignUpUrl();
+      } else if (provider === "구글") {
+        loginUrl = await getGoogleSignUpUrl();
+      } else {
+        alert(`${provider} 알 수 없는 오류가 발생했습니다..`);
+        return;
       }
-    } else {
-      alert(`${provider} 소셜 회원가입은 아직 구현 중입니다.`);
+      window.location.href = loginUrl;
+    } catch (error: unknown) {
+      if (axios.isAxiosError(error)) {
+        console.error(`${provider} 회원가입 URL 요청 에러:`, error.response?.data || error.message);
+        alert(`${provider} 회원가입 연동 중 오류가 발생했습니다.`);
+      } else if (error instanceof Error) {
+        console.error(`${provider} 회원가입 에러:`, error.message);
+        alert(error.message);
+      } else {
+        console.error("알 수 없는 에러:", error);
+        alert("알 수 없는 오류가 발생했습니다.");
+      }
     }
   };
 
   return (
-    <div>
-      <div className="flex justify-center items-center min-h-screen px-4">
-        <div className="w-full max-w-md bg-white dark:bg-gray-800 shadow-xl rounded-2xl p-8 transition-colors duration-200">
-          <h2 className="text-3xl font-bold text-center mb-2 text-gray-900 dark:text-white">
-            개인 회원가입
-          </h2>
-          <p className="text-center text-gray-600 dark:text-gray-400 mb-8">
-            소셜 계정으로 간편하게 가입하세요
-          </p>
+    <div className="flex min-h-screen items-center justify-center px-4">
+      <div className="w-full max-w-md rounded-2xl border border-gray-200 p-8 shadow-xl dark:border-gray-700">
+        <h2 className="mb-2 text-center text-3xl font-bold text-gray-900 dark:text-white">
+          개인 회원가입
+        </h2>
+        <p className="mb-8 text-center text-gray-600 dark:text-gray-400">
+          소셜 계정으로 간편하게 가입하세요
+        </p>
 
-          <div className="flex flex-col gap-4">
+        <div className="flex flex-col gap-4">
+          {/* [수정] 다크모드 hover시 톤 다운된 색상 적용 */}
+          <button
+            type="button"
+            onClick={() => handleSocialSignup("카카오")}
+            className="w-full rounded-lg border border-yellow-400 bg-transparent px-6 py-3 text-lg font-semibold text-yellow-400 transition-all duration-200 hover:bg-yellow-400 hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:ring-offset-2 dark:hover:bg-yellow-700 dark:hover:text-white"
+          >
+            🎨 카카오로 회원가입
+          </button>
+          <button
+            type="button"
+            onClick={() => handleSocialSignup("네이버")}
+            className="w-full rounded-lg border border-green-500 bg-transparent px-6 py-3 text-lg font-semibold text-green-500 transition-all duration-200 hover:bg-green-500 hover:text-white focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 dark:hover:bg-green-700"
+          >
+            🌐 네이버로 회원가입
+          </button>
+          <button
+            type="button"
+            onClick={() => handleSocialSignup("구글")}
+            className="w-full rounded-lg border border-gray-400 bg-transparent px-6 py-3 text-lg font-semibold text-gray-600 transition-all duration-200 hover:bg-red-500 hover:text-white focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 dark:text-gray-400 dark:hover:bg-red-700"
+          >
+            🔍 구글로 회원가입
+          </button>
+          <p className="mt-6 text-center text-sm text-gray-600 dark:text-gray-400">
+            이미 계정이 있으신가요?{" "}
             <button
               type="button"
-              onClick={() => handleSocialSignup("카카오")}
-              className="w-full px-6 py-3 text-lg font-semibold rounded-lg transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 bg-yellow-400 hover:bg-yellow-500 text-gray-900 focus:ring-yellow-500"
+              onClick={() => navigate("/login")}
+              className="font-medium text-blue-600 hover:underline dark:text-blue-400"
             >
-              🎨 카카오로 회원가입
+              로그인
             </button>
-            <button
-              type="button"
-              onClick={() => handleSocialSignup("네이버")}
-              className="w-full px-6 py-3 text-lg font-semibold rounded-lg transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 bg-green-500 hover:bg-green-600 text-white focus:ring-green-500"
-            >
-              🌐 네이버로 회원가입
-            </button>
-            <button
-              type="button"
-              onClick={() => handleSocialSignup("구글")}
-              className="w-full px-6 py-3 text-lg font-semibold rounded-lg transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 bg-red-500 hover:bg-red-600 text-white focus:ring-red-500"
-            >
-              🔍 구글로 회원가입
-            </button>
-            <p className="text-sm text-center text-gray-600 dark:text-gray-400 mt-6">
-              이미 계정이 있으신가요?{" "}
-              <button
-                type="button"
-                onClick={() => navigate("/login")}
-                className="text-blue-600 dark:text-blue-400 hover:underline font-medium"
-              >
-                로그인
-              </button>
-            </p>
-          </div>
+          </p>
         </div>
       </div>
     </div>

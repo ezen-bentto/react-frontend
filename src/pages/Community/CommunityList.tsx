@@ -1,101 +1,138 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import { fetchCommunityList, type CommunityItem } from "@/api/community/list";
+import { fetchCategory, type Category } from "@/api/common/category";
 import { TableOutlined, UnorderedListOutlined } from "@ant-design/icons";
 import Fillter, { type FilterGroup } from "@/components/shared/Fillter";
 import ListItem from "@/components/shared/ListItem";
 import WriteButton from "@/components/shared/WriteButton";
 import Pagination from "@/components/shared/Pagination";
-import { useSearchParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import { DARK_NOT_ITEM, LiGHT_NOT_ITEM } from "@/constants/ImageSrc";
+import { useAuth } from "@/context/AuthContext";
+import { toggleScrap } from "@/api/scrap/toggle"; // 새로 만든 API
+
 
 const CommunityList = () => {
   const [posts, setPosts] = useState<CommunityItem[]>([]);
-  const [filteredPosts, setFilteredPosts] = useState<CommunityItem[]>([]);
-  const [loading, setLoading] = useState(true);
   const [filters, setFilters] = useState<Record<string, string[]>>({});
-  const [viewMode, setViewMode] = useState<"card" | "list">("list"); // 뷰 모드 상태
-  const [currentPage, setCurrentPage] = useState(1); // 현재 페이지
-  const [totalPages, setTotalPages] = useState(1); // 총 페이지 수
-  const [postsPerPage] = useState(12); // 카드 모드 페이지당 게시글 수
+  const [searchText, setSearchText] = useState("");
+  const [viewMode, setViewMode] = useState<"card" | "list">("list");
+  const [currentPage, setCurrentPage] = useState(1);
+  const [postsPerPage] = useState(12);
+  const [categories, setCategories] = useState<Category[]>([]);
+  const [imgSrc, setImgSrc] = useState(LiGHT_NOT_ITEM);
+  const [isMobile, setIsMobile] = useState(false);
 
   const urlParams = new URLSearchParams(window.location.search);
   const communityType = urlParams.get("communityType") || "1";
-  const [searchParams] = useSearchParams();
 
-  // 기존 useEffect - 거의 그대로 유지
+  const navigate = useNavigate();
+  const { isLoggedIn } = useAuth();
+  const handleScrapToggle = async (postId: number) => {
+    if (!isLoggedIn) {
+      alert("스크랩은 로그인 후 이용 가능합니다.");
+      navigate("/login");
+      return;
+    }
+    try {
+      const res = await toggleScrap(postId);
+      setPosts(prev =>
+        prev.map(p =>
+          p.community_id === postId
+            ? { ...p, scrap_yn: res.data.scrapped ? "Y" : "N", scrap_count: res.data.scrapped ? (p.scrap_count ?? 0) + 1 : Math.max((p.scrap_count ?? 1) - 1, 0) }
+            : p
+        )
+      );
+    } catch (err) {
+      console.error("스크랩 토글 실패", err);
+      alert("스크랩 처리 중 오류가 발생했습니다.");
+    }
+  };
+
+  // 모바일 감지
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth <= 768);
+    };
+    checkMobile();
+    window.addEventListener("resize", checkMobile);
+    return () => window.removeEventListener("resize", checkMobile);
+  }, []);
+
+  // 다크모드 감지
+  useEffect(() => {
+    const root = document.documentElement;
+    const updateThemeImage = () => {
+      setImgSrc(root.classList.contains("dark") ? DARK_NOT_ITEM : LiGHT_NOT_ITEM);
+    };
+    updateThemeImage();
+    const observer = new MutationObserver(updateThemeImage);
+    observer.observe(root, { attributes: true, attributeFilter: ["class"] });
+    return () => observer.disconnect();
+  }, []);
+
+  // 카테고리 로드
+  useEffect(() => {
+    const loadCategories = async () => {
+      try {
+        const res = await fetchCategory();
+        setCategories(res.data.list);
+      } catch (err) {
+        console.error("카테고리 불러오기 실패:", err);
+      }
+    };
+    loadCategories();
+  }, []);
+
+  // 데이터 로드 - 클라이언트 페이지네이션으로 통일
   useEffect(() => {
     const loadList = async () => {
       try {
-        setLoading(true);
-        if (viewMode === "card") {
-          const urlPage = parseInt(searchParams.get("page") || "1", 10);
-          const data = await fetchCommunityList(communityType, urlPage, postsPerPage);
-          setPosts(data.list);
-          setTotalPages(data.totalPages);
-          setCurrentPage(data.page);
-        } else {
-          const data = await fetchCommunityList(communityType, 1, 100);
-          setPosts(data.list);
-        }
+        // 카드형, 리스트형 관계없이 모든 데이터 가져오기
+        const data = await fetchCommunityList(communityType, 1, 100);
+        setPosts(data.list);
       } catch (err) {
         console.error("커뮤니티 목록 조회 실패:", err);
-      } finally {
-        setLoading(false);
       }
     };
-
     loadList();
-  }, [communityType, viewMode, searchParams]);
-  // 카드 모드에서 페이지 변경시
-  useEffect(() => {
-    if (viewMode === "card" && currentPage > 1) {
-      const loadPage = async () => {
-        try {
-          setLoading(true);
-          const data = await fetchCommunityList(communityType, currentPage, postsPerPage);
-          setPosts(data.list);
-          setTotalPages(data.totalPages);
-        } catch (err) {
-          console.error("커뮤니티 목록 조회 실패:", err);
-        } finally {
-          setLoading(false);
-        }
-      };
-      loadPage();
-    }
-  }, [currentPage]);
+  }, [communityType]);
 
-  // 기존 필터링 로직 그대로
   useEffect(() => {
-    if (loading || viewMode === "card") return;
+    if (isMobile) setViewMode("card");
+  }, [isMobile]);
 
+  // 필터 + 검색 + 정렬
+  const processedPosts = useMemo(() => {
     let result = [...posts];
 
-    // 필터: category
-    const categoryFilter = filters.category;
-    if (categoryFilter?.length) {
-      result = result.filter(
-        post => post.category_type && categoryFilter.includes(String(post.category_type))
+    if (filters.category?.length) {
+      result = result.filter(post =>
+        post.category_type && filters.category.includes(String(post.category_type))
       );
     }
 
-    // 필터: age_group
-    const ageFilter = filters.age;
-    if (ageFilter?.length === 1) {
-      const ageValue = ageFilter[0];
-      if (ageValue === "2") {
-        // 제한없음 → 모두 포함 (필터 적용하지 않음)
-      } else {
-        result = result.filter(post => post.age_group === ageValue);
+    if (filters.age?.length === 1) {
+      const age = filters.age[0];
+      if (age !== "3") {
+        result = result.filter(post => post.age_group === age);
       }
     }
 
-    // 정렬: sort
-    const sortFilter = filters.sort?.[0];
-    if (sortFilter === "1") {
+    if (searchText.trim()) {
+      const search = searchText.toLowerCase();
+      result = result.filter(post =>
+        post.title.toLowerCase().includes(search) ||
+        post.content.toLowerCase().includes(search)
+      );
+    }
+
+    const sort = filters.sort?.[0];
+    if (sort === "1") {
       result.sort((a, b) => new Date(b.reg_date).getTime() - new Date(a.reg_date).getTime());
-    } else if (sortFilter === "2") {
+    } else if (sort === "2") {
       result.sort((a, b) => (b.scrap_count ?? 0) - (a.scrap_count ?? 0));
-    } else if (sortFilter === "3") {
+    } else if (sort === "3") {
       result.sort((a, b) => {
         const aDate = a.recruit_end_date ? new Date(a.recruit_end_date).getTime() : Infinity;
         const bDate = b.recruit_end_date ? new Date(b.recruit_end_date).getTime() : Infinity;
@@ -103,24 +140,40 @@ const CommunityList = () => {
       });
     }
 
-    setFilteredPosts(result);
-  }, [filters, posts, loading, viewMode]);
+    return result;
+  }, [posts, filters, searchText]);
 
-  // 기존 필터 설정 그대로
+  // 페이지네이션 계산 (카드형일 때만)
+  const indexOfLast = currentPage * postsPerPage;
+  const indexOfFirst = indexOfLast - postsPerPage;
+  const currentPosts = viewMode === "card"
+    ? processedPosts.slice(indexOfFirst, indexOfLast)  // 카드형: 페이지네이션
+    : processedPosts;  // 리스트형: 모든 데이터 표시
+  const totalPages = Math.max(1, Math.ceil(processedPosts.length / postsPerPage));
+
+  // 필터나 검색이 변경되면 첫 페이지로 이동
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [processedPosts]);
+
+  const handleFilterChange = (name: string, selected: string[]) => {
+    setFilters(prev => ({ ...prev, [name]: selected }));
+  };
+
+  const handleViewModeChange = (mode: "card" | "list") => {
+    setViewMode(mode);
+    setCurrentPage(1);
+  };
+
+  // filter group
   const filterGroupByContest: FilterGroup[] = [
     {
       name: "category",
       label: "분야",
-      options: [
-        { label: "포스터/웹툰/콘텐츠", value: "1" },
-        { label: "사진/영상/UCC", value: "2" },
-        { label: "아이디어/기획", value: "3" },
-        { label: "IT/학술/논문", value: "4" },
-        { label: "네이밍/슬로건", value: "5" },
-        { label: "스포츠/음악", value: "6" },
-        { label: "미술/디자인/건축", value: "7" },
-        { label: "에세이/수필/문학", value: "8" },
-      ],
+      options: categories.map(cat => ({
+        label: cat.name,
+        value: String(cat.category_id),
+      })),
       multiSelect: true,
     },
     {
@@ -128,7 +181,8 @@ const CommunityList = () => {
       label: "연령",
       options: [
         { label: "대학생", value: "1" },
-        { label: "제한없음", value: "2" },
+        { label: "직장인/일반인", value: "2" },
+        { label: "제한없음", value: "3" },
       ],
     },
     {
@@ -148,7 +202,8 @@ const CommunityList = () => {
       label: "연령",
       options: [
         { label: "대학생", value: "1" },
-        { label: "제한없음", value: "2" },
+        { label: "직장인/일반인", value: "2" },
+        { label: "제한없음", value: "3" },
       ],
     },
     {
@@ -162,154 +217,130 @@ const CommunityList = () => {
     },
   ];
 
-  const handleFilterChange = (groupName: string, selected: string[]) => {
-    setFilters(prev => ({ ...prev, [groupName]: selected }));
-  };
-
-  const handleSearchSubmit = () => {};
-
-  // 뷰 모드 변경
-  const handleViewModeChange = (mode: "card" | "list") => {
-    setViewMode(mode);
-    setCurrentPage(1);
-  };
-
-  // 페이지 변경
-  const handlePreviousPage = () => {
-    if (currentPage > 1) {
-      setCurrentPage(prev => prev - 1);
-    }
-  };
-
-  const handleNextPage = () => {
-    if (currentPage < totalPages) {
-      setCurrentPage(prev => prev + 1);
-    }
-  };
-
-  // 현재 표시할 게시글 목록
-  const currentPosts = viewMode === "card" ? posts : filteredPosts;
+  const filterGroupByFree: FilterGroup[] = [
+    {
+      name: "sort",
+      label: "정렬",
+      options: [
+        { label: "최신순", value: "1" },
+        { label: "스크랩순", value: "2" },
+        { label: "종료임박순", value: "3" },
+      ],
+    },
+  ];
 
   return (
     <main className="pt-28">
-      <div className="max-w-[1400px] mx-auto">
-        {/* 필터 UI */}
+      <div className="max-w-[1400px] mx-auto relative">
         <h2 className="text-2xl font-extrabold mb-6">커뮤니티</h2>
         <section>
-          {communityType === "1" && (
+          {communityType === "1" && categories.length > 0 && (
             <Fillter
               filters={filterGroupByContest}
               onFilterChange={handleFilterChange}
-              onSearchSubmit={handleSearchSubmit}
+              onSearchSubmit={setSearchText}
             />
           )}
-
           {communityType === "2" && (
             <Fillter
               filters={filterGroupByStudy}
               onFilterChange={handleFilterChange}
-              onSearchSubmit={handleSearchSubmit}
+              onSearchSubmit={setSearchText}
+            />
+          )}
+          {communityType === "3" && (
+            <Fillter
+              filters={filterGroupByFree}
+              onFilterChange={handleFilterChange}
+              onSearchSubmit={setSearchText}
             />
           )}
         </section>
 
-        {/* 뷰 모드 선택 버튼 */}
         <section className="mt-6 flex flex-col gap-4">
-          <div className="flex justify-end gap-4 m-2">
-            <TableOutlined
-              style={{
-                width: "1.5em",
-                height: "1.5em",
-                cursor: "pointer",
-                color: viewMode === "card" ? "#1890ff" : "#8c8c8c",
-              }}
-              onClick={() => handleViewModeChange("card")}
-            />
-            <UnorderedListOutlined
-              style={{
-                width: "1.5em",
-                height: "1.5em",
-                cursor: "pointer",
-                color: viewMode === "list" ? "#1890ff" : "#8c8c8c",
-              }}
-              onClick={() => handleViewModeChange("list")}
-            />
-          </div>
+          {!isMobile && (
+            <div className="flex justify-end gap-4 m-2">
+              <TableOutlined
+                style={{
+                  width: "1.5em",
+                  height: "1.5em",
+                  cursor: "pointer",
+                  color: viewMode === "card" ? "#1890ff" : "#8c8c8c",
+                }}
+                onClick={() => handleViewModeChange("card")}
+              />
+              <UnorderedListOutlined
+                style={{
+                  width: "1.5em",
+                  height: "1.5em",
+                  cursor: "pointer",
+                  color: viewMode === "list" ? "#1890ff" : "#8c8c8c",
+                }}
+                onClick={() => handleViewModeChange("list")}
+              />
+            </div>
+          )}
 
-          {loading ? (
-            <p>로딩 중...</p>
-          ) : currentPosts.length === 0 ? (
-            <p>게시글이 없습니다.</p>
+          {currentPosts.length === 0 ? (
+            <div className="flex flex-col items-center mt-8">
+              <img src={imgSrc} alt="게시글 없음" className="w-64 md:w-80 h-auto" />
+            </div>
           ) : (
             <>
-              {/* 카드형 레이아웃 */}
+              <div
+                className={
+                  viewMode === "card"
+                    ? "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4"
+                    : "flex flex-col gap-4"
+                }
+              >
+                {currentPosts.map(post => (
+                  <ListItem
+                    key={post.community_id}
+                    type="community"
+                    title={post.title}
+                    description={post.content}
+                    writer={post.nickname}
+                    likes={post.scrap_count}
+                    comment={post.comment_count}
+                    linkSrc={`/community/content/${post.community_id}`}
+                    endDate={post.recruit_end_date ?? undefined}
+                    size={viewMode === "card" ? "md" : "lg"}
+                    intent="primary"
+                    division={post.category_type ?? 0}
+                    communityType={post.community_type}
+                    scrapYn={post.scrap_yn as "Y" | "N"}  // 서버에서 scrap_yn 내려주므로
+                    onScrapClick={() => handleScrapToggle(post.community_id)}
+                  />
+                ))}
+              </div>
+
+              {/* 카드형일 때만 페이지네이션 표시 */}
               {viewMode === "card" && (
-                <>
-                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-                    {currentPosts.map(post => (
-                      <ListItem
-                        key={post.community_id}
-                        type="community"
-                        title={post.title}
-                        description={post.content}
-                        writer={post.nickname}
-                        likes={post.scrap_count}
-                        comment={post.comment_count}
-                        linkSrc={`/community/content/${post.community_id}`}
-                        endDate={post.recruit_end_date ?? undefined}
-                        size="md"
-                        intent="primary"
-                        division={post.category_type ?? 0}
-                        communityType={post.community_type}
-                      />
-                    ))}
-                  </div>
-
-                  {/* 페이징 */}
-                  {totalPages > 1 && (
-                    <div className="flex justify-center mt-8">
-                      <Pagination
-                        currentPage={currentPage}
-                        totalPages={totalPages}
-                        onPrevious={handlePreviousPage}
-                        onNext={handleNextPage}
-                        onPageChange={page => setCurrentPage(page)}
-                        intent="primary"
-                        size="md"
-                      />
-                    </div>
-                  )}
-                </>
-              )}
-
-              {/* 리스트형 레이아웃 (기존 방식) */}
-              {viewMode === "list" && (
-                <>
-                  {currentPosts.map(post => (
-                    <ListItem
-                      key={post.community_id}
-                      type="community"
-                      title={post.title}
-                      description={post.content}
-                      writer={post.nickname}
-                      likes={post.scrap_count}
-                      comment={post.comment_count}
-                      linkSrc={`/community/content/${post.community_id}`}
-                      endDate={post.recruit_end_date ?? undefined}
-                      size="lg"
-                      intent="primary"
-                      division={post.category_type ?? 0}
-                      communityType={post.community_type}
-                    />
-                  ))}
-                </>
+                <div className="flex justify-center mt-8">
+                  <Pagination
+                    currentPage={currentPage}
+                    totalPages={totalPages}
+                    onPrevious={() => setCurrentPage(prev => Math.max(1, prev - 1))}
+                    onNext={() => setCurrentPage(prev => Math.min(totalPages, prev + 1))}
+                    onPageChange={page => setCurrentPage(page)}
+                    intent="primary"
+                    size="md"
+                  />
+                </div>
               )}
             </>
           )}
         </section>
 
-        {/* 글쓰기 + Top 버튼 */}
-        <div>
+        <div className="fixed bottom-4 right-4 z-50" onClick={() => {
+          if (!isLoggedIn) {
+            alert("글쓰기는 로그인 후 이용 가능합니다.");
+            navigate("/login");
+          } else {
+            navigate("/community/write");
+          }
+        }}>
           <WriteButton />
         </div>
       </div>

@@ -29,12 +29,14 @@ import countDate from "@/utils/countDate";
  * @param className 추가 클래스
  * @param likes 좋아요 수
  * @param comment 댓글 수
+ * @param category 청년 정책 카테고리
  * @param type community, policy 타입
  * @param linkSrc a 태그 href
  * @param region policy 지역
  * @param endDate community 공모전 종료 날짜
  * @param division 공모전 분류
  * @param communityType 커뮤니티 분류(공모전, 스터디, 자유)
+ * @param scrapYn 스크랩 여부 (Y/N)
  */
 
 const getDivisionLabel = (division: number): string => {
@@ -65,6 +67,7 @@ interface ListItemProps extends ListItemVariants {
   writer?: string;
   description: string;
   className?: string;
+  category?: string;
   likes?: number;
   comment?: number;
   linkSrc: string;
@@ -72,6 +75,8 @@ interface ListItemProps extends ListItemVariants {
   endDate?: string;
   division?: number;
   communityType?: string;
+  scrapYn?: "Y" | "N";
+  onScrapClick?: () => void;
 }
 
 const ListItem = ({
@@ -82,6 +87,7 @@ const ListItem = ({
   size,
   intent,
   className,
+  category,
   likes,
   comment,
   linkSrc,
@@ -89,21 +95,37 @@ const ListItem = ({
   endDate,
   division,
   communityType,
+  scrapYn,
+  onScrapClick,
 }: ListItemProps) => {
   const combinedClass = `${listItem({ size, intent })} ${className ?? ""}`.trim();
 
+  const handleScrapClick = (e: React.MouseEvent) => {
+    e.preventDefault(); // Link 클릭 방지
+    e.stopPropagation();
+
+    if (onScrapClick) {
+      onScrapClick();
+    }
+  };
+
   return (
     <li className={combinedClass}>
-      <Link to={linkSrc} className="flex-default flex-col gap-2 p-4 w-full">
+      <Link to={linkSrc} className="flex-col w-full gap-2 p-4 flex-default">
         <div className="w-full flex-default">
-          <div className="flex-default gap-2">
-            {(type === "policy" || (type === "community" && communityType === "1")) && (
+          <div className="gap-2 flex-default">
+            {type === "policy" && (
+              <Badge size="sm" intent="primary">
+                {category !== undefined ? category : "기타"}
+              </Badge>
+            )}
+            {type === "community" && communityType === "1" && (
               <Badge size="sm" intent="primary">
                 {division !== undefined ? getDivisionLabel(division) : "기타"}
               </Badge>
             )}
             {type === "policy" && (
-              <div className="flex-default gap-2">
+              <div className="gap-2 flex-default">
                 <Badge intent={"orange"} size={"sm"}>
                   {region}
                 </Badge>
@@ -111,7 +133,7 @@ const ListItem = ({
             )}
           </div>
           {type === "community" && communityType !== "3" && (
-            <div className="flex-default gap-2">
+            <div className="gap-2 flex-default">
               <Badge intent={"default"} size={"sm"}>
                 {communityType !== undefined ? getCommunityTypeLabel(communityType) : "기타"}
               </Badge>
@@ -124,21 +146,21 @@ const ListItem = ({
         </div>
 
         <div className="w-full overflow-hidden">
-          <h3 className="font-black justify-start text-2xl truncate">{title}</h3>
+          <h3 className="justify-start text-2xl font-black truncate">{title}</h3>
         </div>
 
         <div className="flex-default w-full">
           <div className="flex justify-center items-start flex-col min-h-[48px]">
             {type === "community" ? (
               <p
-                className="list-col-wrap text-base flex-1"
+                className="flex-1 text-base list-col-wrap"
                 dangerouslySetInnerHTML={{ __html: description }}
               />
             ) : (
-              <p className="list-col-wrap text-base flex-1">{description}</p>
+              <p className="flex-1 text-base list-col-wrap">{description}</p>
             )}
             {type === "community" && (
-              <div className="text-xs uppercase font-semibold opacity-60">{writer}</div>
+              <div className="text-xs font-semibold uppercase opacity-60">{writer}</div>
             )}
           </div>
 
@@ -149,7 +171,7 @@ const ListItem = ({
                 <span>{comment}</span>
               </button>
 
-              <button className="btn btn-ghost">
+              <button className="btn btn-ghost" onClick={handleScrapClick}>
                 <svg
                   className="size-[1.2em]"
                   xmlns="http://www.w3.org/2000/svg"
@@ -159,7 +181,7 @@ const ListItem = ({
                     strokeLinejoin="round"
                     strokeLinecap="round"
                     strokeWidth="2"
-                    fill="none"
+                    fill={type === "community" && scrapYn === "Y" ? "currentColor" : "none"}
                     stroke="currentColor"
                   >
                     <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z" />

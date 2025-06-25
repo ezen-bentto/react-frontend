@@ -1,4 +1,4 @@
-import axios from "axios";
+import axios from "@/api/axiosInstance";
 
 export interface CommunityItem {
   community_id: number;
@@ -17,6 +17,7 @@ export interface CommunityItem {
   mod_date: string;
   scrap_count: number;
   comment_count: number;
+  scrap_yn: "Y" | "N";
 }
 
 export interface CommunityListResponse {
@@ -33,7 +34,7 @@ export const fetchCommunityList = async (
   size: number
 ): Promise<CommunityListResponse> => {
   const response = await axios.get<{ data: CommunityListResponse }>(
-    `${import.meta.env.VITE_API_URL}/api/community/getList`,
+    "/api/community/getList",
     {
       params: {
         communityType: communityType,

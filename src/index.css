@@ -71,7 +71,7 @@ body {
 
 /* theme 변경에 따른 text 색 변경 */
 .theme-text {
-  @apply !text-brand-primary dark:!text-white;
+  @apply text-brand-primary dark:text-white;
 }
 
 /* theme 변경에 따른 input 배경색, placeholder 변경 */
