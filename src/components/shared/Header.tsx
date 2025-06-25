@@ -75,7 +75,6 @@ export const Header = ({ opacityEffect = false }: HeaderProps) => {
   const { initTheme } = useThemeStore();
 
   const location = useLocation();
-  console.info(location.pathname);
   const currentPath = location.pathname + location.search;
 
   const isSubActive = (src: string) => currentPath === src;

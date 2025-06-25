@@ -21,11 +21,12 @@ export const fetchContestPage = async () => {
   return response.data;
 };
 
-export const fetchBookmark = async (target_id: number) => {
+// 북마크 post
+export const fetchCheckBookmark = async (target_id: number) => {
   const token = localStorage.getItem("accessToken");
 
   const response = await axios.post(
-    `${import.meta.env.VITE_API_URL}/api/contest/bookmark?id=${target_id}`,
+    `${import.meta.env.VITE_API_URL}/api/contest/${target_id}/bookmark`,
     {},
     {
       headers: {
@@ -37,15 +38,27 @@ export const fetchBookmark = async (target_id: number) => {
   return response.data.data;
 };
 
+// 로그인 되어 있으면 북마크 했는지 유무 API
 export const fetchIsBookmark = async (target_id: number) => {
   const token = localStorage.getItem("accessToken");
+  if (!token) return null;
 
-  const response = await axios.get(`${import.meta.env.VITE_API_URL}/api/contest/bookmark`, {
-    params: { id: target_id },
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  });
+  const response = await axios.get(
+    `${import.meta.env.VITE_API_URL}/api/contest/${target_id}/bookmark`,
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    }
+  );
+  return response.data.data;
+};
+
+// 북마크 counter
+export const fetchBookmarkCnt = async (target_id: number) => {
+  const response = await axios.get(
+    `${import.meta.env.VITE_API_URL}/api/contest/${target_id}/bookmark/counter`
+  );
 
   return response.data.data;
 };

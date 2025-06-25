@@ -20,8 +20,9 @@ const ContestDetail = () => {
   return (
     <div className="flex flex-col gap-5 mt-28">
       <Title titleText="상세페이지" linkSrc="" />
-
-      <DetailInfo data={data} />
+      {/* 상세정보 */}
+      <div>{data ? <DetailInfo data={data} /> : <div>불러오는 중...</div>}</div>
+      {/* 상세내용 */}
 
       <div className="min-h-50">
         <DetailContent html={data.article ?? ""} />
