@@ -17,6 +17,11 @@ export type Contest = {
   reg_date: string;
 };
 
+export interface bookmark {
+  isBookmarked: boolean;
+  bookmarkCount: number;
+}
+
 export interface ContestStore {
   contests: Contest[];
   popularContests: Contest[];
