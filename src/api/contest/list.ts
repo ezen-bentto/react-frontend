@@ -21,7 +21,7 @@ export const fetchContestPage = async () => {
   return response.data;
 };
 
-export const featBookmark = async (target_id: number) => {
+export const fetchBookmark = async (target_id: number) => {
   const token = localStorage.getItem("accessToken");
 
   const response = await axios.post(
@@ -33,6 +33,19 @@ export const featBookmark = async (target_id: number) => {
       },
     }
   );
+
+  return response.data.data;
+};
+
+export const fetchIsBookmark = async (target_id: number) => {
+  const token = localStorage.getItem("accessToken");
+
+  const response = await axios.get(`${import.meta.env.VITE_API_URL}/api/contest/bookmark`, {
+    params: { id: target_id },
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
 
   return response.data.data;
 };
