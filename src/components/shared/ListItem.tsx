@@ -62,21 +62,31 @@ const getCommunityTypeLabel = (communityType: string): string => {
 };
 
 interface ListItemProps extends ListItemVariants {
-  type: "community" | "policy";
-  title: string;
-  writer?: string;
-  description: string;
-  className?: string;
-  category?: string;
-  likes?: number;
-  comment?: number;
+  type: "community" | "policy" | "contest";
   linkSrc: string;
-  region?: string;
+  title: string;
+  description: string;
+
+  // Community 타입 관련 props
+  writer?: string;
+  comment?: number;
+  likes?: number;
+  communityType?: string;
+
+  // Contest & Policy 타입 관련 props
+  organizer?: string; // 주최기관 (Contest용)
   endDate?: string;
   division?: number;
-  communityType?: string;
+
+  // Policy 타입 관련 props
+  region?: string;
+  category?: string;
+
+  // 스크랩 관련 props
   scrapYn?: "Y" | "N";
   onScrapClick?: () => void;
+
+  className?: string;
 }
 
 const ListItem = ({
@@ -96,6 +106,7 @@ const ListItem = ({
   division,
   communityType,
   scrapYn,
+  organizer,
   onScrapClick,
 }: ListItemProps) => {
   const combinedClass = `${listItem({ size, intent })} ${className ?? ""}`.trim();
@@ -143,6 +154,13 @@ const ListItem = ({
               </Badge>
             </div>
           )}
+          {type === "contest" && endDate && (
+            <div className="flex-default gap-2">
+              <Badge intent={"orange"} size={"sm"}>
+                {countDate(endDate) <= 0 ? "마감" : `D-${countDate(endDate)}`}
+              </Badge>
+            </div>
+          )}
         </div>
 
         <div className="w-full overflow-hidden">
@@ -161,6 +179,9 @@ const ListItem = ({
             )}
             {type === "community" && (
               <div className="text-xs font-semibold uppercase opacity-60">{writer}</div>
+            )}
+            {type === "contest" && organizer && (
+              <div className="text-xs font-semibold uppercase opacity-60">{organizer}</div>
             )}
           </div>
 
