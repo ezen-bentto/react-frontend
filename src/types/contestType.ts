@@ -48,9 +48,9 @@ export interface ContestStore {
   contests: Contest[];
   popularContests: Contest[];
   latestContests: Contest[];
-  contestFormData: ContestFormData;
+
   // eslint-disable-next-line no-unused-vars
-  updateContestFormData: (data: Partial<ContestFormData>) => void;
+  fetchContest: () => void;
 }
 
 export interface ContestDetail extends Contest {

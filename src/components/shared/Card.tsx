@@ -38,6 +38,9 @@ interface CardProps extends CardVariants {
   title: string;
   text: string;
   className?: string;
+
+  intent?: "neutral" | "primary";
+  size?: "sm" | "md" | "lg";
 }
 
 const Card = ({ id, dday, img, title, text, size, intent, className }: CardProps) => {
