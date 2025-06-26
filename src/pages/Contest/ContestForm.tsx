@@ -14,7 +14,7 @@ import type { ContestFormData } from "@/types/contestType";
 import { useState } from "react";
 
 export const initialContestFormData: ContestFormData = {
-  writer_id: "1",
+  writer_id: 1,
   title: "",
   organizer: "",
   organizer_type: "",

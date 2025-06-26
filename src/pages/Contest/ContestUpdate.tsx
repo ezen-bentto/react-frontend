@@ -2,26 +2,54 @@ import { CheckboxGroup } from "@/components/contest/Checkbox";
 import { FormField } from "@/components/contest/FormField";
 import { TextInput } from "@/components/contest/TextInput";
 import Button from "@/components/shared/Button";
-
-import { contestFilterData } from "@/constants/ContestFilterData";
 import { DateRange } from "@/components/contest/DateRange";
-import { fetchContestEdit, fetchContestWrite } from "@/api/contest/contestApi";
 import { RadioGroup } from "@/components/contest/RadioGroup";
 import { useNavigate, useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import ReactQuillEditor from "@/components/shared/ReactQuillEditor";
 import { useDetail } from "@/features/contest/useDetail";
-import type { transformedData } from "@/types/contestType";
+import type { ContestFormData } from "@/types/contestType";
+import { initialContestFormData } from "./ContestForm";
+import { contestFilterData } from "@/constants/ContestFilterData";
+import { useEditContestMutation } from "@/features/contest/useEdit";
 
-const ContestForm = () => {
-  const { id } = useParams();
-  if (!id) return;
-  const isEdit = Boolean(id);
-  const { data, isLoading } = useDetail(parseInt(id));
+const ContestUpdate = () => {
   const navigate = useNavigate();
+  const { id } = useParams(); // /contest/:id 라면 여기에 id 들어옴
+  const { data } = useDetail(Number(id));
+  const contestId = Number(id);
 
-  if (isLoading) return;
-  // contestFilterData에서 옵션들 추출
+  const [contestFormData, setContestFormData] = useState<ContestFormData>(initialContestFormData);
+
+  const updateContestFormData = (updatedFields: Partial<ContestFormData>) => {
+    setContestFormData(prev => ({ ...prev, ...updatedFields }));
+  };
+
+  // ✅ useQuery로 받아온 데이터를 ContestFormData 형식으로 변환
+  useEffect(() => {
+    if (!data) return;
+
+    const transformedData: ContestFormData = {
+      ...data,
+      contest_tag: data.contest_tag ? data.contest_tag.split(",") : [],
+    };
+
+    setContestFormData(transformedData);
+  }, [data]);
+
+  const { mutate: editContest } = useEditContestMutation(contestId);
+
+  const handleSubmit = () => {
+    editContest(contestFormData, {
+      onSuccess: () => {
+        alert("성공적으로 수정되었습니다.");
+        navigate(`/contest/${contestId}`, { replace: true });
+      },
+      onError: () => {
+        alert("수정에 실패했습니다.");
+      },
+    });
+  };
   const getOptionsByName = (name: string) => {
     return contestFilterData.find(group => group.name === name)?.options || [];
   };
@@ -31,39 +59,6 @@ const ContestForm = () => {
   const organizerTypeOptions = getOptionsByName("organizerType");
   const benefitOptions = getOptionsByName("benefits");
   const awardOptions = getOptionsByName("award");
-  const [contestFormData, setContestFormData] = useState<transformedData>(data);
-
-  useEffect(() => {
-    if (isEdit) {
-      // store에 contestFormData 가져오기
-    }
-  }, [id]);
-
-  const handleSubmit = async () => {
-    // console.info("등록 전 데이터 확인:", contestFormData);
-    let response;
-    const transformedData = {
-      ...contestFormData,
-      contest_tag: contestFormData.contest_tag.join(","),
-    };
-
-    // console.info(transformedData.contest_tag, "@@@@@@@@");
-    try {
-      if (isEdit) {
-        response = await fetchContestEdit(transformedData);
-        console.info("수정", response.data);
-        alert("성공적으로 수정되었습니다.");
-      } else {
-        response = await fetchContestWrite(transformedData);
-        console.info("등록", response.data);
-        alert("성공적으로 등록되었습니다.");
-      }
-      navigate(`/contest/${response.data}`);
-    } catch (error) {
-      console.info("실패", error);
-      alert("등록에 실패했습니다.");
-    }
-  };
 
   return (
     <div className="flex flex-col gap-5 mt-28">
@@ -169,11 +164,11 @@ const ContestForm = () => {
           취소
         </Button>
         <Button intent="primary" size="lg" type="submit" onClickFnc={handleSubmit}>
-          {contestFormData.id ? "수정" : "등록"}
+          수정
         </Button>
       </div>
     </div>
   );
 };
 
-export default ContestForm;
+export default ContestUpdate;

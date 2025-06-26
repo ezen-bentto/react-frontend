@@ -21,7 +21,7 @@ export type Contest = {
 
 export type ContestFormData = {
   id?: number;
-  writer_id: string;
+  writer_id: number;
   title: string;
   img?: string | null;
   organizer: string;

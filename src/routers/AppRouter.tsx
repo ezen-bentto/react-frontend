@@ -22,6 +22,7 @@ import ContestForm from "@/pages/Contest/ContestForm";
 
 import { ProtectedRoute } from "@/routers/ProtectedRoute";
 import { PublicRoute } from "@/routers/PublicRoute";
+import ContestUpdate from "@/pages/Contest/ContestUpdate";
 
 const AppRouter = () => {
   return (
@@ -37,7 +38,7 @@ const AppRouter = () => {
 
         <Route path="/contest/:id" element={<ContestDetail />} />
         <Route path="/contest/new" element={<ContestForm />} />
-        <Route path="/contest/:id/edit" element={<ContestForm />} />
+        <Route path="/contest/:id/edit" element={<ContestUpdate />} />
         <Route path="/login" element={<Login />} />
         <Route path="/mypage" element={<MyPage />} />
         <Route path="/signup" element={<SignUpTypeSelect />} />
