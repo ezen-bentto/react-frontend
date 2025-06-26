@@ -70,12 +70,45 @@ const CommunityContent = () => {
     }
     if (!community) return;
 
+    // 현재 스크랩 상태 저장 (디버깅용 로그 추가)
+    const currentScrapStatus = community.scrap_yn;
+    // eslint-disable-next-line no-console
+    console.log("🔍 현재 스크랩 상태:", currentScrapStatus, typeof currentScrapStatus);
+
     try {
-      const { scrap_yn } = await toggleScrap(community.community_id);
-      setCommunity(prev => (prev ? { ...prev, scrap_yn } : prev));
+      // API 호출 (UI 변경 전에 API 먼저 호출)
+      const response = await toggleScrap(community.community_id);
+      // eslint-disable-next-line no-console
+      console.log("🔍 API 응답:", response, typeof response.scrap_yn);
+
+      // API 응답의 scrap_yn 값을 boolean으로 안전하게 변환
+      let newScrapStatus: boolean;
+
+      if (typeof response.scrap_yn === "boolean") {
+        newScrapStatus = response.scrap_yn;
+      } else if (typeof response.scrap_yn === "string") {
+        // "Y"/"N" 형태일 경우
+        newScrapStatus = response.scrap_yn === "Y" || response.scrap_yn === "true";
+      } else if (typeof response.scrap_yn === "number") {
+        // 1/0 형태일 경우
+        newScrapStatus = response.scrap_yn === 1;
+      } else {
+        // 예상치 못한 타입일 경우 토글
+        newScrapStatus = !currentScrapStatus;
+      }
+      // eslint-disable-next-line no-console
+      console.log("🔍 최종 스크랩 상태:", newScrapStatus);
+
+      // 안전하게 상태 업데이트
+      setCommunity(prev => {
+        if (!prev) return prev;
+        return { ...prev, scrap_yn: newScrapStatus };
+      });
+
     } catch (err) {
       console.error("스크랩 토글 실패:", err);
       alert("스크랩 처리 중 오류가 발생했습니다.");
+      // 에러 시에는 상태 변경하지 않음
     }
   };
 
@@ -292,7 +325,7 @@ const CommunityContent = () => {
       }
     };
     loadData();
-  }, [communityId, community?.scrap_yn]);
+  }, [communityId]);
 
   // 댓글 등록
   const handleCommentSubmit = async (e: React.FormEvent) => {
@@ -495,12 +528,14 @@ const CommunityContent = () => {
                     <div className="flex items-center gap-2">
                       <button
                         onClick={handleToggleScrap}
-                        className={`flex items-center justify-center p-2 rounded-full transition-all ${community?.scrap_yn
-                          ? "bg-red-500 text-white"
+                        className={`flex items-center justify-center p-2 rounded-full transition-all duration-200 ${community?.scrap_yn === true
+                          ? "bg-red-500 text-white hover:bg-red-600"
                           : "bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-300"
                           }`}
                       >
-                        {community.scrap_yn ? <HeartFilled /> : <HeartOutlined />}
+                        {(community.scrap_yn === true) ?
+                          <HeartFilled /> : <HeartOutlined />
+                        }
                       </button>
                     </div>
                   </div>
