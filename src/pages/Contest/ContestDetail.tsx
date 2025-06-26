@@ -19,7 +19,13 @@ const ContestDetail = () => {
 
   return (
     <div className="flex flex-col gap-5 mt-28">
-      <Title titleText="상세페이지" linkSrc="" />
+      <div className="flex-default">
+        <Title titleText="상세페이지" linkSrc="" />
+        <div>
+          <span>수정 |</span>
+          <span>삭제</span>
+        </div>
+      </div>
       {/* 상세정보 */}
       <div>{data ? <DetailInfo data={data} /> : <div>불러오는 중...</div>}</div>
       {/* 상세내용 */}

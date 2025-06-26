@@ -5,32 +5,22 @@ import Button from "@/components/shared/Button";
 
 import { contestFilterData } from "@/constants/ContestFilterData";
 import { DateRange } from "@/components/contest/DateRange";
-import { fetchContestWrite } from "@/api/contest/contestApi";
+import { fetchContestEdit, fetchContestWrite } from "@/api/contest/contestApi";
 import { RadioGroup } from "@/components/contest/RadioGroup";
-
+import { useNavigate, useParams } from "react-router-dom";
+import { useEffect, useState } from "react";
 import ReactQuillEditor from "@/components/shared/ReactQuillEditor";
-import { useNavigate } from "react-router-dom";
-import type { ContestFormData } from "@/types/contestType";
-import { useState } from "react";
-
-export const initialContestFormData: ContestFormData = {
-  writer_id: "1",
-  title: "",
-  organizer: "",
-  organizer_type: "",
-  participants: "",
-  prize: "",
-  start_date: "",
-  end_date: "",
-  homepage: "",
-  benefits: "",
-  contest_tag: [],
-  article: "",
-};
+import { useDetail } from "@/features/contest/useDetail";
+import type { transformedData } from "@/types/contestType";
 
 const ContestForm = () => {
+  const { id } = useParams();
+  if (!id) return;
+  const isEdit = Boolean(id);
+  const { data, isLoading } = useDetail(parseInt(id));
   const navigate = useNavigate();
 
+  if (isLoading) return;
   // contestFilterData에서 옵션들 추출
   const getOptionsByName = (name: string) => {
     return contestFilterData.find(group => group.name === name)?.options || [];
@@ -41,7 +31,13 @@ const ContestForm = () => {
   const organizerTypeOptions = getOptionsByName("organizerType");
   const benefitOptions = getOptionsByName("benefits");
   const awardOptions = getOptionsByName("award");
-  const [contestFormData, setContestFormData] = useState<ContestFormData>(initialContestFormData);
+  const [contestFormData, setContestFormData] = useState<transformedData>(data);
+
+  useEffect(() => {
+    if (isEdit) {
+      // store에 contestFormData 가져오기
+    }
+  }, [id]);
 
   const handleSubmit = async () => {
     // console.info("등록 전 데이터 확인:", contestFormData);
@@ -53,19 +49,20 @@ const ContestForm = () => {
 
     // console.info(transformedData.contest_tag, "@@@@@@@@");
     try {
-      response = await fetchContestWrite(transformedData);
-      console.info("등록", response.data);
-      alert("성공적으로 등록되었습니다.");
-
+      if (isEdit) {
+        response = await fetchContestEdit(transformedData);
+        console.info("수정", response.data);
+        alert("성공적으로 수정되었습니다.");
+      } else {
+        response = await fetchContestWrite(transformedData);
+        console.info("등록", response.data);
+        alert("성공적으로 등록되었습니다.");
+      }
       navigate(`/contest/${response.data}`);
     } catch (error) {
       console.info("실패", error);
       alert("등록에 실패했습니다.");
     }
-  };
-
-  const updateContestFormData = (updatedFields: Partial<ContestFormData>) => {
-    setContestFormData(prev => ({ ...prev, ...updatedFields }));
   };
 
   return (
@@ -172,7 +169,7 @@ const ContestForm = () => {
           취소
         </Button>
         <Button intent="primary" size="lg" type="submit" onClickFnc={handleSubmit}>
-          등록
+          {contestFormData.id ? "수정" : "등록"}
         </Button>
       </div>
     </div>

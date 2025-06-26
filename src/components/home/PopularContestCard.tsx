@@ -19,7 +19,7 @@ const PopularContestCard: React.FC<getContestList> = ({
       className="shadow-md min-w-[300px] max-w-[calc(50%-16px)] p-6 overflow-hidden "
       data-aos="flip-left"
     >
-      <Link to={`/constet/${id}`} className="flex flex-col md:flex-row gap-4 no-underline">
+      <Link to={`/contest/${id}`} className="flex flex-col md:flex-row gap-4 no-underline">
         <img src={img} alt={title} className="flex-1 w-full md:w-1/2 object-cover aspect-[5/7]" />
         <div className="flex-1 flex flex-col justify-start gap-4">
           <div className="flex flex-col max-w-[300px] overflow-hidden min-w-0">
