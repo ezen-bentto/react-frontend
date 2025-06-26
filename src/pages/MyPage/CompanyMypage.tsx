@@ -57,9 +57,7 @@ const CompanyMypage = () => {
         setData(response || []);
       } catch (error) {
         console.error(`${activeTab} 데이터 로드 실패:`, error);
-        alert("데이터를 불러오는 중 오류가 발생했습니다. 다시 로그인해주세요.");
-        logout();
-        navigate("/login");
+        alert("데이터를 불러오는 중 오류가 발생했습니다.");
       } finally {
         setLoading(false);
       }
@@ -130,20 +128,13 @@ const CompanyMypage = () => {
                 <h2 className="text-3xl font-bold text-gray-900 dark:text-white">
                   {user?.nickname}
                 </h2>
-                {/* [수정] 이제 AuthContext에 email이 있으므로 에러가 나지 않습니다. */}
                 <p className="text-lg text-gray-600 dark:text-gray-400">{user?.email}</p>
               </div>
             </div>
             <div className="flex gap-2">
-              {/* [수정] onClick -> onClickFnc 로 변경 */}
-              <Button
-                type="button"
-                onClickFnc={() => navigate("/community/write")}
-                intent="primary"
-              >
-                공고/글쓰기
+              <Button type="button" onClickFnc={() => navigate("/contest/new")} intent="primary">
+                글쓰기
               </Button>
-              {/* [수정] intent="secondary"는 없는 옵션이므로 다른 것으로 변경 (예: sky) */}
               <Button type="button" onClickFnc={() => navigate("/mypage/edit")} intent="sky">
                 프로필 수정
               </Button>
