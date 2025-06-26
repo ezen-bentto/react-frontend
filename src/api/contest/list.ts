@@ -55,10 +55,10 @@ export const fetchIsBookmark = async (target_id: number) => {
 };
 
 // 북마크 counter
-export const fetchBookmarkCnt = async (target_id: number) => {
+export const fetchBookmarkCnt = async (target_id: number): Promise<number> => {
   const response = await axios.get(
     `${import.meta.env.VITE_API_URL}/api/contest/${target_id}/bookmark/counter`
   );
 
-  return response.data.data;
+  return Number(response.data.data);
 };

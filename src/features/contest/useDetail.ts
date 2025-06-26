@@ -9,13 +9,17 @@ export const useDetail = (contestId: number | undefined) => {
     queryFn: async () => {
       if (!contestId) return;
 
-      if (contestId < 241) {
+      const numId = Number(contestId);
+      if (numId < 241) {
         const res = await fetchContestPage();
-        return res.find(item => item.id === contestId);
+        const target = res.find(item => item.id === numId);
+        if (!target) throw new Error("Contest not found");
+        return target;
       } else {
-        return await fetchContestDetail(contestId);
+        return await fetchContestDetail(numId);
       }
     },
     staleTime: 1000 * 60 * 5, // optional
+    refetchOnMount: true,
   });
 };
