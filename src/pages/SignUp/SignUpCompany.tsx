@@ -13,10 +13,10 @@ interface SignUpForm {
   password: string;
   confirmPassword: string;
   companyName: string;
-  phoneNumber: string; // 여기는 하이픈 없는 숫자만 저장됩니다.
+  phoneNumber: string; // 하이픈 없는 숫자만 저장
 }
 
-// [추가] 휴대폰 번호 표시를 위한 헬퍼 함수
+// 휴대폰 번호 표시를 위한 헬퍼 함수
 const formatPhoneNumber = (digits: string) => {
   if (!digits) return "";
   const length = digits.length;
@@ -129,8 +129,18 @@ const SignUpCompany = () => {
           기업 정보를 입력해주세요
         </p>
 
-        {errorMessage && <p className="mb-4 text-center text-red-500">{errorMessage}</p>}
-        {successMessage && <p className="mb-4 text-center text-green-600">{successMessage}</p>}
+        <div className="flex h-10 items-center justify-center mb-4">
+          {errorMessage && (
+            <Badge intent="orange" size="sm">
+              {errorMessage}
+            </Badge>
+          )}
+          {successMessage && (
+            <Badge intent="default" size="sm">
+              {successMessage}
+            </Badge>
+          )}
+        </div>
 
         <form onSubmit={handleSubmit} className="flex flex-col gap-4">
           <div>
