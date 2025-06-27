@@ -1,24 +1,5 @@
 import axios from "@/api/axiosInstance";
-
-// 모집상세 요청 타입
-export interface RecruitmentDetail {
-  role: string;
-  count: number;
-}
-
-// 커뮤니티 요청 타입
-export interface CommunityRegisterPayload {
-  communityType: string; // "1" | "2" | "3"
-  contestId?: string | number | null;
-  startDate?: string | null;
-  endDate?: string | null;
-  recruitEndDate?: string | null;
-  categoryType?: string | number | null;
-  ageGroup?: string | null;
-  title: string;
-  content: string;
-  recruitments?: RecruitmentDetail[];
-}
+import type { CommunityRegisterPayload } from "@/types/communityWriteType";
 
 /**
  *

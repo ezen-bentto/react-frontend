@@ -1,8 +1,5 @@
 import axios from "@/api/axiosInstance";
-
-export interface CommunityDeletePayload {
-  communityId: number;
-}
+import type { CommunityDeletePayload } from "@/types/communityWriteType";
 
 /**
  *

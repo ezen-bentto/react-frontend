@@ -1,20 +1,5 @@
 import axios from "@/api/axiosInstance";
-
-// 댓글 목록 응답(row)
-export interface CommentRow {
-  comment_id: number;
-  post_id: number;
-  user_id: number;
-  nickname: string;
-  content: string;
-  reg_date: string;
-  del_yn: string;
-}
-
-// 댓글 목록 응답(배열)
-export interface CommentListResponse {
-  list: CommentRow[];
-}
+import type { CommentListResponse } from "@/types/commentType";
 
 /**
  *
