@@ -1,7 +1,8 @@
+// components/shared/FileInput.tsx
 import type { ChangeEvent } from "react";
 
 type FileInputProps = {
-  onFileSelect: (file: File) => void;
+  onFileSelect: (file: File, save_name: string) => void;
   className?: string;
 };
 
@@ -16,7 +17,7 @@ const FileInput = ({ onFileSelect, className = "" }: FileInputProps) => {
       return;
     }
 
-    onFileSelect(file);
+    onFileSelect(file, file.name);
   };
 
   return (

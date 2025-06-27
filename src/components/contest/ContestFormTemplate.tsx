@@ -56,7 +56,10 @@ const ContestFormTemplate = ({ formData, onChange, onSubmit, submitLabel, isLoad
           {isLoading ? (
             <SkeletonInput />
           ) : (
-            <FileInput onFileSelect={() => {}} className="w-[600px]" />
+            <FileInput
+              onFileSelect={(file, save_name) => onChange({ file_path: file, save_name })}
+              className="w-[600px]"
+            />
           )}
         </div>
 

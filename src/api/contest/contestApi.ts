@@ -37,3 +37,29 @@ export const fetchContestEdit = async (id: number, contestData: transformedData)
   );
   return response.data;
 };
+
+export const uploadContestImage = async (file: Blob, fileName: string) => {
+  const formData = new FormData();
+  formData.append("file", file);
+  formData.append("article", fileName);
+
+  const response = await axios.post<{ fileUrl: string }>(
+    `${import.meta.env.VITE_API_URL}/api/contest/image`,
+    formData,
+    {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    }
+  );
+
+  return response.data.fileUrl; // 또는 fileName
+};
+
+export const uploadContestImageForEdit = async (id: number, formData: FormData) => {
+  return await axios.patch(`${import.meta.env.VITE_API_URL}/api/contest/${id}/image`, formData, {
+    headers: {
+      "Content-Type": "multipart/form-data",
+    },
+  });
+};

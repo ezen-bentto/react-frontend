@@ -18,6 +18,8 @@ export type Contest = {
   article: string;
   views: number;
   reg_date: string;
+  file_path?: Blob;
+  save_name?: string;
 };
 
 export type ContestFormData = {
@@ -35,10 +37,19 @@ export type ContestFormData = {
   end_date: string;
   homepage: string;
   article: string;
+  file_path?: File;
+  save_name?: string;
 };
 
-export interface transformedData extends Omit<ContestFormData, "contest_tag"> {
+export interface ResponseContestData extends Omit<ContestFormData, "file_path"> {
+  file_path?: Blob | null;
+}
+
+export type RequestContestData = Omit<ContestFormData, "file_path" | "save_name" | "img">;
+
+export interface transformedData extends Omit<ContestFormData, "contest_tag" | "imageFile"> {
   contest_tag: string; // string 타입으로 변경
+  imageFile?: Blob | null;
 }
 export interface bookmark {
   isBookmarked: boolean;
