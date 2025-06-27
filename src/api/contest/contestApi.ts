@@ -23,9 +23,15 @@ export const fetchContestPage = async () => {
 };
 
 export const fetchContestWrite = async (contestData: transformedData) => {
-  const response = await axios.post<{ data: Contest }>(
+  const token = localStorage.getItem("accessToken");
+  const response = await axios.post<{ data: number }>(
     `${import.meta.env.VITE_API_URL}/api/contest/register`,
-    contestData
+    contestData,
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    }
   );
   return response.data;
 };
@@ -38,11 +44,11 @@ export const fetchContestEdit = async (id: number, contestData: transformedData)
   return response.data;
 };
 
-export const uploadContestImage = async (file: Blob, fileName: string) => {
+export const uploadContestImage = async (file: Blob, fileName: string, id: number) => {
   const formData = new FormData();
-  const token = localStorage.getItem("accessToken");
   formData.append("file", file);
   formData.append("article", fileName);
+  formData.append("contest_id", id.toString());
 
   const response = await axios.post<{ fileUrl: string }>(
     `${import.meta.env.VITE_API_URL}/api/file/image`,
@@ -50,7 +56,6 @@ export const uploadContestImage = async (file: Blob, fileName: string) => {
     {
       headers: {
         "Content-Type": "multipart/form-data",
-        Authorization: `Bearer ${token}`,
       },
     }
   );
@@ -59,14 +64,12 @@ export const uploadContestImage = async (file: Blob, fileName: string) => {
 };
 
 export const uploadContestImageForEdit = async (id: number, formData: FormData) => {
-  const token = localStorage.getItem("accessToken");
   return await axios.patch(
     `${import.meta.env.VITE_API_URL}/api/file/image/contest/${id}`,
     formData,
     {
       headers: {
         "Content-Type": "multipart/form-data",
-        Authorization: `Bearer ${token}`,
       },
     }
   );

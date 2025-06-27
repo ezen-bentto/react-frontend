@@ -37,29 +37,33 @@ const ContestForm = () => {
   const handleSubmit = async () => {
     try {
       let uploadedImageUrl = "";
-
-      // 이미지 업로드 먼저
-      if (
-        contestFormData.file_path &&
-        contestFormData.file_path.size > 0 &&
-        contestFormData.save_name
-      ) {
-        const BlobImage = await fileToBlob(contestFormData.file_path);
-        uploadedImageUrl = await uploadContestImage(BlobImage, contestFormData.save_name);
-      }
-
       // 이미지파일, 네임 필요없어서
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const { file_path, save_name, ...restData } = contestFormData;
-      // 이미지 업로드 후, 게시글 데이터 전송
+      // 게시글 데이터
       const transformedData = {
         ...restData,
         writer_id: user.id,
         contest_tag: contestFormData.contest_tag.join(","),
         image_url: uploadedImageUrl, // imageFile 대신 image_url 로 전송
       };
-
+      // contest_id 값 받음
       const response = await fetchContestWrite(transformedData);
+
+      // 이미지 업로드
+      if (
+        contestFormData.file_path &&
+        contestFormData.file_path.size > 0 &&
+        contestFormData.save_name
+      ) {
+        const BlobImage = await fileToBlob(contestFormData.file_path);
+        uploadedImageUrl = await uploadContestImage(
+          BlobImage,
+          contestFormData.save_name,
+          response.data
+        );
+      }
+
       alert("성공적으로 등록되었습니다.");
       navigate(`/contest/${response.data}`);
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
