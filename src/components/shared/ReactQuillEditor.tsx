@@ -2,6 +2,7 @@
 import ReactQuill from "react-quill-new";
 import Quill from "quill";
 import { fetchUpload } from "@/api/common/upload";
+// import { useRef } from "react";
 
 // 서버에 이미지 업로드 요청하는 함수
 const uploadImage = async (file: File): Promise<string> => {
@@ -69,5 +70,4 @@ const ReactQuillEditor = ({ value, onChange, className }: Props) => {
     />
   );
 };
-
 export default ReactQuillEditor;

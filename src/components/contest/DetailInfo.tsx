@@ -68,7 +68,7 @@ function DetailInfo({ data }: DetailInfoProps) {
             <div className="w-8 h-8 bg-gray-200 rounded-full flex items-center justify-center">
               👀
             </div>
-            <span className="text-xs text-gray-600">356</span>
+            <span className="text-xs text-gray-600">{data.views}</span>
           </button>
         </div>
       </div>

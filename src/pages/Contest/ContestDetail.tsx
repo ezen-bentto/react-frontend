@@ -1,4 +1,4 @@
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import DetailContent from "@/components/contest/DetailContent";
 import DetailInfo from "@/components/contest/DetailInfo";
 import ListItem from "@/components/shared/ListItem";
@@ -19,7 +19,14 @@ const ContestDetail = () => {
 
   return (
     <div className="flex flex-col gap-5 mt-28">
-      <Title titleText="상세페이지" linkSrc="" />
+      <div className="flex-default">
+        <Title titleText="상세페이지" linkSrc="" />
+        <div className="text-sm text-gray-500 space-x-2">
+          {/* TODO: 로그인 한 유저만 보이도록 */}
+          <span><Link to={`/contest/${id}/edit`}>수정 |</Link></span>
+          <span><Link to={`/contest/${id}/delete`}>삭제</Link></span>
+        </div>
+      </div>
       {/* 상세정보 */}
       <div>{data ? <DetailInfo data={data} /> : <div>불러오는 중...</div>}</div>
       {/* 상세내용 */}

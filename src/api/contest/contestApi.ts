@@ -29,9 +29,9 @@ export const fetchContestWrite = async (contestData: transformedData) => {
   return response.data;
 };
 
-export const fetchContestEdit = async (contestData: transformedData) => {
+export const fetchContestEdit = async (id: number, contestData: transformedData) => {
   const response = await axios.post<{ data: Contest }>(
-    `${import.meta.env.VITE_API_URL}/api/contest/modify`,
+    `${import.meta.env.VITE_API_URL}/api/contest/${id}/modify`,
     contestData
   );
   return response.data;
