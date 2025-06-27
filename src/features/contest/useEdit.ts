@@ -1,12 +1,12 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { fetchContestEdit } from "@/api/contest/contestApi";
-import type { ContestFormData } from "@/types/contestType";
+import type { RequestContestData } from "@/types/contestType";
 
 export const useEditContestMutation = (contestId: number) => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: (formData: ContestFormData) => {
+    mutationFn: (formData: RequestContestData) => {
       return fetchContestEdit(contestId, {
         ...formData,
         contest_tag: formData.contest_tag.join(","), // 변환은 여기서 처리

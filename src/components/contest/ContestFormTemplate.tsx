@@ -9,6 +9,7 @@ import { contestFilterData } from "@/constants/ContestFilterData";
 import type { ContestFormData } from "@/types/contestType";
 import { SkeletonInput, SkeletonTextarea } from "./SkeletonUI";
 import ReactQuill from "react-quill-new";
+import FileInput from "../shared/FileInput";
 
 type Props = {
   formData: ContestFormData;
@@ -38,18 +39,29 @@ const ContestFormTemplate = ({ formData, onChange, onSubmit, submitLabel, isLoad
           )}
         </FormField>
 
-        <FormField label="공모기간" required>
+        <div className="flex-default">
+          <FormField label="공모기간" required>
+            {isLoading ? (
+              <SkeletonInput />
+            ) : (
+              <DateRange
+                startDate={formData.start_date}
+                endDate={formData.end_date}
+                onStartDateChange={date => onChange({ start_date: date })}
+                onEndDateChange={date => onChange({ end_date: date })}
+              />
+            )}
+          </FormField>
+
           {isLoading ? (
             <SkeletonInput />
           ) : (
-            <DateRange
-              startDate={formData.start_date}
-              endDate={formData.end_date}
-              onStartDateChange={date => onChange({ start_date: date })}
-              onEndDateChange={date => onChange({ end_date: date })}
+            <FileInput
+              onFileSelect={(file, save_name) => onChange({ file_path: file, save_name })}
+              className="w-[600px]"
             />
           )}
-        </FormField>
+        </div>
 
         <FormField label="홈페이지" required>
           {isLoading ? (
