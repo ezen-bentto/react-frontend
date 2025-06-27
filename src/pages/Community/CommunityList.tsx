@@ -11,7 +11,6 @@ import { DARK_NOT_ITEM, LiGHT_NOT_ITEM } from "@/constants/ImageSrc";
 import { useAuth } from "@/context/AuthContext";
 import { toggleScrap } from "@/api/scrap/toggle"; // 새로 만든 API
 
-
 const CommunityList = () => {
   const [posts, setPosts] = useState<CommunityItem[]>([]);
   const [filters, setFilters] = useState<Record<string, string[]>>({});
@@ -39,7 +38,13 @@ const CommunityList = () => {
       setPosts(prev =>
         prev.map(p =>
           p.community_id === postId
-            ? { ...p, scrap_yn: res.data.scrapped ? "Y" : "N", scrap_count: res.data.scrapped ? (p.scrap_count ?? 0) + 1 : Math.max((p.scrap_count ?? 1) - 1, 0) }
+            ? {
+                ...p,
+                scrap_yn: res.data.scrapped ? "Y" : "N",
+                scrap_count: res.data.scrapped
+                  ? (p.scrap_count ?? 0) + 1
+                  : Math.max((p.scrap_count ?? 1) - 1, 0),
+              }
             : p
         )
       );
@@ -107,8 +112,8 @@ const CommunityList = () => {
     let result = [...posts];
 
     if (filters.category?.length) {
-      result = result.filter(post =>
-        post.category_type && filters.category.includes(String(post.category_type))
+      result = result.filter(
+        post => post.category_type && filters.category.includes(String(post.category_type))
       );
     }
 
@@ -121,9 +126,9 @@ const CommunityList = () => {
 
     if (searchText.trim()) {
       const search = searchText.toLowerCase();
-      result = result.filter(post =>
-        post.title.toLowerCase().includes(search) ||
-        post.content.toLowerCase().includes(search)
+      result = result.filter(
+        post =>
+          post.title.toLowerCase().includes(search) || post.content.toLowerCase().includes(search)
       );
     }
 
@@ -146,9 +151,10 @@ const CommunityList = () => {
   // 페이지네이션 계산 (카드형일 때만)
   const indexOfLast = currentPage * postsPerPage;
   const indexOfFirst = indexOfLast - postsPerPage;
-  const currentPosts = viewMode === "card"
-    ? processedPosts.slice(indexOfFirst, indexOfLast)  // 카드형: 페이지네이션
-    : processedPosts;  // 리스트형: 모든 데이터 표시
+  const currentPosts =
+    viewMode === "card"
+      ? processedPosts.slice(indexOfFirst, indexOfLast) // 카드형: 페이지네이션
+      : processedPosts; // 리스트형: 모든 데이터 표시
   const totalPages = Math.max(1, Math.ceil(processedPosts.length / postsPerPage));
 
   // 필터나 검색이 변경되면 첫 페이지로 이동
@@ -309,7 +315,7 @@ const CommunityList = () => {
                     intent="primary"
                     division={post.category_type ?? 0}
                     communityType={post.community_type}
-                    scrapYn={post.scrap_yn as "Y" | "N"}  // 서버에서 scrap_yn 내려주므로
+                    scrapYn={post.scrap_yn as "Y" | "N"} // 서버에서 scrap_yn 내려주므로
                     onScrapClick={() => handleScrapToggle(post.community_id)}
                   />
                 ))}
@@ -333,14 +339,17 @@ const CommunityList = () => {
           )}
         </section>
 
-        <div className="fixed bottom-4 right-4 z-50" onClick={() => {
-          if (!isLoggedIn) {
-            alert("글쓰기는 로그인 후 이용 가능합니다.");
-            navigate("/login");
-          } else {
-            navigate("/community/write");
-          }
-        }}>
+        <div
+          className="fixed bottom-4 right-4 z-50"
+          onClick={() => {
+            if (!isLoggedIn) {
+              alert("글쓰기는 로그인 후 이용 가능합니다.");
+              navigate("/login");
+            } else {
+              navigate("/community/write");
+            }
+          }}
+        >
           <WriteButton />
         </div>
       </div>

@@ -33,15 +33,12 @@ export const fetchCommunityList = async (
   page: number,
   size: number
 ): Promise<CommunityListResponse> => {
-  const response = await axios.get<{ data: CommunityListResponse }>(
-    "/api/community/getList",
-    {
-      params: {
-        communityType: communityType,
-        page,
-        size,
-      },
-    }
-  );
+  const response = await axios.get<{ data: CommunityListResponse }>("/api/community/getList", {
+    params: {
+      communityType: communityType,
+      page,
+      size,
+    },
+  });
   return response.data.data;
 };

@@ -74,9 +74,9 @@ const CommunityWrite = () => {
         recruitments:
           data.recruitment_detail_list?.length > 0
             ? data.recruitment_detail_list.map(detail => ({
-              role: detail.role,
-              count: detail.count.toString(),
-            }))
+                role: detail.role,
+                count: detail.count.toString(),
+              }))
             : [{ role: "", count: "" }],
       });
 
@@ -323,11 +323,11 @@ const CommunityWrite = () => {
         selectedOption === "3"
           ? undefined
           : formData.recruitments
-            .filter(r => r.role.trim())
-            .map(r => ({
-              role: r.role.trim(),
-              count: Number(r.count),
-            })),
+              .filter(r => r.role.trim())
+              .map(r => ({
+                role: r.role.trim(),
+                count: Number(r.count),
+              })),
     };
 
     try {
@@ -349,11 +349,11 @@ const CommunityWrite = () => {
             selectedOption === "3"
               ? undefined
               : formData.recruitments
-                .filter(r => r.role.trim())
-                .map(r => ({
-                  role: r.role.trim(),
-                  count: Number(r.count),
-                })),
+                  .filter(r => r.role.trim())
+                  .map(r => ({
+                    role: r.role.trim(),
+                    count: Number(r.count),
+                  })),
         };
         result = await modifyCommunity(modifyData);
         // eslint-disable-next-line no-console
@@ -382,7 +382,9 @@ const CommunityWrite = () => {
           <div className="flex justify-center items-center h-64">
             <div className="flex flex-col items-center space-y-4">
               <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
-              <div className="text-lg text-gray-600 dark:text-gray-400 font-medium">데이터를 불러오는 중...</div>
+              <div className="text-lg text-gray-600 dark:text-gray-400 font-medium">
+                데이터를 불러오는 중...
+              </div>
             </div>
           </div>
         </div>
@@ -400,7 +402,9 @@ const CommunityWrite = () => {
               {isEditMode ? "게시글 수정" : "새 게시글 작성"}
             </h1>
             <p className="text-gray-600 dark:text-gray-400 text-lg transition-colors duration-300">
-              {isEditMode ? "게시글 내용을 수정해보세요" : "커뮤니티에 새로운 이야기를 공유해보세요"}
+              {isEditMode
+                ? "게시글 내용을 수정해보세요"
+                : "커뮤니티에 새로운 이야기를 공유해보세요"}
             </p>
             <div className="w-24 h-1 bg-gradient-to-r from-blue-500 to-purple-500 mx-auto mt-4 rounded-full"></div>
           </div>
@@ -411,7 +415,9 @@ const CommunityWrite = () => {
               <div className="w-10 h-10 bg-gradient-to-r from-blue-500 to-purple-500 rounded-xl flex items-center justify-center mr-4">
                 <span className="text-white font-bold text-lg">1</span>
               </div>
-              <h2 className="text-2xl font-bold text-gray-800 dark:text-gray-200 transition-colors duration-300">기본 정보를 입력해주세요</h2>
+              <h2 className="text-2xl font-bold text-gray-800 dark:text-gray-200 transition-colors duration-300">
+                기본 정보를 입력해주세요
+              </h2>
             </div>
 
             {/* 라디오 버튼 섹션 */}
@@ -435,7 +441,7 @@ const CommunityWrite = () => {
                   icon: "💬",
                   color: "from-purple-400 to-pink-500",
                 },
-              ].map((option) => (
+              ].map(option => (
                 <label
                   key={option.value}
                   className={`relative flex items-center p-6 border-2 rounded-xl cursor-pointer transition-all duration-300 hover:scale-105
@@ -475,9 +481,7 @@ const CommunityWrite = () => {
               ))}
 
               {/* 👇 수정 모드일 때 숨겨진 input으로 값 전달 */}
-              {isEditMode && (
-                <input type="hidden" name="communityType" value={selectedOption} />
-              )}
+              {isEditMode && <input type="hidden" name="communityType" value={selectedOption} />}
             </div>
 
             {/* 분야/참여 선택 */}
@@ -497,30 +501,43 @@ const CommunityWrite = () => {
                         setIsCategoryDropdownOpen(!isCategoryDropdownOpen);
                       }}
                     >
-                      <span className={selectedCategory ? "text-gray-800 dark:text-gray-200 font-medium" : "text-gray-400 dark:text-gray-500"}>
+                      <span
+                        className={
+                          selectedCategory
+                            ? "text-gray-800 dark:text-gray-200 font-medium"
+                            : "text-gray-400 dark:text-gray-500"
+                        }
+                      >
                         {selectedCategory ? selectedCategory.name : "공모전 분야를 선택해주세요"}
                       </span>
-                      <span className={`transition-transform duration-200 text-gray-600 dark:text-gray-400 ${isCategoryDropdownOpen ? "rotate-180" : ""}`}>
+                      <span
+                        className={`transition-transform duration-200 text-gray-600 dark:text-gray-400 ${isCategoryDropdownOpen ? "rotate-180" : ""}`}
+                      >
                         ▼
                       </span>
                     </div>
                     {isCategoryDropdownOpen && (
-                      <div className="absolute top-full left-0 right-0 mt-2 bg-white dark:bg-[#2B2B2B] border-2 border-gray-200 dark:border-gray-600 rounded-xl shadow-xl z-50 max-h-60 overflow-y-auto"
-                      >
+                      <div className="absolute top-full left-0 right-0 mt-2 bg-white dark:bg-[#2B2B2B] border-2 border-gray-200 dark:border-gray-600 rounded-xl shadow-xl z-50 max-h-60 overflow-y-auto">
                         {categories && categories.length > 0 ? (
                           categories.map((category, index) => (
                             <div
                               key={category.category_id}
-                              className={`px-4 py-3 cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors duration-150 ${index !== categories.length - 1 ? "border-b border-gray-100 dark:border-gray-600" : ""
-                                } ${index === 0 ? "rounded-t-xl" : ""} ${index === categories.length - 1 ? "rounded-b-xl" : ""
-                                }`}
+                              className={`px-4 py-3 cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors duration-150 ${
+                                index !== categories.length - 1
+                                  ? "border-b border-gray-100 dark:border-gray-600"
+                                  : ""
+                              } ${index === 0 ? "rounded-t-xl" : ""} ${
+                                index === categories.length - 1 ? "rounded-b-xl" : ""
+                              }`}
                               onClick={e => {
                                 e.preventDefault();
                                 e.stopPropagation();
                                 handleCategorySelect(category);
                               }}
                             >
-                              <span className="text-gray-800 dark:text-white font-medium">{category.name}</span>
+                              <span className="text-gray-800 dark:text-white font-medium">
+                                {category.name}
+                              </span>
                             </div>
                           ))
                         ) : (
@@ -549,7 +566,13 @@ const CommunityWrite = () => {
                         }
                       }}
                     >
-                      <span className={selectedContest ? "text-gray-800 dark:text-gray-200 font-medium" : "text-gray-400 dark:text-gray-500"}>
+                      <span
+                        className={
+                          selectedContest
+                            ? "text-gray-800 dark:text-gray-200 font-medium"
+                            : "text-gray-400 dark:text-gray-500"
+                        }
+                      >
                         {isLoadingContests
                           ? "공모전을 불러오는 중..."
                           : selectedContest
@@ -558,10 +581,11 @@ const CommunityWrite = () => {
                               ? contests.length > 0
                                 ? "참여할 공모전을 선택해주세요"
                                 : "진행중인 공모전이 없습니다"
-                              : "먼저 분야를 선택해주세요"
-                        }
+                              : "먼저 분야를 선택해주세요"}
                       </span>
-                      <span className={`transition-transform duration-200 text-gray-600 dark:text-gray-400 ${isContestDropdownOpen ? "rotate-180" : ""}`}>
+                      <span
+                        className={`transition-transform duration-200 text-gray-600 dark:text-gray-400 ${isContestDropdownOpen ? "rotate-180" : ""}`}
+                      >
                         ▼
                       </span>
                     </div>
@@ -570,9 +594,13 @@ const CommunityWrite = () => {
                         {contests.map((contest, index) => (
                           <div
                             key={contest.contest_id}
-                            className={`px-4 py-3 cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors duration-150 ${index !== contests.length - 1 ? "border-b border-gray-100 dark:border-gray-600" : ""
-                              } ${index === 0 ? "rounded-t-xl" : ""} ${index === contests.length - 1 ? "rounded-b-xl" : ""
-                              }`}
+                            className={`px-4 py-3 cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors duration-150 ${
+                              index !== contests.length - 1
+                                ? "border-b border-gray-100 dark:border-gray-600"
+                                : ""
+                            } ${index === 0 ? "rounded-t-xl" : ""} ${
+                              index === contests.length - 1 ? "rounded-b-xl" : ""
+                            }`}
                             onClick={e => {
                               e.preventDefault();
                               e.stopPropagation();
@@ -580,7 +608,9 @@ const CommunityWrite = () => {
                             }}
                           >
                             <div className="space-y-1">
-                              <span className="text-gray-800 dark:text-white font-medium block">{contest.title}</span>
+                              <span className="text-gray-800 dark:text-white font-medium block">
+                                {contest.title}
+                              </span>
                             </div>
                           </div>
                         ))}
@@ -629,7 +659,9 @@ const CommunityWrite = () => {
                 <div className="w-10 h-10 bg-gradient-to-r from-green-500 to-blue-500 rounded-xl flex items-center justify-center mr-4">
                   <span className="text-white font-bold text-lg">2</span>
                 </div>
-                <h2 className="text-2xl font-bold text-gray-800 dark:text-gray-200">모집정보를 입력해주세요</h2>
+                <h2 className="text-2xl font-bold text-gray-800 dark:text-gray-200">
+                  모집정보를 입력해주세요
+                </h2>
               </div>
 
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
@@ -668,7 +700,9 @@ const CommunityWrite = () => {
               {/* 모집 역할 섹션 */}
               <div className="space-y-6">
                 <div className="flex items-center justify-between">
-                  <h3 className="text-lg font-semibold text-gray-800 dark:text-gray-200 transition-colors duration-300">모집 역할 및 인원</h3>
+                  <h3 className="text-lg font-semibold text-gray-800 dark:text-gray-200 transition-colors duration-300">
+                    모집 역할 및 인원
+                  </h3>
                   <button
                     type="button"
                     onClick={handleAddRole}
@@ -680,7 +714,10 @@ const CommunityWrite = () => {
                 </div>
 
                 {formData.recruitments.map((r, idx) => (
-                  <div key={idx} className="border border-gray-200 dark:border-gray-600 rounded-xl p-6 transition-colors duration-300">
+                  <div
+                    key={idx}
+                    className="border border-gray-200 dark:border-gray-600 rounded-xl p-6 transition-colors duration-300"
+                  >
                     <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-4">
                       <div className="space-y-2">
                         <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 transition-colors duration-300">
@@ -732,7 +769,9 @@ const CommunityWrite = () => {
               <div className="w-10 h-10 bg-gradient-to-r from-purple-500 to-pink-500 rounded-xl flex items-center justify-center mr-4">
                 <span className="text-white font-bold text-lg">3</span>
               </div>
-              <h2 className="text-2xl font-bold text-gray-800 dark:text-gray-200">내용을 작성해주세요</h2>
+              <h2 className="text-2xl font-bold text-gray-800 dark:text-gray-200">
+                내용을 작성해주세요
+              </h2>
             </div>
 
             <div className="space-y-6 mb-8">
@@ -797,7 +836,9 @@ const CommunityWrite = () => {
               {isEditMode ? "수정이 완료되었습니다!" : "등록이 완료되었습니다!"}
             </h3>
             <p className="text-gray-600 dark:text-gray-400 mb-6 transition-colors duration-300">
-              {isEditMode ? "게시글이 성공적으로 수정되었습니다." : "새로운 게시글이 성공적으로 등록되었습니다."}
+              {isEditMode
+                ? "게시글이 성공적으로 수정되었습니다."
+                : "새로운 게시글이 성공적으로 등록되었습니다."}
             </p>
             <button
               className="w-full py-3 bg-gradient-to-r from-blue-500 to-purple-500 text-white rounded-xl hover:from-blue-600 hover:to-purple-600 transition-all duration-200 font-medium shadow-lg hover:shadow-xl"
@@ -810,8 +851,9 @@ const CommunityWrite = () => {
       </dialog>
 
       {/* 커스텀 스타일을 위한 CSS 클래스들 */}
-      <style dangerouslySetInnerHTML={{
-        __html: `
+      <style
+        dangerouslySetInnerHTML={{
+          __html: `
           /* ReactQuill 커스텀 스타일 */
           .community-write .ql-editor {
             font-size: 16px;
@@ -970,8 +1012,9 @@ const CommunityWrite = () => {
           * {
             transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
           }
-        `
-      }} />
+        `,
+        }}
+      />
     </main>
   );
 };

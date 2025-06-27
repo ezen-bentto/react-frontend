@@ -466,10 +466,11 @@ const CommunityContent = () => {
       <div className="fixed top-4 right-4 z-50">
         <button
           onClick={() => setIsDarkMode(!isDarkMode)}
-          className={`p-3 rounded-full shadow-lg transition-all duration-300 ${isDarkMode
-            ? "bg-yellow-500 text-gray-900 hover:bg-yellow-400"
-            : "bg-[#2B2B2B] text-white hover:bg-gray-700"
-            }`}
+          className={`p-3 rounded-full shadow-lg transition-all duration-300 ${
+            isDarkMode
+              ? "bg-yellow-500 text-gray-900 hover:bg-yellow-400"
+              : "bg-[#2B2B2B] text-white hover:bg-gray-700"
+          }`}
         >
           {isDarkMode ? <FireOutlined /> : <BulbOutlined />}
         </button>
@@ -495,10 +496,11 @@ const CommunityContent = () => {
                     <div className="flex items-center gap-2">
                       <button
                         onClick={handleToggleScrap}
-                        className={`flex items-center justify-center p-2 rounded-full transition-all ${community?.scrap_yn
-                          ? "bg-red-500 text-white"
-                          : "bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-300"
-                          }`}
+                        className={`flex items-center justify-center p-2 rounded-full transition-all ${
+                          community?.scrap_yn
+                            ? "bg-red-500 text-white"
+                            : "bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-300"
+                        }`}
                       >
                         {community.scrap_yn ? <HeartFilled /> : <HeartOutlined />}
                       </button>
@@ -788,7 +790,7 @@ const CommunityContent = () => {
                         >
                           취소
                         </Button>
-                        <Button type="submit" intent="orange" size="sm" onClickFnc={() => { }}>
+                        <Button type="submit" intent="orange" size="sm" onClickFnc={() => {}}>
                           {isSubmitting ? "등록중..." : "등록"}
                         </Button>
                       </div>
@@ -832,8 +834,9 @@ const CommunityContent = () => {
       <dialog id="result_modal" className="modal">
         <div className="modal-box border bg-white dark:bg-[#2B2B2B] text-gray-900 dark:text-white border-gray-200 dark:border-gray-700">
           <h3
-            className={`font-bold text-lg ${deleteModalState.type === "success" ? "text-green-600" : "text-red-600"
-              }`}
+            className={`font-bold text-lg ${
+              deleteModalState.type === "success" ? "text-green-600" : "text-red-600"
+            }`}
           >
             {deleteModalState.type === "success" ? "삭제 완료" : "삭제 실패"}
           </h3>
@@ -845,10 +848,11 @@ const CommunityContent = () => {
           )}
           <div className="modal-action">
             <button
-              className={`btn ${deleteModalState.type === "success"
-                ? "bg-green-500 hover:bg-green-600 text-white"
-                : "bg-red-500 dark:bg-red-600 hover:bg-red-600 dark:hover:bg-red-700 text-white"
-                }`}
+              className={`btn ${
+                deleteModalState.type === "success"
+                  ? "bg-green-500 hover:bg-green-600 text-white"
+                  : "bg-red-500 dark:bg-red-600 hover:bg-red-600 dark:hover:bg-red-700 text-white"
+              }`}
               onClick={() => {
                 closeModal("result_modal");
                 if (deleteModalState.type === "error") {
@@ -894,18 +898,20 @@ const CommunityContent = () => {
       <dialog id="comment_result_modal" className="modal">
         <div className="modal-box border bg-white dark:bg-[#2B2B2B] text-gray-900 dark:text-white border-gray-200 dark:border-gray-700">
           <h3
-            className={`font-bold text-lg ${commentDeleteModalState.type === "success" ? "text-green-600" : "text-red-600"
-              }`}
+            className={`font-bold text-lg ${
+              commentDeleteModalState.type === "success" ? "text-green-600" : "text-red-600"
+            }`}
           >
             {commentDeleteModalState.type === "success" ? "삭제 완료" : "삭제 실패"}
           </h3>
           <p className="py-4 text-gray-700 dark:text-gray-300">{commentDeleteModalState.message}</p>
           <div className="modal-action">
             <button
-              className={`btn ${commentDeleteModalState.type === "success"
-                ? "bg-green-500 hover:bg-green-600 text-white"
-                : "bg-red-500 dark:bg-red-600 hover:bg-red-600 dark:hover:bg-red-700 text-white"
-                }`}
+              className={`btn ${
+                commentDeleteModalState.type === "success"
+                  ? "bg-green-500 hover:bg-green-600 text-white"
+                  : "bg-red-500 dark:bg-red-600 hover:bg-red-600 dark:hover:bg-red-700 text-white"
+              }`}
               onClick={() => {
                 closeModal("comment_result_modal");
                 // 모달 상태 초기화
