@@ -5,7 +5,7 @@ interface FormFieldProps {
 }
 
 export const FormField = ({ label, required = false, children }: FormFieldProps) => (
-  <div className="flex flex-col items-start md:flex-row md:items-center">
+  <div className="flex flex-col w-full items-start md:flex-row md:items-center">
     <label className="min-w-30 block text-sm font-medium mb-2">
       {label}
       {required && <span className="text-red-500 ml-1">*</span>}
