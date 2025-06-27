@@ -39,7 +39,7 @@ const ContestFormTemplate = ({ formData, onChange, onSubmit, submitLabel, isLoad
           )}
         </FormField>
 
-        <div className="flex-default">
+        <div className="flex-default w-full flex-col md:flex-row md:gap-16 gap-4">
           <FormField label="공모기간" required>
             {isLoading ? (
               <SkeletonInput />
@@ -58,7 +58,7 @@ const ContestFormTemplate = ({ formData, onChange, onSubmit, submitLabel, isLoad
           ) : (
             <FileInput
               onFileSelect={(file, save_name) => onChange({ file_path: file, save_name })}
-              className="w-[600px]"
+              className="w-full"
             />
           )}
         </div>

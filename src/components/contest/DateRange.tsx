@@ -16,12 +16,12 @@ export const DateRange = ({
   className = "",
 }: DateRangeProps) => {
   return (
-    <div className={`flex gap-1 items-center ${className} md:gap-4`}>
+    <div className={`flex w-full gap-1 items-center ${className} md:gap-4`}>
       <input
         type="date"
         value={startDate}
         onChange={e => onStartDateChange(e.target.value)}
-        className="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+        className="p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
       />
       <span className="text-gray-500">~</span>
       <input
