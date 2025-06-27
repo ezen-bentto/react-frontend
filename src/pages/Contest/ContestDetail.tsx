@@ -5,10 +5,12 @@ import ListItem from "@/components/shared/ListItem";
 import Title from "@/components/shared/Title";
 import type { CommunityListItem } from "@/types/contestDetailType";
 import { useDetail } from "@/features/contest/useDetail";
+import { useAuth } from "@/context/AuthContext";
 
 const ContestDetail = () => {
   const { id } = useParams();
   const parsedId = id ? parseInt(id) : undefined;
+  const { user } = useAuth();
 
   const { data, isLoading, isError } = useDetail(parsedId);
 
@@ -21,11 +23,16 @@ const ContestDetail = () => {
     <div className="flex flex-col gap-5 mt-28">
       <div className="flex-default">
         <Title titleText="상세페이지" linkSrc="" />
-        <div className="text-sm text-gray-500 space-x-2">
-          {/* TODO: 로그인 한 유저만 보이도록 */}
-          <span><Link to={`/contest/${id}/edit`}>수정 |</Link></span>
-          <span><Link to={`/contest/${id}/delete`}>삭제</Link></span>
-        </div>
+        {user?.id === data.writer_id && (
+          <div className="text-sm text-gray-500 space-x-2">
+            <span>
+              <Link to={`/contest/${id}/edit`}>수정 |</Link>
+            </span>
+            <span>
+              <Link to={`/contest/${id}/delete`}>삭제</Link>
+            </span>
+          </div>
+        )}
       </div>
       {/* 상세정보 */}
       <div>{data ? <DetailInfo data={data} /> : <div>불러오는 중...</div>}</div>

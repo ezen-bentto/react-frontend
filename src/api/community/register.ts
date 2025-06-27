@@ -53,9 +53,6 @@ export const registerCommunity = async (payload: CommunityRegisterPayload) => {
     })),
   };
 
-  const response = await axios.post(
-    "/api/community/register",
-    transformedPayload
-  );
+  const response = await axios.post("/api/community/register", transformedPayload);
   return response.data;
 };
