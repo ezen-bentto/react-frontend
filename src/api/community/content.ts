@@ -41,9 +41,7 @@ export interface CommunityDetail {
  *        2025/06/24           김혜미               scrap_yn 추가
  * @param communityId
  */
-export const fetchCommunityDetail = async (
-  communityId: number
-): Promise<CommunityDetail> => {
+export const fetchCommunityDetail = async (communityId: number): Promise<CommunityDetail> => {
   const response = await axios.get<{ data: CommunityDetail }>(
     `/api/community/getDetail?communityId=${communityId}`
   );

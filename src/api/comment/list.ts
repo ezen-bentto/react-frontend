@@ -32,9 +32,7 @@ export interface CommentListResponse {
  */
 export const fetchCommentList = async (postId: number): Promise<CommentListResponse> => {
   try {
-    const response = await axios.get(
-      `/api/comment/getList?postId=${postId}`
-    );
+    const response = await axios.get(`/api/comment/getList?postId=${postId}`);
     return response.data.data;
   } catch (error) {
     console.error("댓글 목록 조회 실패:", error);

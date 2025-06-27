@@ -23,8 +23,12 @@ const ContestDetail = () => {
         <Title titleText="상세페이지" linkSrc="" />
         <div className="text-sm text-gray-500 space-x-2">
           {/* TODO: 로그인 한 유저만 보이도록 */}
-          <span><Link to={`/contest/${id}/edit`}>수정 |</Link></span>
-          <span><Link to={`/contest/${id}/delete`}>삭제</Link></span>
+          <span>
+            <Link to={`/contest/${id}/edit`}>수정 |</Link>
+          </span>
+          <span>
+            <Link to={`/contest/${id}/delete`}>삭제</Link>
+          </span>
         </div>
       </div>
       {/* 상세정보 */}

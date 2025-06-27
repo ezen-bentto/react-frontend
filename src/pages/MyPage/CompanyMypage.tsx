@@ -8,6 +8,7 @@ import {
   getMyBookmarkedContests,
   getMyBookmarkedCommunities,
 } from "../../api/mypage/mypage";
+import { fetchContestPage } from "@/api/contest/contestApi";
 import Avatar from "@/components/shared/Avatar";
 import Button from "@/components/shared/Button";
 import ListItem from "@/components/shared/ListItem";
@@ -53,21 +54,63 @@ const CompanyMypage = () => {
     const fetchData = async () => {
       setLoading(true);
       try {
-        let response;
-        if (activeTab === "bookmarked-contests") response = await getMyBookmarkedContests();
-        else if (activeTab === "bookmarked-communities")
-          response = await getMyBookmarkedCommunities();
-        else if (activeTab === "my-posts") response = await getMyPosts();
-        setData(response || []);
+        if (activeTab === "bookmarked-contests") {
+          // 1. 백엔드에서 데이터를 가져옵니다.
+          //    이 시점의 crawledContestIds는 실제로는 ["3"] 같은 문자열 배열입니다.
+          const { crawledContestIds, dbContests } = await getMyBookmarkedContests();
+
+          // 2. [핵심 수정] API에서 받은 문자열 배열을 숫자 배열로 변환합니다.
+          //    이제 numericCrawledIds는 [3] 과 같은 숫자 배열이 되어 타입스크립트와 일치합니다.
+          const numericCrawledIds = crawledContestIds.map(id => Number(id));
+
+          let crawledContests: BookmarkedContest[] = [];
+
+          if (numericCrawledIds && numericCrawledIds.length > 0) {
+            const allCrawledData = await fetchContestPage();
+
+            // 3. [핵심 수정] 이제 숫자 배열을 사용하여 숫자 ID를 직접 비교합니다.
+            const bookmarkedCrawledData = allCrawledData.filter(contest => {
+              // contest.id (숫자)와 numericCrawledIds (숫자 배열)를 비교합니다.
+              // 이제 타입이 일치하므로 에러가 발생하지 않습니다.
+              return numericCrawledIds.includes(contest.id);
+            });
+
+            crawledContests = bookmarkedCrawledData.map(item => ({
+              id: item.id, // 이미 숫자이므로 Number()로 감쌀 필요 없음
+              title: item.title,
+              organizer: item.organizer,
+              endDate: item.end_date,
+            }));
+          }
+
+          const allBookmarkedIds = [...numericCrawledIds, ...dbContests.map(c => c.id)];
+          const combinedData = [...crawledContests, ...dbContests];
+
+          const sortedData = allBookmarkedIds
+            .map(id => combinedData.find(item => item.id === id))
+            .filter((item): item is BookmarkedContest => !!item);
+
+          setData(sortedData);
+        } else {
+          // '북마크한 커뮤니티' 또는 '내가 쓴 글' 탭 처리
+          let response;
+          if (activeTab === "bookmarked-communities") {
+            response = await getMyBookmarkedCommunities();
+          } else if (activeTab === "my-posts") {
+            response = await getMyPosts();
+          }
+          setData(response || []);
+        }
       } catch (error) {
         console.error(`${activeTab} 데이터 로드 실패:`, error);
+        setData([]); // 에러 발생 시 데이터 초기화
         alert("데이터를 불러오는 중 오류가 발생했습니다.");
       } finally {
         setLoading(false);
       }
     };
     fetchData();
-  }, [activeTab, navigate]);
+  }, [activeTab]);
 
   const renderList = () => {
     if (loading) return <p className="text-center py-8 dark:text-white">로딩 중...</p>;

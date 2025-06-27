@@ -36,8 +36,6 @@ export interface CategoryAPIResponse {
  *
  */
 export const fetchCategory = async (): Promise<CategoryAPIResponse> => {
-  const response = await axios.get<CategoryAPIResponse>(
-    "/api/common/getCategory"
-  );
+  const response = await axios.get<CategoryAPIResponse>("/api/common/getCategory");
   return response.data;
 };

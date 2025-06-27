@@ -1,3 +1,4 @@
+//react-frontend\src\types\contestType.ts
 import type { CommunityListItem } from "./contestDetailType";
 
 export type Contest = {
