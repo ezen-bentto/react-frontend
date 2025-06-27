@@ -8,7 +8,23 @@ import { registerCommunity } from "@/api/community/register";
 import { fetchCommunityDetail } from "@/api/community/content";
 import { useSearchParams, useNavigate } from "react-router-dom";
 import { modifyCommunity } from "@/api/community/modify";
-import type { ModifyPayload, RecruitmentDetail, SubmitPayload } from "@/types/communityWriteType";
+import type { ModifyPayload, RecruitmentDetailResponse, SubmitPayload } from "@/types/communityWriteType";
+// Form 데이터 타입 정의
+interface FormRecruitment {
+  recruitmentDetailId?: number; // optional로 변경
+  role: string;
+  count: string;
+}
+
+interface FormData {
+  title: string;
+  content: string;
+  startDate: string;
+  endDate: string;
+  recruitEndDate: string;
+  ageGroup: string;
+  recruitments: FormRecruitment[];
+}
 
 const CommunityWrite = () => {
   const [searchParams] = useSearchParams();
@@ -18,15 +34,16 @@ const CommunityWrite = () => {
   const isEditMode = communityId !== undefined;
 
   const [selectedOption, setSelectedOption] = useState<"1" | "2" | "3">("1");
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<FormData>({
     title: "",
     content: "",
     startDate: "",
     endDate: "",
     recruitEndDate: "",
     ageGroup: "",
-    recruitments: [{ role: "", count: "" }],
+    recruitments: [{ role: "", count: "" }], // recruitmentDetailId는 optional이므로 생략 가능
   });
+
 
   const {
     categories,
@@ -61,7 +78,9 @@ const CommunityWrite = () => {
           endDate: detail.end_date?.slice(0, 10) ?? "",
           recruitEndDate: detail.recruit_end_date?.slice(0, 10) ?? "",
           ageGroup: detail.age_group,
-          recruitments: detail.recruitment_detail_list.map((r: RecruitmentDetail) => ({
+          // 수정: 기존 recruitment_detail_id 포함하여 매핑
+          recruitments: detail.recruitment_detail_list.map((r: RecruitmentDetailResponse) => ({
+            recruitmentDetailId: r.recruitment_detail_id, // 추가: 기존 ID 포함
             role: r.role,
             count: r.count.toString(),
           })),
@@ -75,6 +94,7 @@ const CommunityWrite = () => {
     };
     loadDetail();
   }, [communityId]);
+
 
   // 카테고리 설정
   useEffect(() => {
@@ -114,7 +134,7 @@ const CommunityWrite = () => {
   const handleAddRole = () => {
     setFormData((prev) => ({
       ...prev,
-      recruitments: [...prev.recruitments, { role: "", count: "" }],
+      recruitments: [...prev.recruitments, { recruitmentDetailId: undefined, role: "", count: "" }],
     }));
   };
 
@@ -155,6 +175,12 @@ const CommunityWrite = () => {
         const modifyPayload: ModifyPayload = {
           ...basePayload,
           communityId: communityId,
+          // 수정: recruitmentDetailId 포함하여 전송
+          recruitments: formData.recruitments.map((r) => ({
+            recruitmentDetailId: r.recruitmentDetailId,
+            role: r.role,
+            count: Number(r.count),
+          })),
         };
         await modifyCommunity(modifyPayload);
       } else {
