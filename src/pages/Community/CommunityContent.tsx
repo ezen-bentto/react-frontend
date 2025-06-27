@@ -41,14 +41,8 @@ const CommunityContent = () => {
   const { communityId } = useParams<{ communityId: string }>();
   const navigate = useNavigate();
 
-  const {
-    community,
-    comments,
-    isLoading,
-    error,
-    reloadComments,
-    reloadCommunity,
-  } = useCommunityData(communityId);
+  const { community, comments, isLoading, error, reloadComments, reloadCommunity } =
+    useCommunityData(communityId);
 
   const countdown = useCountdown(community?.recruit_end_date);
   const [isDarkMode, setIsDarkMode] = useState(false);
@@ -78,7 +72,7 @@ const CommunityContent = () => {
   }, []);
 
   const getCategoryName = (categoryId?: number | null) => {
-    const matched = categoryList.find((c) => c.category_id === categoryId);
+    const matched = categoryList.find(c => c.category_id === categoryId);
     return matched?.name || "카테고리 없음";
   };
 
@@ -151,7 +145,9 @@ const CommunityContent = () => {
             authorId={community.author_id}
             currentUserId={user?.id}
             communityId={communityId!}
-            onDeleteClick={() => setDeleteModalState({ type: "confirm", message: "정말 삭제하시겠습니까?" })}
+            onDeleteClick={() =>
+              setDeleteModalState({ type: "confirm", message: "정말 삭제하시겠습니까?" })
+            }
           />
           <Info
             communityType={community.community_type}
@@ -173,8 +169,12 @@ const CommunityContent = () => {
             setEditingCommentId(id);
             setEditedContent(content);
           }}
-          onDelete={(id) => {
-            setCommentDeleteModalState({ type: "confirm", message: "댓글을 삭제하시겠습니까?", commentId: Number(id) });
+          onDelete={id => {
+            setCommentDeleteModalState({
+              type: "confirm",
+              message: "댓글을 삭제하시겠습니까?",
+              commentId: Number(id),
+            });
           }}
           onSubmit={handleCommentSubmit}
           onCancel={() => setEditedContent("")}
@@ -183,7 +183,7 @@ const CommunityContent = () => {
           editedContent={editedContent}
           setEditedContent={setEditedContent}
           cancelEditing={() => setEditingCommentId(null)}
-          submitEdit={async (id) => {
+          submitEdit={async id => {
             try {
               await modifyComment({ commentId: Number(id), content: editedContent });
               await reloadComments();
@@ -204,7 +204,11 @@ const CommunityContent = () => {
       />
 
       <PostDeleteResultModal
-        type={deleteModalState.type === "success" || deleteModalState.type === "error" ? deleteModalState.type : null}
+        type={
+          deleteModalState.type === "success" || deleteModalState.type === "error"
+            ? deleteModalState.type
+            : null
+        }
         message={deleteModalState.message}
         onClose={() => setDeleteModalState({ type: null, message: "" })}
       />
@@ -217,7 +221,11 @@ const CommunityContent = () => {
       />
 
       <CommentResultModal
-        type={commentDeleteModalState.type === "success" || commentDeleteModalState.type === "error" ? commentDeleteModalState.type : null}
+        type={
+          commentDeleteModalState.type === "success" || commentDeleteModalState.type === "error"
+            ? commentDeleteModalState.type
+            : null
+        }
         message={commentDeleteModalState.message}
         onClose={() => setCommentDeleteModalState({ type: null, message: "" })}
       />

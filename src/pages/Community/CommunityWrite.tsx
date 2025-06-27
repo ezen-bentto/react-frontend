@@ -79,7 +79,7 @@ const CommunityWrite = () => {
   // 카테고리 설정
   useEffect(() => {
     if (pendingCategoryId && categories.length > 0) {
-      const found = categories.find((cat) => cat.category_id === pendingCategoryId);
+      const found = categories.find(cat => cat.category_id === pendingCategoryId);
       if (found) {
         setSelectedCategory(found);
         // 카테고리 선택 후 공모전 목록을 로드하기 위해 handleCategorySelect 호출
@@ -92,7 +92,7 @@ const CommunityWrite = () => {
   // 공모전 설정 (카테고리가 변경되고 공모전 목록이 로드된 후 실행)
   useEffect(() => {
     if (pendingContestId && contests.length > 0 && !isLoadingContests) {
-      const found = contests.find((con) => con.contest_id === pendingContestId);
+      const found = contests.find(con => con.contest_id === pendingContestId);
       if (found) {
         setSelectedContest(found);
         setPendingContestId(null);
@@ -102,17 +102,17 @@ const CommunityWrite = () => {
 
   const handleFormChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
+    setFormData(prev => ({ ...prev, [name]: value }));
   };
 
   const handleRecruitmentChange = (index: number, field: "role" | "count", value: string) => {
     const updated = [...formData.recruitments];
     updated[index][field] = value;
-    setFormData((prev) => ({ ...prev, recruitments: updated }));
+    setFormData(prev => ({ ...prev, recruitments: updated }));
   };
 
   const handleAddRole = () => {
-    setFormData((prev) => ({
+    setFormData(prev => ({
       ...prev,
       recruitments: [...prev.recruitments, { role: "", count: "" }],
     }));
@@ -121,7 +121,7 @@ const CommunityWrite = () => {
   const handleRemoveRole = (index: number) => {
     if (formData.recruitments.length > 1) {
       const updated = formData.recruitments.filter((_, i) => i !== index);
-      setFormData((prev) => ({ ...prev, recruitments: updated }));
+      setFormData(prev => ({ ...prev, recruitments: updated }));
     }
   };
 
@@ -144,7 +144,7 @@ const CommunityWrite = () => {
       endDate: formData.endDate,
       recruitEndDate: formData.recruitEndDate,
       ageGroup: formData.ageGroup,
-      recruitments: formData.recruitments.map((r) => ({
+      recruitments: formData.recruitments.map(r => ({
         role: r.role,
         count: Number(r.count),
       })),
@@ -202,7 +202,7 @@ const CommunityWrite = () => {
             selectedCategory={selectedCategory}
             isCategoryDropdownOpen={isCategoryDropdownOpen}
             setIsCategoryDropdownOpen={setIsCategoryDropdownOpen}
-            handleCategorySelect={async (category) => {
+            handleCategorySelect={async category => {
               setSelectedContest(null);
               await handleCategorySelect(category);
               setIsCategoryDropdownOpen(false);
@@ -231,7 +231,7 @@ const CommunityWrite = () => {
             title={formData.title}
             content={formData.content}
             onTitleChange={handleFormChange}
-            onContentChange={(value) => setFormData((prev) => ({ ...prev, content: value }))}
+            onContentChange={value => setFormData(prev => ({ ...prev, content: value }))}
           />
 
           <div className="flex justify-center space-x-4 pt-8 border-t border-gray-200 dark:border-gray-600 transition-colors duration-300">
@@ -252,12 +252,7 @@ const CommunityWrite = () => {
         </form>
       </div>
 
-      {isSubmitModalOpen && (
-        <SubmitModal
-          isEditMode={isEditMode}
-          onConfirm={handleModalConfirm}
-        />
-      )}
+      {isSubmitModalOpen && <SubmitModal isEditMode={isEditMode} onConfirm={handleModalConfirm} />}
     </main>
   );
 };
