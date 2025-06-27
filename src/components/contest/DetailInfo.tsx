@@ -6,6 +6,7 @@ import { useBookmark, useBookmarkCnt, useBookmarkMutation } from "@/features/con
 import { StarOutlined } from "@ant-design/icons";
 import { blobToBase64 } from "@/utils/blobToBase64";
 import { useEffect, useState } from "react";
+import { NOT_IMAGE_COL } from "@/constants/ImageSrc";
 
 interface DetailInfoProps {
   data?: Contest;
@@ -90,7 +91,7 @@ function DetailInfo({ data }: DetailInfoProps) {
         <div className="flex justify-center flex-shrink-0">
           <div className="w-72 h-96 bg-gray-100 rounded-lg overflow-hidden">
             <img
-              src={data.img ?? base64Url}
+              src={data.img ? data.img : base64Url ? base64Url : NOT_IMAGE_COL}
               alt={data.title}
               className="w-full h-full object-cover"
             />

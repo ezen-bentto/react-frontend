@@ -44,7 +44,7 @@ export const uploadContestImage = async (file: Blob, fileName: string) => {
   formData.append("article", fileName);
 
   const response = await axios.post<{ fileUrl: string }>(
-    `${import.meta.env.VITE_API_URL}/api/contest/image`,
+    `${import.meta.env.VITE_API_URL}/api/file/image`,
     formData,
     {
       headers: {
@@ -57,9 +57,13 @@ export const uploadContestImage = async (file: Blob, fileName: string) => {
 };
 
 export const uploadContestImageForEdit = async (id: number, formData: FormData) => {
-  return await axios.patch(`${import.meta.env.VITE_API_URL}/api/contest/${id}/image`, formData, {
-    headers: {
-      "Content-Type": "multipart/form-data",
-    },
-  });
+  return await axios.patch(
+    `${import.meta.env.VITE_API_URL}/api/file/image/contest/${id}`,
+    formData,
+    {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    }
+  );
 };
