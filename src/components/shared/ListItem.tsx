@@ -72,7 +72,7 @@ interface ListItemProps extends ListItemVariants {
   comment?: number;
   likes?: number;
   communityType?: string;
-  category_type?: string;
+  categoryType?: string;
 
   // Contest & Policy 타입 관련 props
   organizer?: string; // 주최기관 (Contest용)
@@ -108,7 +108,7 @@ const ListItem = ({
   communityType,
   scrapYn,
   organizer,
-  category_type,
+  categoryType,
   onScrapClick,
 }: ListItemProps) => {
   const combinedClass = `${listItem({ size, intent })} ${className ?? ""}`.trim();
@@ -142,9 +142,9 @@ const ListItem = ({
                 {getCommunityTypeLabel(communityType)}
               </Badge>
             )}
-            {type === "community" && category_type && (
+            {type === "community" && categoryType && (
               <Badge size="sm" intent="primary">
-                {category_type}
+                {categoryType}
               </Badge>
             )}
             {type === "contest" && division && (

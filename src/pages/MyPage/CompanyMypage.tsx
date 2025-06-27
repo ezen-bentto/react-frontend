@@ -108,7 +108,7 @@ const CompanyMypage = () => {
                   : undefined
               }
               communityType={item.communityType}
-              category_type={item.categoryType}
+              categoryType={item.categoryType}
             />
           ))}
         </ul>
