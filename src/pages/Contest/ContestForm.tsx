@@ -1,7 +1,7 @@
 import { fetchContestWrite } from "@/api/contest/contestApi";
 import { useNavigate } from "react-router-dom";
 import type { ContestFormData } from "@/types/contestType";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import ContestFormTemplate from "@/components/contest/ContestFormTemplate";
 
 export const initialContestFormData: ContestFormData = {
@@ -44,6 +44,10 @@ const ContestForm = () => {
       alert("등록에 실패했습니다.");
     }
   };
+
+  useEffect(() => {
+    console.info(contestFormData.article, "@@@@");
+  }, [contestFormData]);
 
   const handleChange = (updated: Partial<ContestFormData>) =>
     setContestFormData(prev => ({ ...prev, ...updated }));

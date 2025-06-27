@@ -4,10 +4,11 @@ import { TextInput } from "@/components/contest/TextInput";
 import Button from "@/components/shared/Button";
 import { DateRange } from "@/components/contest/DateRange";
 import { RadioGroup } from "@/components/contest/RadioGroup";
-import ReactQuillEditor from "@/components/shared/ReactQuillEditor";
+// import ReactQuillEditor from "@/components/shared/ReactQuillEditor";
 import { contestFilterData } from "@/constants/ContestFilterData";
 import type { ContestFormData } from "@/types/contestType";
 import { SkeletonInput, SkeletonTextarea } from "./SkeletonUI";
+import ReactQuill from "react-quill-new";
 
 type Props = {
   formData: ContestFormData;
@@ -138,10 +139,12 @@ const ContestFormTemplate = ({ formData, onChange, onSubmit, submitLabel, isLoad
           {isLoading ? (
             <SkeletonTextarea />
           ) : (
-            <ReactQuillEditor
+            <ReactQuill
               value={formData.article}
               onChange={value => onChange({ article: value })}
-              className="w-full h-[400px] mb-4"
+              theme="snow"
+              placeholder="내용을 입력하세요..."
+              className="w-full h-[300px]"
             />
           )}
         </FormField>
