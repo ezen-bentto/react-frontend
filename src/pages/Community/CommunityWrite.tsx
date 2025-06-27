@@ -189,6 +189,7 @@ const CommunityWrite = () => {
       setIsSubmitModalOpen(true);
     } catch (err) {
       console.error("처리 실패", err);
+
       alert("에러가 발생했습니다.");
     }
   };
