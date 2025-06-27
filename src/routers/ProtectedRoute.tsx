@@ -13,6 +13,8 @@ export const ProtectedRoute = ({ children, allowedRoles }: ProtectedRouteProps) 
   const { isLoggedIn, user } = useAuth();
   const location = useLocation();
 
+  console.info("^^^^^^^^^^^^", isLoggedIn, user);
+
   if (!isLoggedIn) {
     // 로그인하지 않았다면 로그인 페이지로
     // 현재 페이지 위치를 state로 넘겨서, 로그인 성공 후 원래 있던 페이지로 돌아오게

@@ -38,7 +38,14 @@ const AppRouter = () => {
 
         <Route path="/contest/:id" element={<ContestDetail />} />
         <Route path="/contest/new" element={<ContestForm />} />
-        <Route path="/contest/:id/edit" element={<ContestUpdate />} />
+        <Route
+          path="/contest/:id/edit"
+          element={
+            <ProtectedRoute>
+              <ContestUpdate />
+            </ProtectedRoute>
+          }
+        />
         {/* <Route path="/contest/:id/delete" element={<ContestDelete />} /> */}
         <Route path="/login" element={<Login />} />
         <Route path="/mypage" element={<MyPage />} />

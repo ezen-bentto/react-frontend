@@ -5,12 +5,18 @@ import type { ContestFormData } from "@/types/contestType";
 import { initialContestFormData } from "./ContestForm";
 import { useEditContestMutation } from "@/features/contest/useEdit";
 import ContestFormTemplate from "@/components/contest/ContestFormTemplate";
+import { useAuth } from "@/context/AuthContext";
 
 const ContestUpdate = () => {
   const navigate = useNavigate();
   const { id } = useParams(); // /contest/:id 라면 여기에 id 들어옴
   const { data, isLoading } = useDetail(Number(id));
   const contestId = Number(id);
+  const { user } = useAuth();
+
+  if (user?.id !== data?.writer_id) {
+    navigate(`/contest/${contestId}`);
+  }
 
   const [contestFormData, setContestFormData] = useState<ContestFormData>(initialContestFormData);
 
@@ -42,9 +48,6 @@ const ContestUpdate = () => {
       },
     });
   };
-
-  // ✅ 로딩 중이면 에디터 렌더링 안 함
-  if (isLoading) return <div>로딩 중...</div>;
 
   return (
     <ContestFormTemplate
