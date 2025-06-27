@@ -20,9 +20,6 @@ export const deleteCommunity = async (payload: CommunityDeletePayload) => {
     communityId: Number(payload.communityId),
   };
 
-  const response = await axios.post(
-    "/api/community/delete",
-    transformedPayload
-  );
+  const response = await axios.post("/api/community/delete", transformedPayload);
   return response.data.data;
 };
