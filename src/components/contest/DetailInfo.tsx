@@ -4,43 +4,56 @@ import Badge from "../shared/Badge";
 import Button from "../shared/Button";
 import { useBookmark, useBookmarkCnt, useBookmarkMutation } from "@/features/contest/useBookmark";
 import { StarOutlined } from "@ant-design/icons";
+import { blobToBase64 } from "@/utils/blobToBase64";
+import { useEffect, useState } from "react";
+import { NOT_IMAGE_COL } from "@/constants/ImageSrc";
 
 interface DetailInfoProps {
   data?: Contest;
 }
+const shareButtons = [
+  {
+    name: "Facebook",
+    icon: "📘",
+    color: "bg-blue-600",
+    url: (pageUrl: string) =>
+      `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(pageUrl)}`,
+  },
+  {
+    name: "Twitter",
+    icon: "🐦",
+    color: "bg-sky-500",
+    url: (pageUrl: string) =>
+      `https://twitter.com/intent/tweet?url=${encodeURIComponent(pageUrl)}&text=${encodeURIComponent("이 페이지를 공유해요!")}`,
+  },
+  {
+    name: "Naver",
+    icon: "N",
+    color: "bg-green-500",
+    url: (pageUrl: string) =>
+      `https://share.naver.com/web/shareView.nhn?url=${encodeURIComponent(pageUrl)}&title=${encodeURIComponent("페이지 제목")}`,
+  },
+];
 
 function DetailInfo({ data }: DetailInfoProps) {
   if (!data) {
     return <div>로딩 중...</div>;
   }
+  const [base64Url, setBase64Url] = useState("");
   const { bookmarkCount } = useBookmarkCnt(data.id);
   const { mutate, isPending } = useBookmarkMutation(data.id);
   // 로그인 되어 있다면
   const { isBookmarked } = useBookmark(data.id);
 
-  const shareButtons = [
-    {
-      name: "Facebook",
-      icon: "📘",
-      color: "bg-blue-600",
-      url: (pageUrl: string) =>
-        `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(pageUrl)}`,
-    },
-    {
-      name: "Twitter",
-      icon: "🐦",
-      color: "bg-sky-500",
-      url: (pageUrl: string) =>
-        `https://twitter.com/intent/tweet?url=${encodeURIComponent(pageUrl)}&text=${encodeURIComponent("이 페이지를 공유해요!")}`,
-    },
-    {
-      name: "Naver",
-      icon: "N",
-      color: "bg-green-500",
-      url: (pageUrl: string) =>
-        `https://share.naver.com/web/shareView.nhn?url=${encodeURIComponent(pageUrl)}&title=${encodeURIComponent("페이지 제목")}`,
-    },
-  ];
+  useEffect(() => {
+    const loadImage = async () => {
+      if (data.file_path) {
+        const base64 = await blobToBase64(data.file_path);
+        setBase64Url(base64);
+      }
+    };
+    loadImage();
+  }, []);
 
   return (
     <div className="rounded-lg shadow-sm border p-6 mb-20">
@@ -78,7 +91,7 @@ function DetailInfo({ data }: DetailInfoProps) {
         <div className="flex justify-center flex-shrink-0">
           <div className="w-72 h-96 bg-gray-100 rounded-lg overflow-hidden">
             <img
-              src={data.img ?? undefined}
+              src={data.img ? data.img : base64Url ? base64Url : NOT_IMAGE_COL}
               alt={data.title}
               className="w-full h-full object-cover"
             />

@@ -14,6 +14,7 @@ import { useAuth } from "../../context/AuthContext";
 import Title from "@/components/shared/Title";
 import Button from "@/components/shared/Button";
 import Input from "@/components/shared/Input";
+import Badge from "@/components/shared/Badge";
 
 type Provider = "카카오" | "네이버" | "구글";
 
@@ -120,7 +121,13 @@ const Login = () => {
           </button>
         </div>
 
-        {errorMessage && <p className="mb-4 text-center text-red-500">{errorMessage}</p>}
+        <div className="flex h-10 items-center justify-center mb-4">
+          {errorMessage && (
+            <Badge intent="orange" size="sm">
+              {errorMessage}
+            </Badge>
+          )}
+        </div>
 
         {tab === "personal" && (
           <div className="flex flex-col gap-3">

@@ -1,8 +1,10 @@
-import { fetchContestWrite } from "@/api/contest/contestApi";
+import { fetchContestWrite, uploadContestImage } from "@/api/contest/contestApi";
 import { useNavigate } from "react-router-dom";
 import type { ContestFormData } from "@/types/contestType";
 import { useState } from "react";
 import ContestFormTemplate from "@/components/contest/ContestFormTemplate";
+import { fileToBlob } from "@/utils/fileToBlob";
+import { useAuth } from "@/context/AuthContext";
 
 export const initialContestFormData: ContestFormData = {
   writer_id: 1,
@@ -17,30 +19,51 @@ export const initialContestFormData: ContestFormData = {
   benefits: "",
   contest_tag: [],
   article: "",
+  file_path: new File([], ""),
+  save_name: "",
 };
 
 const ContestForm = () => {
   const navigate = useNavigate();
+  const { user } = useAuth();
+
+  if (!user) {
+    navigate("/");
+    return;
+  }
 
   const [contestFormData, setContestFormData] = useState<ContestFormData>(initialContestFormData);
 
   const handleSubmit = async () => {
-    // console.info("등록 전 데이터 확인:", contestFormData);
-    let response;
-    const transformedData = {
-      ...contestFormData,
-      contest_tag: contestFormData.contest_tag.join(","),
-    };
-
-    // console.info(transformedData.contest_tag, "@@@@@@@@");
     try {
-      response = await fetchContestWrite(transformedData);
-      console.info("등록", response.data);
-      alert("성공적으로 등록되었습니다.");
+      let uploadedImageUrl = "";
 
+      // 이미지 업로드 먼저
+      if (
+        contestFormData.file_path &&
+        contestFormData.file_path.size > 0 &&
+        contestFormData.save_name
+      ) {
+        const BlobImage = await fileToBlob(contestFormData.file_path);
+        uploadedImageUrl = await uploadContestImage(BlobImage, contestFormData.save_name);
+      }
+
+      // 이미지파일, 네임 필요없어서
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      const { file_path, save_name, ...restData } = contestFormData;
+      // 이미지 업로드 후, 게시글 데이터 전송
+      const transformedData = {
+        ...restData,
+        writer_id: user.id,
+        contest_tag: contestFormData.contest_tag.join(","),
+        image_url: uploadedImageUrl, // imageFile 대신 image_url 로 전송
+      };
+
+      const response = await fetchContestWrite(transformedData);
+      alert("성공적으로 등록되었습니다.");
       navigate(`/contest/${response.data}`);
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (error) {
-      console.info("실패", error);
       alert("등록에 실패했습니다.");
     }
   };
