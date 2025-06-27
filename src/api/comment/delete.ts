@@ -1,15 +1,5 @@
 import axios from "@/api/axiosInstance";
-
-// 댓글 삭제 요청 타입
-export interface CommentDeleteRequest {
-  commentId: number;
-}
-
-// 댓글 삭제 응답 타입
-export interface CommentResponse {
-  insertId?: number;
-  affectedRows: number;
-}
+import type { CommentDeleteRequest, CommentResponse } from "@/types/commentType";
 
 /**
  *
