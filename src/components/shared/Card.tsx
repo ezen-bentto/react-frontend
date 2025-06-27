@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import { card, type CardVariants } from "../style/card";
 import Badge from "./Badge";
 import { useState } from "react";
+import { NOT_IMAGE } from "@/constants/ImageSrc";
 
 /**
  *
@@ -59,9 +60,9 @@ const Card = ({ id, dday, img, title, text, size, intent, className }: CardProps
           {!isImageLoaded && (
             <div className="absolute top-0 left-0 w-full h-full bg-gray-200 animate-pulse rounded" />
           )}
-          {img && (
+          {
             <img
-              src={img}
+              src={img ? img : NOT_IMAGE}
               alt={title}
               loading="lazy"
               onLoad={() => setIsImageLoaded(true)}
@@ -69,7 +70,7 @@ const Card = ({ id, dday, img, title, text, size, intent, className }: CardProps
                 isImageLoaded ? "opacity-100" : "opacity-0"
               }`}
             />
-          )}
+          }
         </figure>
 
         <div className="card-body w-full">
