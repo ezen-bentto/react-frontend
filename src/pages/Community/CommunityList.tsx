@@ -22,7 +22,7 @@ const CommunityList = () => {
     setFilters,
     setSearchText,
     setViewMode,
-    handleScrapToggle
+    handleScrapToggle,
   } = useCommunityList(communityType);
 
   const { isMobile, imgSrc } = useResponsive();
@@ -48,8 +48,12 @@ const CommunityList = () => {
         <section className="mt-6 flex flex-col gap-4">
           {!isMobile && (
             <div className="flex justify-end gap-4 m-2">
-              <button className="cursor-pointer" onClick={() => setViewMode("card")}>📦</button>
-              <button className="cursor-pointer" onClick={() => setViewMode("list")}>📃</button>
+              <button className="cursor-pointer" onClick={() => setViewMode("card")}>
+                📦
+              </button>
+              <button className="cursor-pointer" onClick={() => setViewMode("list")}>
+                📃
+              </button>
             </div>
           )}
 
@@ -79,14 +83,17 @@ const CommunityList = () => {
           )}
         </section>
 
-        <div className="fixed bottom-4 right-4 z-50" onClick={() => {
-          if (!isLoggedIn) {
-            alert("글쓰기는 로그인 후 이용 가능합니다.");
-            navigate("/login");
-          } else {
-            navigate("/community/write");
-          }
-        }}>
+        <div
+          className="fixed bottom-4 right-4 z-50"
+          onClick={() => {
+            if (!isLoggedIn) {
+              alert("글쓰기는 로그인 후 이용 가능합니다.");
+              navigate("/login");
+            } else {
+              navigate("/community/write");
+            }
+          }}
+        >
           <WriteButton />
         </div>
       </div>

@@ -62,21 +62,32 @@ const getCommunityTypeLabel = (communityType: string): string => {
 };
 
 interface ListItemProps extends ListItemVariants {
-  type: "community" | "policy";
-  title: string;
-  writer?: string;
-  description: string;
-  className?: string;
-  category?: string;
-  likes?: number;
-  comment?: number;
+  type: "community" | "policy" | "contest";
   linkSrc: string;
-  region?: string;
+  title: string;
+  description: string;
+
+  // Community 타입 관련 props
+  writer?: string;
+  comment?: number;
+  likes?: number;
+  communityType?: string;
+  categoryType?: string;
+
+  // Contest & Policy 타입 관련 props
+  organizer?: string; // 주최기관 (Contest용)
   endDate?: string;
   division?: number;
-  communityType?: string;
+
+  // Policy 타입 관련 props
+  region?: string;
+  category?: string;
+
+  // 스크랩 관련 props
   scrapYn?: "Y" | "N";
   onScrapClick?: () => void;
+
+  className?: string;
 }
 
 const ListItem = ({
@@ -96,6 +107,8 @@ const ListItem = ({
   division,
   communityType,
   scrapYn,
+  organizer,
+  categoryType,
   onScrapClick,
 }: ListItemProps) => {
   const combinedClass = `${listItem({ size, intent })} ${className ?? ""}`.trim();
@@ -112,45 +125,57 @@ const ListItem = ({
   return (
     <li className={combinedClass}>
       <Link to={linkSrc} className="flex-col w-full gap-2 p-4 flex-default">
-        <div className="w-full flex-default">
-          <div className="gap-2 flex-default">
-            {type === "policy" && (
+        <div className="w-full flex justify-between items-start">
+          <div className="flex gap-2 flex-wrap">
+            {type === "policy" && category && (
               <Badge size="sm" intent="primary">
-                {category !== undefined ? category : "기타"}
+                {category}
               </Badge>
             )}
-            {type === "community" && communityType === "1" && (
-              <Badge size="sm" intent="primary">
-                {division !== undefined ? getDivisionLabel(division) : "기타"}
+            {type === "policy" && region && (
+              <Badge intent="orange" size="sm">
+                {region}
               </Badge>
             )}
-            {type === "policy" && (
-              <div className="gap-2 flex-default">
-                <Badge intent={"orange"} size={"sm"}>
-                  {region}
-                </Badge>
-              </div>
+            {type === "community" && communityType && (
+              <Badge size="sm" intent="primary">
+                {getCommunityTypeLabel(communityType)}
+              </Badge>
+            )}
+            {type === "community" && categoryType && (
+              <Badge size="sm" intent="primary">
+                {categoryType}
+              </Badge>
+            )}
+            {type === "contest" && division && (
+              <Badge size="sm" intent="primary">
+                {getDivisionLabel(division)}
+              </Badge>
             )}
           </div>
-          {type === "community" && communityType !== "3" && (
-            <div className="gap-2 flex-default">
-              <Badge intent={"default"} size={"sm"}>
-                {communityType !== undefined ? getCommunityTypeLabel(communityType) : "기타"}
-              </Badge>
-              <Badge intent={"orange"} size={"sm"}>
-                {/* D- */}
-                {countDate(endDate ?? "error") <= 0 ? "마감" : `D-${countDate(endDate ?? "error")}`}
-              </Badge>
-            </div>
+
+          {/* D-day 뱃지 로직 통합: endDate가 있고, 마감일이 지나지 않았을 때만 표시 */}
+          {endDate && countDate(endDate) > 0 && (
+            <Badge intent="orange" size="sm">
+              D-{countDate(endDate)}
+            </Badge>
+          )}
+          {endDate && countDate(endDate) <= 0 && (
+            <Badge intent="default" size="sm">
+              마감
+            </Badge>
           )}
         </div>
 
+        {/* 제목 */}
         <div className="w-full overflow-hidden">
           <h3 className="justify-start text-2xl font-black truncate">{title}</h3>
         </div>
 
+        {/* 본문 및 하단 정보 */}
         <div className="flex-default w-full">
-          <div className="flex justify-center items-start flex-col min-h-[48px]">
+          <div className="flex justify-center items-start flex-col min-h-[48px] flex-1">
+            {/* type에 따라 p태그를 완전히 분리하여 렌더링. */}
             {type === "community" ? (
               <p
                 className="flex-1 text-base list-col-wrap"
@@ -159,9 +184,11 @@ const ListItem = ({
             ) : (
               <p className="flex-1 text-base list-col-wrap">{description}</p>
             )}
-            {type === "community" && (
-              <div className="text-xs font-semibold uppercase opacity-60">{writer}</div>
-            )}
+
+            <div className="text-xs font-semibold uppercase opacity-60 mt-2">
+              {type === "community" && writer && <span>{writer}</span>}
+              {type === "contest" && organizer && <span>{organizer}</span>}
+            </div>
           </div>
 
           {type === "community" && (

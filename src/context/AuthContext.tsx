@@ -7,6 +7,8 @@ interface AuthUser {
   id: number;
   nickname: string;
   userType: string; // '1': 개인, '2': 기업, '3': 관리자
+  email?: string;
+  profileImage?: string;
 }
 
 interface AuthContextType {
@@ -22,6 +24,8 @@ interface DecodedToken {
   userId: number;
   nickname: string;
   userType: string;
+  email?: string;
+  profileImage?: string;
 }
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
@@ -37,6 +41,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
           id: Number(decodedUser.userId),
           nickname: decodedUser.nickname,
           userType: decodedUser.userType,
+          email: decodedUser.email,
+          profileImage: decodedUser.profileImage,
         });
         setIsLoggedIn(true);
       } catch (error) {
@@ -55,6 +61,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         id: Number(decodedUser.userId),
         nickname: decodedUser.nickname,
         userType: decodedUser.userType,
+        email: decodedUser.email,
+        profileImage: decodedUser.profileImage,
       });
       setIsLoggedIn(true);
     } catch (error) {

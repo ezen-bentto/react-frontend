@@ -1,3 +1,4 @@
+//react-frontend\src\api\contest\list.ts
 import type { ContestWithCommunity } from "@/types/contestDetailType";
 import type { Contest } from "@/types/contestType";
 import axios from "axios";
