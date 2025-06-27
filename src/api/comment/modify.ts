@@ -1,16 +1,5 @@
 import axios from "@/api/axiosInstance";
-
-// 댓글 수정 요청 타입
-export interface CommentModifyRequest {
-  commentId: number;
-  content: string;
-}
-
-// 댓글 수정 응답 타입
-export interface CommentResponse {
-  insertId?: number;
-  affectedRows: number;
-}
+import type { CommentModifyRequest, CommentResponse } from "@/types/commentType";
 
 /**
  *

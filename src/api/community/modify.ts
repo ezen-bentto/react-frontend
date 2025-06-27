@@ -1,28 +1,5 @@
 import axios from "@/api/axiosInstance";
-
-// 커뮤니티 수정 요청 타입
-export interface CommunityModifyRequest {
-  communityId: number;
-  communityType: string;
-  contestId?: number | null;
-  categoryType?: number | null;
-  startDate?: string | null;
-  endDate?: string | null;
-  recruitEndDate?: string | null;
-  ageGroup?: string | null;
-  title: string;
-  content: string;
-  recruitments?: Array<{
-    role: string;
-    count: number;
-  }>;
-}
-
-// 커뮤니티 수정 응답 타입
-export interface CommunityModifyResponse {
-  insertId?: number;
-  affectedRows: number;
-}
+import type { CommunityModifyRequest, CommunityModifyResponse } from "@/types/communityWriteType";
 
 /**
  *

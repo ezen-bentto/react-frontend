@@ -14,15 +14,42 @@
     "ecmaVersion": "latest",
     "sourceType": "module"
   },
-  "plugins": ["react", "react-hooks", "@typescript-eslint", "prettier"],
+  "plugins": [
+    "react",
+    "react-hooks",
+    "@typescript-eslint",
+    "prettier"
+  ],
   // 원하는 규칙 추가하기
   "rules": {
-    "quotes": ["error", "double"],
+    "quotes": [
+      "error",
+      "double"
+    ],
     "no-duplicate-imports": "error",
-    "no-console": ["warn", { "allow": ["warn", "error", "info"] }],
+    "no-console": [
+      "warn",
+      {
+        "allow": [
+          "warn",
+          "error",
+          "info"
+        ]
+      }
+    ],
     "no-unused-vars": "error",
     "no-multiple-empty-lines": "error",
-    "react/react-in-jsx-scope": "off"
+    "react/react-in-jsx-scope": "off",
+    // 자바스크립트 기본 no-unused-vars 비활성화
+    "no-unused-vars": "off",
+    // 타입스크립트용으로 대체 (prefix가 '_'인 경우 무시)
+    "@typescript-eslint/no-unused-vars": [
+      "warn",
+      {
+        "argsIgnorePattern": "^_",
+        "varsIgnorePattern": "^_"
+      }
+    ]
   },
   "settings": {
     "import/resolver": {
