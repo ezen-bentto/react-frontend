@@ -3,7 +3,7 @@ import BaseInfoSection from "@/components/community/write/BaseInfoSection";
 import RequirementInfoSection from "@/components/community/write/RequirementInfoSection";
 import TitleContentInput from "@/components/community/write/TitleContentInput";
 import SubmitModal from "@/components/community/modal/SubmitModal";
-import { useCommunityHandlers } from "@/hooks/community/useCommunityHandlers";
+import { useCommunityHandlers } from "@/features/community/useCommunityHandlers";
 import { registerCommunity } from "@/api/community/register";
 import { fetchCommunityDetail } from "@/api/community/content";
 import { useSearchParams, useNavigate } from "react-router-dom";

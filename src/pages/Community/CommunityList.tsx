@@ -1,7 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/context/AuthContext";
-import { useCommunityList } from "@/hooks/community/useCommunityList";
-import { useResponsive } from "@/hooks/community/useResponsive";
+import { useCommunityList } from "@/features/community/useCommunityList";
+import { useResponsive } from "@/features/community/useResponsive";
 import FilterSection from "@/components/community/list/FilterSection";
 import CommunityGrid from "@/components/community/list/CommunityGrid";
 import EmptyState from "@/components/community/list/EmptyState";

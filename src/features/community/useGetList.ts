@@ -1,4 +1,5 @@
-import { fetchCommunityList, type CommunityItem } from "@/api/community/list";
+import { fetchCommunityList } from "@/api/community/list";
+import type { CommunityItem } from "@/types/communityListType";
 import { keepPreviousData, useQuery } from "@tanstack/react-query";
 
 export const useCommunityPage = () => {
