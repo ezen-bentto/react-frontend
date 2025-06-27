@@ -178,7 +178,7 @@ const ListItem = ({
             {/* type에 따라 p태그를 완전히 분리하여 렌더링. */}
             {type === "community" ? (
               <p
-                className="flex-1 text-base list-col-wrap"
+                className="flex-1 text-base list-col-wrap line-clamp-1"
                 dangerouslySetInnerHTML={{ __html: description }}
               />
             ) : (
