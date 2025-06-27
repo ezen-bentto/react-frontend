@@ -153,7 +153,7 @@ const ListItem = ({
           <div className="flex justify-center items-start flex-col min-h-[48px]">
             {type === "community" ? (
               <p
-                className="flex-1 text-base list-col-wrap"
+                className="flex-1 text-base list-col-wrap line-clamp-1"
                 dangerouslySetInnerHTML={{ __html: description }}
               />
             ) : (
