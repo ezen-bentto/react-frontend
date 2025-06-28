@@ -7,7 +7,8 @@ import { useEditContestMutation } from "@/features/contest/useEdit";
 import ContestFormTemplate from "@/components/contest/ContestFormTemplate";
 import { useAuth } from "@/context/AuthContext";
 import { blobToFile } from "@/utils/blobToFile";
-import { uploadContestImageForEdit } from "@/api/contest/contestApi";
+import { uploadImage, type imageProps } from "@/api/common/upload";
+import { fileToBlob } from "@/utils/fileToBlob";
 
 const ContestUpdate = () => {
   const navigate = useNavigate();
@@ -52,11 +53,17 @@ const ContestUpdate = () => {
 
   const handleSubmit = async () => {
     try {
+      // 수정해야함 다시 짜야함
       // 1️⃣ 이미지가 새로 업로드 되었으면 따로 전송
       if (contestFormData.file_path && contestFormData.file_path.size > 0) {
-        const formData = new FormData();
-        formData.append("file", contestFormData.file_path);
-        await uploadContestImageForEdit(contestId, formData);
+        const blobImage = await fileToBlob(contestFormData.file_path);
+        const requsetData: imageProps = {
+          file: blobImage,
+          fileName: contestFormData.save_name!,
+          id: data!.id,
+          type: "contest",
+        };
+        await uploadImage(requsetData);
       }
 
       // 2️⃣ 게시글 정보만 수정
