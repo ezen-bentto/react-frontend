@@ -17,13 +17,21 @@ type Props = {
   onChange: (updated: Partial<ContestFormData>) => void;
   onSubmit: () => void;
   submitLabel: string;
-  isLoading?: boolean; // ✅ 추가
+  isLoading?: boolean;
+  onImageChange?: () => void;
 };
 
 const getOptionsByName = (name: string) =>
   contestFilterData.find(group => group.name === name)?.options || [];
 
-const ContestFormTemplate = ({ formData, onChange, onSubmit, submitLabel, isLoading }: Props) => {
+const ContestFormTemplate = ({
+  formData,
+  onChange,
+  onSubmit,
+  submitLabel,
+  isLoading,
+  onImageChange,
+}: Props) => {
   // console.info(formData.file_path, formData.save_name);
   return (
     <div className="flex flex-col gap-5 mt-28">
@@ -58,7 +66,10 @@ const ContestFormTemplate = ({ formData, onChange, onSubmit, submitLabel, isLoad
             <SkeletonInput />
           ) : (
             <FileInput
-              onFileSelect={(file, save_name) => onChange({ file_path: file, save_name })}
+              onFileSelect={(file, save_name) => {
+                onChange({ file_path: file, save_name });
+                onImageChange?.();
+              }}
               className="w-full"
               selectedFileName={formData.file_path?.name}
             />
