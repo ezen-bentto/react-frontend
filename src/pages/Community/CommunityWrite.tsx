@@ -8,14 +8,9 @@ import { registerCommunity } from "@/api/community/register";
 import { fetchCommunityDetail } from "@/api/community/content";
 import { useSearchParams, useNavigate } from "react-router-dom";
 import { modifyCommunity } from "@/api/community/modify";
-
-import type {
-  ModifyPayload,
-  RecruitmentDetailResponse,
-  SubmitPayload,
-} from "@/types/communityWriteType";
-
 import { uploadImage, updateImageReference } from "@/api/common/upload";
+import type { ModifyPayload, RecruitmentDetailResponse, SubmitPayload } from "@/types/communityWriteType";
+
 // Form 데이터 타입 정의
 interface FormRecruitment {
   recruitmentDetailId?: number;
@@ -248,7 +243,7 @@ const CommunityWrite = () => {
         const modifyPayload: ModifyPayload = {
           ...basePayload,
           communityId: communityId,
-          recruitments: formData.recruitments.map(r => ({
+          recruitments: formData.recruitments.map((r) => ({
             recruitmentDetailId: r.recruitmentDetailId,
             role: r.role,
             count: Number(r.count),
