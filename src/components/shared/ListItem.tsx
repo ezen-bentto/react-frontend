@@ -52,6 +52,19 @@ const getDivisionLabel = (division: number): string => {
   return divisionMap[division] || "기타";
 };
 
+const getCategoryTypeLabel = (categoryType: string): string => {
+  const categoryMap: Record<string, string> = {
+    1: "포스터/웹툰/콘텐츠",
+    2: "사진/영상/UCC",
+    3: "아이디어/기획",
+    4: "IT/학술/논문",
+    5: "네이밍/슬로건",
+    6: "스포츠/음악",
+    7: "미술/디자인/건축",
+  };
+  return categoryMap[categoryType] || "기타"; // 매핑값이 없을 경우 '기타'를 반환
+};
+
 const getCommunityTypeLabel = (communityType: string): string => {
   const communityTypeMap: Record<string, string> = {
     "1": "공모전",
@@ -148,7 +161,7 @@ const ListItem = ({
             )}
             {type === "community" && categoryType && (
               <Badge size="sm" intent="primary">
-                {categoryType}
+                {getCategoryTypeLabel(categoryType)}
               </Badge>
             )}
             {type === "contest" && division && (
@@ -183,7 +196,7 @@ const ListItem = ({
             {type === "community" ? (
               <p
                 className="flex-1 text-base list-col-wrap line-clamp-1"
-                dangerouslySetInnerHTML={{ __html: description.replace(/<img[^>]*>/g, "") }}
+                dangerouslySetInnerHTML={{ __html: (description || "").replace(/<img[^>]*>/g, "") }}
               />
             ) : (
               <p className="flex-1 text-base list-col-wrap">{description}</p>

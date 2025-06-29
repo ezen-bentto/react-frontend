@@ -21,10 +21,11 @@ const Header = ({ community, getCategoryName, onToggleScrap }: HeaderProps) => {
 
             <button
               onClick={onToggleScrap}
-              className={`flex items-center justify-center p-2 rounded-full transition-all duration-200 ${community.scrap_yn
-                ? "bg-red-500 text-white hover:bg-red-600"
-                : "bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-300"
-                }`}
+              className={`flex items-center justify-center p-2 rounded-full transition-all duration-200 ${
+                community.scrap_yn
+                  ? "bg-red-500 text-white hover:bg-red-600"
+                  : "bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-300"
+              }`}
             >
               {community.scrap_yn ? <HeartFilled /> : <HeartOutlined />}
             </button>

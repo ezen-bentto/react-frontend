@@ -122,14 +122,14 @@ const SignUpCompany = () => {
   };
 
   return (
-    <div className="flex min-h-screen items-center justify-center px-4 py-8 pt-20">
+    <div className="flex min-h-screen items-center justify-center px-4 py-8 pt-28">
       <div className="w-full max-w-md rounded-2xl border border-gray-200 p-8 shadow-xl dark:border-gray-700">
         <Title titleText="기업 회원가입" className="mb-2 text-center text-3xl font-bold" />
-        <p className="mb-8 text-center text-gray-600 dark:text-gray-400">
+        <p className="mb-2 text-center text-gray-600 dark:text-gray-400">
           기업 정보를 입력해주세요
         </p>
 
-        <div className="flex h-10 items-center justify-center mb-4">
+        <div className="flex h-4 items-center justify-center">
           {errorMessage && (
             <Badge intent="orange" size="sm">
               {errorMessage}

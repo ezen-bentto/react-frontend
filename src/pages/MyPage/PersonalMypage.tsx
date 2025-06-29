@@ -1,4 +1,4 @@
-// src/pages/MyPage/PersonalMypage.tsx
+// src/pages/MyPage/CompanyMypage.tsx
 
 import { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
@@ -59,7 +59,7 @@ const PersonalMypage = () => {
           //    이 시점의 crawledContestIds는 실제로는 ["3"] 같은 문자열 배열입니다.
           const { crawledContestIds, dbContests } = await getMyBookmarkedContests();
 
-          // 2. [핵심 수정] API에서 받은 문자열 배열을 숫자 배열로 변환합니다.
+          // 2. API에서 받은 문자열 배열을 숫자 배열로 변환합니다.
           //    이제 numericCrawledIds는 [3] 과 같은 숫자 배열이 되어 타입스크립트와 일치합니다.
           const numericCrawledIds = crawledContestIds.map(id => Number(id));
 
@@ -68,7 +68,7 @@ const PersonalMypage = () => {
           if (numericCrawledIds && numericCrawledIds.length > 0) {
             const allCrawledData = await fetchContestPage();
 
-            // 3. [핵심 수정] 이제 숫자 배열을 사용하여 숫자 ID를 직접 비교합니다.
+            // 3. 이제 숫자 배열을 사용하여 숫자 ID를 직접 비교합니다.
             const bookmarkedCrawledData = allCrawledData.filter(contest => {
               // contest.id (숫자)와 numericCrawledIds (숫자 배열)를 비교합니다.
               // 이제 타입이 일치하므로 에러가 발생하지 않습니다.
@@ -200,7 +200,7 @@ const PersonalMypage = () => {
 
       <section className="py-8 px-4">
         <div className="max-w-[1400px] mx-auto">
-          {/* [수정] 탭 버튼에 activeTab 상태에 따른 조건부 스타일링 적용 */}
+          {/* 탭 버튼에 activeTab 상태에 따른 조건부 스타일링 적용 */}
           <div className="flex mb-8 overflow-x-auto border-b-2 border-gray-200 dark:border-gray-700 scrollbar-hide">
             <button
               onClick={() => handleTabChange("bookmarked-contests")}
