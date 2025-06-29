@@ -73,7 +73,6 @@ const FilterSection = ({ communityType, onFilterChange, onSearchSubmit }: Filter
       options: [
         { label: "최신순", value: "1" },
         { label: "스크랩순", value: "2" },
-        { label: "종료임박순", value: "3" },
       ],
     },
   ];

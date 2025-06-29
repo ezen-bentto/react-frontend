@@ -45,18 +45,41 @@ export const useCommunityList = (communityType: string) => {
           post.title.toLowerCase().includes(search) || post.content.toLowerCase().includes(search)
       );
     }
+
     const sort = filters.sort?.[0];
     if (sort === "1") {
+      // 최신순
       result.sort((a, b) => new Date(b.reg_date).getTime() - new Date(a.reg_date).getTime());
     } else if (sort === "2") {
+      // 스크랩순
       result.sort((a, b) => (b.scrap_count ?? 0) - (a.scrap_count ?? 0));
     } else if (sort === "3") {
+      // 종료임박순 - 마감된 항목 제외하고 23:59:59 기준으로 계산
+      const now = new Date();
+
+      // 마감되지 않은 항목만 필터링
+      result = result.filter(post => {
+        if (!post.recruit_end_date) return false;
+
+        const endDate = new Date(post.recruit_end_date);
+        endDate.setHours(23, 59, 59, 999);
+
+        return endDate.getTime() > now.getTime();
+      });
+
+      // 종료임박순으로 정렬
       result.sort((a, b) => {
-        const aDate = a.recruit_end_date ? new Date(a.recruit_end_date).getTime() : Infinity;
-        const bDate = b.recruit_end_date ? new Date(b.recruit_end_date).getTime() : Infinity;
-        return aDate - bDate;
+        const aDate = new Date(a.recruit_end_date!);
+        const bDate = new Date(b.recruit_end_date!);
+
+        // 마감일을 23:59:59로 설정
+        aDate.setHours(23, 59, 59, 999);
+        bDate.setHours(23, 59, 59, 999);
+
+        return aDate.getTime() - bDate.getTime();
       });
     }
+
     return result;
   }, [posts, filters, searchText]);
 
@@ -78,12 +101,12 @@ export const useCommunityList = (communityType: string) => {
         prev.map(p =>
           p.community_id === postId
             ? {
-                ...p,
-                scrap_yn: res.data.scrapped ? "Y" : "N",
-                scrap_count: res.data.scrapped
-                  ? (p.scrap_count ?? 0) + 1
-                  : Math.max((p.scrap_count ?? 1) - 1, 0),
-              }
+              ...p,
+              scrap_yn: res.data.scrapped ? "Y" : "N",
+              scrap_count: res.data.scrapped
+                ? (p.scrap_count ?? 0) + 1
+                : Math.max((p.scrap_count ?? 1) - 1, 0),
+            }
             : p
         )
       );
