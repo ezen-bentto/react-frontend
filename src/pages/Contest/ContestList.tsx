@@ -73,7 +73,7 @@ const ContestList = () => {
       }));
 
       // 데이터 병합
-      const combinedData = [...normalizedCrawledData, ...normalizedDbData];
+      const combinedData = [...normalizedDbData, ...normalizedCrawledData];
 
       // id 중복 제거
       const uniqueData = combinedData.reduce((acc, current) => {
