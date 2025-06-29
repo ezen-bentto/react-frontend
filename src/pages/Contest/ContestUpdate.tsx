@@ -9,6 +9,7 @@ import { useAuth } from "@/context/AuthContext";
 import { blobToFile } from "@/utils/blobToFile";
 import { uploadImage, type imageProps } from "@/api/common/upload";
 import { fileToBlob } from "@/utils/fileToBlob";
+import { bufferJsonToBlob } from "@/utils/bufferJsonToBlob";
 
 const ContestUpdate = () => {
   const navigate = useNavigate();
@@ -16,10 +17,6 @@ const ContestUpdate = () => {
   const { data, isLoading } = useDetail(Number(id));
   const contestId = Number(id);
   const { user } = useAuth();
-
-  if (user?.id !== data?.writer_id) {
-    navigate(`/contest/${contestId}`);
-  }
 
   const [contestFormData, setContestFormData] = useState<ContestFormData>(initialContestFormData);
 
@@ -34,8 +31,11 @@ const ContestUpdate = () => {
       let file_path: File | undefined;
 
       if (data.file_path && data.save_name) {
-        file_path = blobToFile(data.file_path, data.save_name);
+        const blobFile = bufferJsonToBlob(data.file_path, "image/png");
+        file_path = blobToFile(blobFile, data.save_name);
       }
+
+      if (!file_path) return;
 
       const transformedData: ContestFormData = {
         ...data,
@@ -62,6 +62,7 @@ const ContestUpdate = () => {
           fileName: contestFormData.save_name!,
           id: data!.id,
           type: "contest",
+          image_id: data!.file_id,
         };
         await uploadImage(requsetData);
       }
@@ -88,6 +89,12 @@ const ContestUpdate = () => {
       alert("수정 중 오류 발생");
     }
   };
+
+  useEffect(() => {
+    if (user && data && Number(user.id) !== Number(data.writer_id)) {
+      navigate(`/contest/${contestId}`);
+    }
+  }, [user, data, contestId, navigate]);
 
   return (
     <ContestFormTemplate

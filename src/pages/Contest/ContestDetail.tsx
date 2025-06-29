@@ -23,7 +23,7 @@ const ContestDetail = () => {
     <div className="flex flex-col gap-5 mt-28">
       <div className="flex-default">
         <Title titleText="상세페이지" linkSrc="" />
-        {user?.id === data.writer_id && (
+        {Number(user?.id) === Number(data.writer_id) && (
           <div className="text-sm text-gray-500 space-x-2">
             <span>
               <Link to={`/contest/${id}/edit`}>수정 |</Link>

@@ -1,6 +1,11 @@
 //react-frontend\src\types\contestType.ts
 import type { CommunityListItem } from "./contestDetailType";
 
+export interface FileJson {
+  type: "Buffer";
+  data: [];
+}
+
 export type Contest = {
   id: number;
   writer_id: number;
@@ -18,8 +23,8 @@ export type Contest = {
   article: string;
   views: number;
   reg_date: string;
-  file_path?: Blob;
-  save_name?: string;
+  file_path?: FileJson;
+  file_id?: number;
 };
 
 export type ContestFormData = {
@@ -66,5 +71,6 @@ export interface ContestStore {
 }
 
 export interface ContestDetail extends Contest {
+  save_name?: string;
   communityList: CommunityListItem[];
 }
