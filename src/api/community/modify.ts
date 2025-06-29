@@ -18,8 +18,13 @@ import type { CommunityModifyRequest, CommunityModifyResponse } from "@/types/co
 export const modifyCommunity = async (
   data: CommunityModifyRequest
 ): Promise<CommunityModifyResponse> => {
+  const token = localStorage.getItem("accessToken");
   try {
-    const response = await axios.post("/api/community/modify", data);
+    const response = await axios.post("/api/community/modify", data, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
 
     return response.data;
   } catch (error) {

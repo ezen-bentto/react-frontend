@@ -24,7 +24,7 @@ const getOptionsByName = (name: string) =>
   contestFilterData.find(group => group.name === name)?.options || [];
 
 const ContestFormTemplate = ({ formData, onChange, onSubmit, submitLabel, isLoading }: Props) => {
-  console.info(formData.file_path, formData.save_name);
+  // console.info(formData.file_path, formData.save_name);
   return (
     <div className="flex flex-col gap-5 mt-28">
       <div className="space-y-6">
