@@ -1,14 +1,20 @@
-import React, { useMemo, useRef } from "react";
+import React, { useMemo, useRef, useEffect } from "react";
 import ReactQuill from "react-quill-new";
 import "react-quill-new/dist/quill.snow.css";
-import { uploadImage } from "@/api/common/upload"; // 기존 업로드 API 그대로 사용
 
 interface TitleContentInputProps {
   title: string;
   content: string;
   onTitleChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   onContentChange: (value: string) => void;
-  communityId?: number; // 수정 모드일 때 필요
+  communityId?: number;
+}
+
+declare global {
+  interface Window {
+    tempImageFiles?: Map<string, { file: File; fileName: string }>;
+    uploadedImageIds?: Array<{ fileName: string; url: string }>;
+  }
 }
 
 const TitleContentInput: React.FC<TitleContentInputProps> = ({
@@ -18,36 +24,36 @@ const TitleContentInput: React.FC<TitleContentInputProps> = ({
   onContentChange,
   communityId,
 }) => {
-  // Quill 에디터 ref 추가
+  // Quill 에디터 ref
   const quillRef = useRef<ReactQuill>(null);
 
   // ReactQuill 이미지 핸들러
   const imageHandler = async () => {
-    const input = document.createElement('input');
-    input.setAttribute('type', 'file');
-    input.setAttribute('accept', 'image/*');
+    const input = document.createElement("input");
+    input.setAttribute("type", "file");
+    input.setAttribute("accept", "image/*");
     input.click();
 
     input.onchange = async () => {
       const file = input.files?.[0];
       if (!file) return;
 
-      // 파일 크기 체크 (예: 5MB 제한)
+      // 파일 크기 체크
       if (file.size > 5 * 1024 * 1024) {
-        alert('파일 크기는 5MB 이하여야 합니다.');
+        alert("파일 크기는 5MB 이하여야 합니다.");
         return;
       }
 
       // 파일 타입 체크
-      if (!file.type.startsWith('image/')) {
-        alert('이미지 파일만 업로드 가능합니다.');
+      if (!file.type.startsWith("image/")) {
+        alert("이미지 파일만 업로드 가능합니다.");
         return;
       }
 
       try {
-        // 로딩 표시 (선택적)
-        const loadingToast = document.createElement('div');
-        loadingToast.textContent = '이미지 업로드 중...';
+        // 로딩 표시
+        const loadingToast = document.createElement("div");
+        loadingToast.textContent = "이미지 업로드 중...";
         loadingToast.style.cssText = `
           position: fixed;
           top: 20px;
@@ -60,42 +66,39 @@ const TitleContentInput: React.FC<TitleContentInputProps> = ({
         `;
         document.body.appendChild(loadingToast);
 
-        // 임시 ID로 이미지 업로드 (글 작성 전이므로 -1 사용)
-        const imageUrl = await uploadImage({
-          file,
-          fileName: file.name,
-          id: communityId || -1, // 임시 ID 사용
-          type: 'community',
-        });
+        // 1. Base64로 변환하여 즉시 미리보기
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          const base64Data = e.target?.result as string;
 
-        console.log('업로드된 이미지 URL:', imageUrl); // 디버깅용
+          const quill = quillRef.current?.getEditor();
+          if (quill) {
+            const range = quill.getSelection();
+            const index = range ? range.index : quill.getLength();
 
-        // Quill 에디터 인스턴스 가져오기 (수정된 방법)
-        const quill = quillRef.current?.getEditor();
+            // Base64로 즉시 표시
+            quill.insertEmbed(index, "image", base64Data);
+            quill.setSelection(index + 1);
 
-        if (quill) {
-          const range = quill.getSelection();
-          const index = range ? range.index : quill.getLength();
-
-          // 이미지 삽입
-          quill.insertEmbed(index, 'image', imageUrl);
-          quill.setSelection(index + 1);
-
-          console.log('이미지 삽입 완료:', imageUrl); // 디버깅용
-        } else {
-          console.error('Quill 에디터 인스턴스를 찾을 수 없습니다.');
-          alert('에디터에 이미지를 삽입할 수 없습니다.');
-        }
+            // 2. 실제 파일 객체를 별도 저장 (Blob 형태로)
+            if (!window.tempImageFiles) window.tempImageFiles = new Map();
+            window.tempImageFiles.set(base64Data, {
+              file: file,
+              fileName: file.name
+            });
+          }
+        };
+        reader.readAsDataURL(file);
 
         // 로딩 표시 제거
         document.body.removeChild(loadingToast);
 
       } catch (error) {
-        console.error('이미지 업로드 실패:', error);
-        alert('이미지 업로드에 실패했습니다. 다시 시도해주세요.');
+        console.error("이미지 처리 실패:", error);
+        alert("이미지 처리에 실패했습니다.");
 
         // 로딩 표시 제거 (에러 시에도)
-        const existingToast = document.querySelector('div[style*="position: fixed"]');
+        const existingToast = document.querySelector("div[style*=\"position: fixed\"]");
         if (existingToast) {
           document.body.removeChild(existingToast);
         }
@@ -108,27 +111,36 @@ const TitleContentInput: React.FC<TitleContentInputProps> = ({
     toolbar: {
       container: [
         [{ header: [1, 2, 3, false] }],
-        ['bold', 'italic', 'underline', 'strike'],
-        [{ list: 'ordered' }, { list: 'bullet' }],
+        ["bold", "italic", "underline", "strike"],
+        [{ list: "ordered" }, { list: "bullet" }],
         [{ color: [] }, { background: [] }],
         [{ align: [] }],
-        ['link', 'image'],
-        ['clean'],
+        ["link", "image"],
+        ["clean"],
       ],
       handlers: {
         image: imageHandler, // 커스텀 이미지 핸들러
       },
     },
-  }), [communityId]); // communityId 의존성 추가
+  }), [communityId]);
 
   const formats = [
-    'header',
-    'bold', 'italic', 'underline', 'strike',
-    'list', 'bullet',
-    'color', 'background',
-    'align',
-    'link', 'image',
+    "header",
+    "bold", "italic", "underline", "strike",
+    "list", "bullet",
+    "color", "background",
+    "align",
+    "link", "image",
   ];
+
+  // 컴포넌트 언마운트 시 임시 데이터 정리
+  useEffect(() => {
+    return () => {
+      // 컴포넌트 정리 시 임시 데이터 제거
+      window.tempImageFiles = new Map();
+      window.uploadedImageIds = [];
+    };
+  }, []);
 
   return (
     <div className="card-animation border border-gray-200 dark:border-gray-700 rounded-2xl shadow-lg p-8 hover:shadow-xl transition-all duration-300">
@@ -162,7 +174,7 @@ const TitleContentInput: React.FC<TitleContentInputProps> = ({
           </label>
           <div className="border-2 border-gray-200 dark:border-gray-600 rounded-xl overflow-hidden focus-within:border-blue-500 transition-colors duration-200">
             <ReactQuill
-              ref={quillRef} // ref 추가
+              ref={quillRef}
               value={content}
               onChange={onContentChange}
               theme="snow"
