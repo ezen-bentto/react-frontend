@@ -101,12 +101,12 @@ export const useCommunityList = (communityType: string) => {
         prev.map(p =>
           p.community_id === postId
             ? {
-              ...p,
-              scrap_yn: res.data.scrapped ? "Y" : "N",
-              scrap_count: res.data.scrapped
-                ? (p.scrap_count ?? 0) + 1
-                : Math.max((p.scrap_count ?? 1) - 1, 0),
-            }
+                ...p,
+                scrap_yn: res.data.scrapped ? "Y" : "N",
+                scrap_count: res.data.scrapped
+                  ? (p.scrap_count ?? 0) + 1
+                  : Math.max((p.scrap_count ?? 1) - 1, 0),
+              }
             : p
         )
       );

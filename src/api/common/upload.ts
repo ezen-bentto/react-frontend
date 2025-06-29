@@ -51,23 +51,30 @@ export const uploadImage = async (props: imageProps): Promise<string> => {
 
 /**
  * 이미지 reference_id 업데이트 API
- * 
+ *
  * @function updateImageReference
  * @date 2025/06/29
  * @param fileName - 업데이트할 파일명
  * @param newReferenceId - 새로운 reference_id (커뮤니티 ID)
  * @returns Promise<void>
  */
-export const updateImageReference = async (fileName: string, newReferenceId: number): Promise<void> => {
+export const updateImageReference = async (
+  fileName: string,
+  newReferenceId: number
+): Promise<void> => {
   try {
-    const response = await axios.post(`${import.meta.env.VITE_API_URL}/api/file/update-reference`, {
-      fileName,
-      newReferenceId,
-    }, {
-      headers: {
-        "Content-Type": "application/json",
+    const response = await axios.post(
+      `${import.meta.env.VITE_API_URL}/api/file/update-reference`,
+      {
+        fileName,
+        newReferenceId,
       },
-    });
+      {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
     return response.data;
   } catch (error) {
     console.error("reference_id 업데이트 실패:", fileName, error);

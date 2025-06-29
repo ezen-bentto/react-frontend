@@ -194,7 +194,7 @@ const CommunityWrite = () => {
           if (!window.uploadedImageIds) window.uploadedImageIds = [];
           window.uploadedImageIds.push({
             fileName: imageInfo.fileName,
-            url: imageUrl
+            url: imageUrl,
           });
         } catch (error) {
           console.error("이미지 업로드 실패:", imageInfo.fileName, error);
@@ -208,7 +208,6 @@ const CommunityWrite = () => {
   // 업로드된 이미지들의 reference_id를 실제 커뮤니티 ID로 업데이트
   const updateImageReferences = async (communityId: number) => {
     const uploadedImageIds = window.uploadedImageIds || [];
-
 
     for (const imageInfo of uploadedImageIds) {
       try {
@@ -278,7 +277,6 @@ const CommunityWrite = () => {
       // 3. 임시 데이터 정리
       window.tempImageFiles = new Map();
       window.uploadedImageIds = [];
-
 
       setIsSubmitModalOpen(true);
     } catch (err) {
