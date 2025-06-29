@@ -179,7 +179,7 @@ const ListItem = ({
             {type === "community" ? (
               <p
                 className="flex-1 text-base list-col-wrap line-clamp-1"
-                dangerouslySetInnerHTML={{ __html: description }}
+                dangerouslySetInnerHTML={{ __html: description.replace(/<img[^>]*>/g, '') }}
               />
             ) : (
               <p className="flex-1 text-base list-col-wrap">{description}</p>

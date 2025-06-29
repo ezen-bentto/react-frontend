@@ -14,10 +14,10 @@ const Header = ({ community, getCategoryName, onToggleScrap }: HeaderProps) => {
           )}
 
           <div className="flex items-center gap-4 ml-auto">
-            <div className="flex items-center gap-2 text-gray-600 dark:text-gray-400">
+            {/* <div className="flex items-center gap-2 text-gray-600 dark:text-gray-400">
               <EyeOutlined />
               <span className="text-sm">조회수</span>
-            </div>
+            </div> */}
 
             <button
               onClick={onToggleScrap}

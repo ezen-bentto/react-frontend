@@ -9,6 +9,7 @@ import { fetchCommunityDetail } from "@/api/community/content";
 import { useSearchParams, useNavigate } from "react-router-dom";
 import { modifyCommunity } from "@/api/community/modify";
 import type { ModifyPayload, RecruitmentDetailResponse, SubmitPayload } from "@/types/communityWriteType";
+import { uploadImage } from "@/api/common/upload";
 // Form 데이터 타입 정의
 interface FormRecruitment {
   recruitmentDetailId?: number; // optional로 변경
@@ -64,6 +65,32 @@ const CommunityWrite = () => {
   const [pendingCategoryId, setPendingCategoryId] = useState<number | null>(null);
   const [pendingContestId, setPendingContestId] = useState<number | null>(null);
   const [isSubmitModalOpen, setIsSubmitModalOpen] = useState(false);
+  const processImagesBeforeSubmit = async (content: string): Promise<string> => {
+    const tempImages = (window as any).tempImages || [];
+    let processedContent = content;
+
+    for (const tempImage of tempImages) {
+      try {
+        // 실제 이미지 업로드
+        const imageUrl = await uploadImage({
+          file: tempImage.file,
+          fileName: tempImage.file.name,
+          id: communityId || 0, // 실제 커뮤니티 ID 사용
+          type: 'community',
+        });
+
+        // content에서 Base64를 실제 URL로 교체
+        processedContent = processedContent.replace(tempImage.base64, imageUrl);
+      } catch (error) {
+        console.error('이미지 업로드 실패:', error);
+      }
+    }
+
+    // 임시 이미지 정보 초기화
+    (window as any).tempImages = [];
+
+    return processedContent;
+  };
 
   useEffect(() => {
     const loadDetail = async () => {
@@ -259,6 +286,7 @@ const CommunityWrite = () => {
             content={formData.content}
             onTitleChange={handleFormChange}
             onContentChange={value => setFormData(prev => ({ ...prev, content: value }))}
+            communityId={communityId} // 추가: 이미지 업로드를 위한 커뮤니티 ID 전달
           />
 
           <div className="flex justify-center space-x-4 pt-8 border-t border-gray-200 dark:border-gray-600 transition-colors duration-300">
