@@ -8,7 +8,11 @@ import { registerCommunity } from "@/api/community/register";
 import { fetchCommunityDetail } from "@/api/community/content";
 import { useSearchParams, useNavigate } from "react-router-dom";
 import { modifyCommunity } from "@/api/community/modify";
-import type { ModifyPayload, RecruitmentDetailResponse, SubmitPayload } from "@/types/communityWriteType";
+import type {
+  ModifyPayload,
+  RecruitmentDetailResponse,
+  SubmitPayload,
+} from "@/types/communityWriteType";
 // Form 데이터 타입 정의
 interface FormRecruitment {
   recruitmentDetailId?: number; // optional로 변경
@@ -43,7 +47,6 @@ const CommunityWrite = () => {
     ageGroup: "",
     recruitments: [{ role: "", count: "" }], // recruitmentDetailId는 optional이므로 생략 가능
   });
-
 
   const {
     categories,
@@ -94,7 +97,6 @@ const CommunityWrite = () => {
     };
     loadDetail();
   }, [communityId]);
-
 
   // 카테고리 설정
   useEffect(() => {
@@ -176,7 +178,7 @@ const CommunityWrite = () => {
           ...basePayload,
           communityId: communityId,
           // 수정: recruitmentDetailId 포함하여 전송
-          recruitments: formData.recruitments.map((r) => ({
+          recruitments: formData.recruitments.map(r => ({
             recruitmentDetailId: r.recruitmentDetailId,
             role: r.role,
             count: Number(r.count),
