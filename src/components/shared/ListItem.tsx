@@ -39,19 +39,6 @@ import countDate from "@/utils/countDate";
  * @param scrapYn 스크랩 여부 (Y/N)
  */
 
-const getDivisionLabel = (division: number): string => {
-  const divisionMap: Record<number, string> = {
-    1: "포스터/웹툰/콘텐츠",
-    2: "사진/영상/UCC",
-    3: "아이디어/기획",
-    4: "IT/학술/논문",
-    5: "네이밍/슬로건",
-    6: "스포츠/음악",
-    7: "미술/디자인/건축",
-  };
-  return divisionMap[division] || "기타";
-};
-
 const getCategoryTypeLabel = (categoryType: string): string => {
   const categoryMap: Record<string, string> = {
     1: "포스터/웹툰/콘텐츠",
@@ -62,7 +49,7 @@ const getCategoryTypeLabel = (categoryType: string): string => {
     6: "스포츠/음악",
     7: "미술/디자인/건축",
   };
-  return categoryMap[categoryType] || "기타"; // 매핑값이 없을 경우 '기타'를 반환
+  return categoryMap[categoryType] || "기타";
 };
 
 const getCommunityTypeLabel = (communityType: string): string => {
@@ -74,68 +61,60 @@ const getCommunityTypeLabel = (communityType: string): string => {
   return communityTypeMap[communityType] || "공모전";
 };
 
-interface ListItemProps extends ListItemVariants {
-  type: "community" | "policy" | "contest";
+// 1. 모든 타입에 공통으로 필요한 기본 Props
+interface ListItemBaseProps extends ListItemVariants {
   linkSrc: string;
   title: string;
-  description: string;
+  endDate?: string;
+  scrapYn?: "Y" | "N";
+  onScrapClick?: () => void;
+  className?: string;
+}
 
-  // Community 타입 관련 props
+// 2. Community 타입 전용 Props
+interface CommunityListItemProps extends ListItemBaseProps {
+  type: "community";
+  description: string; // Community 타입은 description이 필수
   writer?: string;
   comment?: number;
   likes?: number;
   communityType?: string;
   categoryType?: string;
-
-  // Contest & Policy 타입 관련 props
-  organizer?: string; // 주최기관 (Contest용)
-  endDate?: string;
-  division?: number;
-
-  // Policy 타입 관련 props
-  region?: string;
-  category?: string;
-
-  // 스크랩 관련 props
-  scrapYn?: "Y" | "N";
-  onScrapClick?: () => void;
-
-  className?: string;
 }
 
-const ListItem = ({
-  type,
-  title,
-  writer,
-  description,
-  size,
-  intent,
-  className,
-  category,
-  likes,
-  comment,
-  linkSrc,
-  region,
-  endDate,
-  division,
-  communityType,
-  scrapYn,
-  organizer,
-  categoryType,
-  onScrapClick,
-}: ListItemProps) => {
+// 3. Policy 타입 전용 Props
+interface PolicyListItemProps extends ListItemBaseProps {
+  type: "policy";
+  description: string; // Policy 타입도 description이 필수
+  region?: string;
+  category?: string;
+}
+
+// 4. Contest 타입 전용 Props
+interface ContestListItemProps extends ListItemBaseProps {
+  type: "contest";
+  organizer?: string;
+  organizerTypeTag?: string;
+  participantsTag?: string;
+  categoryTag?: string;
+}
+
+// 5. 위 타입들을 모두 포함하는 최종 Props 타입
+type ListItemProps = CommunityListItemProps | PolicyListItemProps | ContestListItemProps;
+
+const ListItem = (props: ListItemProps) => {
+  // props를 통째로 받도록 변경
+  const { type, title, linkSrc, size, intent, className, endDate, onScrapClick } = props;
   const combinedClass = `${listItem({ size, intent })} ${className ?? ""}`.trim();
 
   const handleScrapClick = (e: React.MouseEvent) => {
-    e.preventDefault(); // Link 클릭 방지
+    e.preventDefault();
     e.stopPropagation();
-
     if (onScrapClick) {
       onScrapClick();
     }
   };
 
-  // 커뮤니티 타입 여부에 따라 다른 날짜 계산 로직 적용
   const isCommunityType = type === "community";
   const daysLeft = endDate ? countDate(endDate, isCommunityType) : 0;
 
@@ -144,34 +123,44 @@ const ListItem = ({
       <Link to={linkSrc} className="flex-col w-full gap-2 p-4 flex-default">
         <div className="w-full flex justify-between items-start">
           <div className="flex gap-2 flex-wrap">
-            {type === "policy" && category && (
+            {props.type === "policy" && props.category && (
               <Badge size="sm" intent="primary">
-                {category}
+                {props.category}
               </Badge>
             )}
-            {type === "policy" && region && (
+            {props.type === "policy" && props.region && (
               <Badge intent="orange" size="sm">
-                {region}
+                {props.region}
               </Badge>
             )}
-            {type === "community" && communityType && (
+            {props.type === "community" && props.communityType && (
               <Badge size="sm" intent="primary">
-                {getCommunityTypeLabel(communityType)}
+                {getCommunityTypeLabel(props.communityType)}
               </Badge>
             )}
-            {type === "community" && categoryType && (
+            {props.type === "community" && props.categoryType && (
               <Badge size="sm" intent="primary">
-                {getCategoryTypeLabel(categoryType)}
+                {getCategoryTypeLabel(props.categoryType)}
               </Badge>
             )}
-            {type === "contest" && division && (
+            {props.type === "contest" && props.organizerTypeTag && (
               <Badge size="sm" intent="primary">
-                {getDivisionLabel(division)}
+                {props.organizerTypeTag}
+              </Badge>
+            )}
+            {props.type === "contest" && props.participantsTag && (
+              <Badge size="sm" intent="primary">
+                {props.participantsTag}
+              </Badge>
+            )}
+            {props.type === "contest" && props.categoryTag && (
+              <Badge size="sm" intent="primary">
+                {props.categoryTag}
               </Badge>
             )}
           </div>
 
-          {/* D-day 뱃지 로직: 커뮤니티는 23:59:59까지 1일로 처리 */}
+          {/* D-day 뱃지 로직 */}
           {endDate && daysLeft > 0 && (
             <Badge intent="orange" size="sm">
               D-{daysLeft}
@@ -192,29 +181,30 @@ const ListItem = ({
         {/* 본문 및 하단 정보 */}
         <div className="flex-default w-full">
           <div className="flex justify-center items-start flex-col min-h-[48px] flex-1">
-            {/* type에 따라 p태그를 완전히 분리하여 렌더링. */}
-            {type === "community" ? (
+            {props.type === "community" && (
               <p
                 className="flex-1 text-base list-col-wrap line-clamp-1"
-                dangerouslySetInnerHTML={{ __html: (description || "").replace(/<img[^>]*>/g, "") }}
+                dangerouslySetInnerHTML={{
+                  __html: (props.description || "").replace(/<img[^>]*>/g, ""),
+                }}
               />
-            ) : (
-              <p className="flex-1 text-base list-col-wrap">{description}</p>
+            )}
+            {props.type === "policy" && (
+              <p className="flex-1 text-base list-col-wrap">{props.description}</p>
             )}
 
             <div className="text-xs font-semibold uppercase opacity-60 mt-2">
-              {type === "community" && writer && <span>{writer}</span>}
-              {type === "contest" && organizer && <span>{organizer}</span>}
+              {props.type === "community" && <span>{props.writer}</span>}
+              {props.type === "contest" && <span>{props.organizer}</span>}
             </div>
           </div>
 
-          {type === "community" && (
+          {props.type === "community" && (
             <div className="flex justify-end">
               <button className="btn btn-ghost">
                 <CommentOutlined />
-                <span>{comment}</span>
+                <span>{props.comment}</span>
               </button>
-
               <button className="btn btn-ghost" onClick={handleScrapClick}>
                 <svg
                   className="size-[1.2em]"
@@ -225,14 +215,13 @@ const ListItem = ({
                     strokeLinejoin="round"
                     strokeLinecap="round"
                     strokeWidth="2"
-                    fill={type === "community" && scrapYn === "Y" ? "currentColor" : "none"}
+                    fill={props.scrapYn === "Y" ? "currentColor" : "none"}
                     stroke="currentColor"
                   >
                     <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z" />
                   </g>
                 </svg>
-
-                <span>{likes}</span>
+                <span>{props.likes}</span>
               </button>
             </div>
           )}
