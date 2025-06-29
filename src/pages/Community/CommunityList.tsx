@@ -27,6 +27,9 @@ const CommunityList = () => {
 
   const { isMobile, imgSrc } = useResponsive();
 
+  // 모바일에서는 강제로 카드형으로 설정
+  const effectiveViewMode = isMobile ? "card" : viewMode;
+
   const handleFilterChange = (name: string, selected: string[]) => {
     setFilters(prev => ({
       ...prev,
@@ -63,10 +66,11 @@ const CommunityList = () => {
             <>
               <CommunityGrid
                 posts={currentPosts}
-                viewMode={viewMode}
+                viewMode={effectiveViewMode}
                 onScrapClick={handleScrapToggle}
               />
-              {viewMode === "card" && (
+              {/* 모바일에서는 항상 페이지네이션 표시, 데스크톱에서는 카드형일 때만 표시 */}
+              {(isMobile || effectiveViewMode === "card") && (
                 <div className="flex justify-center mt-8">
                   <Pagination
                     currentPage={currentPage}

@@ -8,14 +8,17 @@ import { registerCommunity } from "@/api/community/register";
 import { fetchCommunityDetail } from "@/api/community/content";
 import { useSearchParams, useNavigate } from "react-router-dom";
 import { modifyCommunity } from "@/api/community/modify";
+
 import type {
   ModifyPayload,
   RecruitmentDetailResponse,
   SubmitPayload,
 } from "@/types/communityWriteType";
+
+import { uploadImage, updateImageReference } from "@/api/common/upload";
 // Form 데이터 타입 정의
 interface FormRecruitment {
-  recruitmentDetailId?: number; // optional로 변경
+  recruitmentDetailId?: number;
   role: string;
   count: string;
 }
@@ -28,6 +31,13 @@ interface FormData {
   recruitEndDate: string;
   ageGroup: string;
   recruitments: FormRecruitment[];
+}
+
+declare global {
+  interface Window {
+    tempImageFiles?: Map<string, { file: File; fileName: string }>;
+    uploadedImageIds?: Array<{ fileName: string; url: string }>;
+  }
 }
 
 const CommunityWrite = () => {
@@ -45,7 +55,7 @@ const CommunityWrite = () => {
     endDate: "",
     recruitEndDate: "",
     ageGroup: "",
-    recruitments: [{ role: "", count: "" }], // recruitmentDetailId는 optional이므로 생략 가능
+    recruitments: [{ role: "", count: "" }],
   });
 
   const {
@@ -81,9 +91,8 @@ const CommunityWrite = () => {
           endDate: detail.end_date?.slice(0, 10) ?? "",
           recruitEndDate: detail.recruit_end_date?.slice(0, 10) ?? "",
           ageGroup: detail.age_group,
-          // 수정: 기존 recruitment_detail_id 포함하여 매핑
           recruitments: detail.recruitment_detail_list.map((r: RecruitmentDetailResponse) => ({
-            recruitmentDetailId: r.recruitment_detail_id, // 추가: 기존 ID 포함
+            recruitmentDetailId: r.recruitment_detail_id,
             role: r.role,
             count: r.count.toString(),
           })),
@@ -104,14 +113,13 @@ const CommunityWrite = () => {
       const found = categories.find(cat => cat.category_id === pendingCategoryId);
       if (found) {
         setSelectedCategory(found);
-        // 카테고리 선택 후 공모전 목록을 로드하기 위해 handleCategorySelect 호출
         handleCategorySelect(found);
         setPendingCategoryId(null);
       }
     }
   }, [categories, pendingCategoryId, handleCategorySelect, setSelectedCategory]);
 
-  // 공모전 설정 (카테고리가 변경되고 공모전 목록이 로드된 후 실행)
+  // 공모전 설정
   useEffect(() => {
     if (pendingContestId && contests.length > 0 && !isLoadingContests) {
       const found = contests.find(con => con.contest_id === pendingContestId);
@@ -153,31 +161,94 @@ const CommunityWrite = () => {
     }
   };
 
+  // Base64 이미지들을 실제 서버에 Blob으로 업로드
+  const processImagesBeforeSubmit = async (content: string): Promise<string> => {
+    const tempImageFiles = window.tempImageFiles || new Map();
+    let processedContent = content;
+
+    // 업로드된 이미지 ID들을 저장 (나중에 reference_id 업데이트용)
+    window.uploadedImageIds = [];
+
+    // content에서 Base64 이미지 찾기
+    const base64Regex = /<img[^>]+src="(data:image\/[^;]+;base64,[^"]+)"/g;
+    let match;
+
+    while ((match = base64Regex.exec(content)) !== null) {
+      const base64Data = match[1];
+      const imageInfo = tempImageFiles.get(base64Data);
+
+      if (imageInfo) {
+        try {
+          // 실제 File 객체(Blob)로 업로드
+          const imageUrl = await uploadImage({
+            file: imageInfo.file, // 원본 File 객체 사용
+            fileName: imageInfo.fileName,
+            id: -999, // 임시 ID (나중에 업데이트)
+            type: "community",
+          });
+
+          // content에서 Base64를 실제 URL로 교체
+          processedContent = processedContent.replace(base64Data, imageUrl);
+
+          // 업로드된 이미지 정보 저장 (reference_id 업데이트용)
+          if (!window.uploadedImageIds) window.uploadedImageIds = [];
+          window.uploadedImageIds.push({
+            fileName: imageInfo.fileName,
+            url: imageUrl
+          });
+        } catch (error) {
+          console.error("이미지 업로드 실패:", imageInfo.fileName, error);
+        }
+      }
+    }
+
+    return processedContent;
+  };
+
+  // 업로드된 이미지들의 reference_id를 실제 커뮤니티 ID로 업데이트
+  const updateImageReferences = async (communityId: number) => {
+    const uploadedImageIds = window.uploadedImageIds || [];
+
+
+    for (const imageInfo of uploadedImageIds) {
+      try {
+        // 분리된 API 함수 사용
+        await updateImageReference(imageInfo.fileName, communityId);
+      } catch (error) {
+        console.error("reference_id 업데이트 실패:", imageInfo.fileName, error);
+      }
+    }
+  };
+
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    const basePayload: SubmitPayload = {
-      communityType: selectedOption,
-      categoryType: selectedCategory?.category_id ?? null,
-      contestId: selectedContest?.contest_id ?? null,
-      title: formData.title,
-      content: formData.content,
-      startDate: formData.startDate,
-      endDate: formData.endDate,
-      recruitEndDate: formData.recruitEndDate,
-      ageGroup: formData.ageGroup,
-      recruitments: formData.recruitments.map(r => ({
-        role: r.role,
-        count: Number(r.count),
-      })),
-    };
-
     try {
+      // 1. content에서 Base64 이미지들을 실제 업로드로 교체
+      const processedContent = await processImagesBeforeSubmit(formData.content);
+
+      const basePayload: SubmitPayload = {
+        communityType: selectedOption,
+        categoryType: selectedCategory?.category_id ?? null,
+        contestId: selectedContest?.contest_id ?? null,
+        title: formData.title,
+        content: processedContent, // 처리된 컨텐츠
+        startDate: formData.startDate || "", // null 대신 빈 문자열
+        endDate: formData.endDate || "", // null 대신 빈 문자열
+        recruitEndDate: formData.recruitEndDate || "", // null 대신 빈 문자열
+        ageGroup: formData.ageGroup,
+        recruitments: formData.recruitments.map(r => ({
+          role: r.role,
+          count: Number(r.count),
+        })),
+      };
+
+      let savedCommunityId: number;
+
       if (isEditMode && communityId) {
         const modifyPayload: ModifyPayload = {
           ...basePayload,
           communityId: communityId,
-          // 수정: recruitmentDetailId 포함하여 전송
           recruitments: formData.recruitments.map(r => ({
             recruitmentDetailId: r.recruitmentDetailId,
             role: r.role,
@@ -185,13 +256,33 @@ const CommunityWrite = () => {
           })),
         };
         await modifyCommunity(modifyPayload);
+        savedCommunityId = communityId;
       } else {
-        await registerCommunity(basePayload);
+        const response = await registerCommunity(basePayload);
+        // insertId가 실제 커뮤니티 ID
+        savedCommunityId = response?.data?.insertId || response?.insertId;
+
+        // insertId가 문자열인 경우 숫자로 변환
+        if (typeof savedCommunityId === "string") {
+          savedCommunityId = parseInt(savedCommunityId);
+        }
       }
+
+      // 2. 업로드된 이미지들의 reference_id를 실제 커뮤니티 ID로 업데이트
+      if (savedCommunityId) {
+        await updateImageReferences(savedCommunityId);
+      } else {
+        console.error("커뮤니티 ID를 찾을 수 없습니다:", savedCommunityId);
+      }
+
+      // 3. 임시 데이터 정리
+      window.tempImageFiles = new Map();
+      window.uploadedImageIds = [];
+
+
       setIsSubmitModalOpen(true);
     } catch (err) {
       console.error("처리 실패", err);
-
       alert("에러가 발생했습니다.");
     }
   };
@@ -199,10 +290,8 @@ const CommunityWrite = () => {
   const handleModalConfirm = () => {
     setIsSubmitModalOpen(false);
     if (isEditMode) {
-      // 수정 성공 시 상세 페이지로 이동
       navigate(`/community/content/${communityId}`);
     } else {
-      // 등록 성공 시 목록 페이지로 이동
       navigate(`/community/list?communityType=${selectedOption}`);
     }
   };
@@ -261,6 +350,7 @@ const CommunityWrite = () => {
             content={formData.content}
             onTitleChange={handleFormChange}
             onContentChange={value => setFormData(prev => ({ ...prev, content: value }))}
+            communityId={communityId}
           />
 
           <div className="flex justify-center space-x-4 pt-8 border-t border-gray-200 dark:border-gray-600 transition-colors duration-300">
