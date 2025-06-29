@@ -33,7 +33,7 @@ const FileInput = ({ onFileSelect, selectedFileName, className = "" }: FileInput
     <div className={`flex flex-col gap-2 ${className}`}>
       <input type="file" accept="image/*" className="file-input" onChange={handleChange} />
       {selectedFileName && (
-        <p className="text-sm text-gray-600"> 기존의 등록한 파일: {selectedFileName}</p>
+        <p className="text-sm text-gray-600"> 등록한 파일: {selectedFileName}</p>
       )}
     </div>
   );
