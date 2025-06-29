@@ -18,10 +18,6 @@ const ContestUpdate = () => {
   const contestId = Number(id);
   const { user } = useAuth();
 
-  if (user?.id !== data?.writer_id) {
-    navigate(`/contest/${contestId}`);
-  }
-
   const [contestFormData, setContestFormData] = useState<ContestFormData>(initialContestFormData);
 
   const handleChange = (updated: Partial<ContestFormData>) =>
@@ -93,6 +89,12 @@ const ContestUpdate = () => {
       alert("수정 중 오류 발생");
     }
   };
+
+  useEffect(() => {
+    if (user && data && Number(user.id) !== Number(data.writer_id)) {
+      navigate(`/contest/${contestId}`);
+    }
+  }, [user, data, contestId, navigate]);
 
   return (
     <ContestFormTemplate

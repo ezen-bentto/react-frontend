@@ -1,14 +1,15 @@
 // components/shared/FileInput.tsx
 import type { ChangeEvent } from "react";
 
+const MAX_FILE_SIZE = 2 * 1024 * 1024; // 2MB
+
 type FileInputProps = {
   onFileSelect: (file: File, save_name: string) => void;
   className?: string;
+  selectedFileName?: string;
 };
 
-const MAX_FILE_SIZE = 2 * 1024 * 1024; // 2MB
-
-const FileInput = ({ onFileSelect, className = "" }: FileInputProps) => {
+const FileInput = ({ onFileSelect, selectedFileName, className = "" }: FileInputProps) => {
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
@@ -29,12 +30,12 @@ const FileInput = ({ onFileSelect, className = "" }: FileInputProps) => {
   };
 
   return (
-    <input
-      type="file"
-      accept="image/*"
-      className={`file-input ${className}`}
-      onChange={handleChange}
-    />
+    <div className={`flex flex-col gap-2 ${className}`}>
+      <input type="file" accept="image/*" className="file-input" onChange={handleChange} />
+      {selectedFileName && (
+        <p className="text-sm text-gray-600"> 기존의 등록한 파일: {selectedFileName}</p>
+      )}
+    </div>
   );
 };
 
