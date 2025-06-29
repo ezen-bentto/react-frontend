@@ -37,9 +37,15 @@ export const fetchContestWrite = async (contestData: transformedData) => {
 };
 
 export const fetchContestEdit = async (id: number, contestData: transformedData) => {
+  const token = localStorage.getItem("accessToken");
   const response = await axios.post<{ data: Contest }>(
     `${import.meta.env.VITE_API_URL}/api/contest/${id}/modify`,
-    contestData
+    contestData,
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    }
   );
   return response.data;
 };

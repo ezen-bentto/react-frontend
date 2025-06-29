@@ -19,6 +19,7 @@ const ContestUpdate = () => {
   const { user } = useAuth();
 
   const [contestFormData, setContestFormData] = useState<ContestFormData>(initialContestFormData);
+  const [isImageUpdated, setIsImageUpdated] = useState(false);
 
   const handleChange = (updated: Partial<ContestFormData>) =>
     setContestFormData(prev => ({ ...prev, ...updated }));
@@ -53,10 +54,9 @@ const ContestUpdate = () => {
 
   const handleSubmit = async () => {
     try {
-      // 수정해야함 다시 짜야함
       // 1️⃣ 이미지가 새로 업로드 되었으면 따로 전송
-      if (contestFormData.file_path && contestFormData.file_path.size > 0) {
-        const blobImage = await fileToBlob(contestFormData.file_path);
+      if (isImageUpdated) {
+        const blobImage = await fileToBlob(contestFormData.file_path!);
         const requsetData: imageProps = {
           file: blobImage,
           fileName: contestFormData.save_name!,
@@ -103,6 +103,7 @@ const ContestUpdate = () => {
       onSubmit={handleSubmit}
       submitLabel="수정"
       isLoading={isLoading}
+      onImageChange={() => setIsImageUpdated(true)}
     />
   );
 };
