@@ -9,6 +9,7 @@ import { useAuth } from "@/context/AuthContext";
 import { blobToFile } from "@/utils/blobToFile";
 import { uploadImage, type imageProps } from "@/api/common/upload";
 import { fileToBlob } from "@/utils/fileToBlob";
+import { bufferJsonToBlob } from "@/utils/bufferJsonToBlob";
 
 const ContestUpdate = () => {
   const navigate = useNavigate();
@@ -34,8 +35,11 @@ const ContestUpdate = () => {
       let file_path: File | undefined;
 
       if (data.file_path && data.save_name) {
-        file_path = blobToFile(data.file_path, data.save_name);
+        const blobFile = bufferJsonToBlob(data.file_path, "image/png");
+        file_path = blobToFile(blobFile, data.save_name);
       }
+
+      if (!file_path) return;
 
       const transformedData: ContestFormData = {
         ...data,
@@ -62,6 +66,7 @@ const ContestUpdate = () => {
           fileName: contestFormData.save_name!,
           id: data!.id,
           type: "contest",
+          image_id: data!.file_id,
         };
         await uploadImage(requsetData);
       }

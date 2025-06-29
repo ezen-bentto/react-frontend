@@ -1,8 +1,11 @@
 import { Link } from "react-router-dom";
 import { card, type CardVariants } from "../style/card";
 import Badge from "./Badge";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { NOT_IMAGE } from "@/constants/ImageSrc";
+import { blobToBase64 } from "@/utils/blobToBase64";
+import type { FileJson } from "@/types/contestType";
+import { bufferJsonToBlob } from "@/utils/bufferJsonToBlob";
 
 /**
  *
@@ -35,7 +38,7 @@ import { NOT_IMAGE } from "@/constants/ImageSrc";
 interface CardProps extends CardVariants {
   id: number;
   dday: string;
-  img?: string;
+  img?: string | FileJson;
   title: string;
   text: string;
   className?: string;
@@ -49,6 +52,24 @@ const Card = ({ id, dday, img, title, text, size, intent, className }: CardProps
     `relative w-full h-full ${card({ size, intent })} ${className ?? ""}`.trim(); // 👉 w-full, h-full 강제
 
   const [isImageLoaded, setIsImageLoaded] = useState(false);
+  const [imageSrc, setImageSrc] = useState<string>(NOT_IMAGE);
+
+  useEffect(() => {
+    const processImage = async () => {
+      if (typeof img === "string") {
+        setImageSrc(img);
+      } else if (img && img.type === "Buffer" && Array.isArray(img.data)) {
+        // FileJson 형태인 경우
+        const blob = bufferJsonToBlob(img, "image/png");
+        const base64 = await blobToBase64(blob);
+        setImageSrc(base64);
+      } else {
+        setImageSrc(NOT_IMAGE);
+      }
+    };
+
+    processImage();
+  }, [img]);
 
   return (
     <Link to={`/contest/${id}`}>
@@ -62,7 +83,7 @@ const Card = ({ id, dday, img, title, text, size, intent, className }: CardProps
           )}
           {
             <img
-              src={img ? img : NOT_IMAGE}
+              src={imageSrc}
               alt={title}
               loading="lazy"
               onLoad={() => setIsImageLoaded(true)}

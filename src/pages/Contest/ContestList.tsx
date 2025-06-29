@@ -5,7 +5,7 @@ import Fillter from "@/components/shared/Fillter";
 import Pagination from "@/components/shared/Pagination";
 import Title from "@/components/shared/Title";
 import { contestFilterData } from "@/constants/ContestFilterData";
-import { DARK_NOT_ITEM, LiGHT_NOT_ITEM } from "@/constants/ImageSrc";
+import { DARK_NOT_ITEM, LiGHT_NOT_ITEM, NOT_IMAGE } from "@/constants/ImageSrc";
 import { useThemeStore } from "@/features/common/themeStore";
 import type { Contest } from "@/types/contestType";
 import countDate from "@/utils/countDate";
@@ -138,7 +138,7 @@ const ContestList = () => {
               key={item.id}
               dday={countDate(item.end_date).toString()}
               id={item.id}
-              img={item.img ?? ""}
+              img={item.img ? item.img : item.file_path ? item.file_path : NOT_IMAGE}
               text={item.organizer}
               title={item.title}
               intent="neutral"

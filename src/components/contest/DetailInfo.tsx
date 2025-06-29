@@ -7,6 +7,7 @@ import { StarOutlined } from "@ant-design/icons";
 import { blobToBase64 } from "@/utils/blobToBase64";
 import { useEffect, useState } from "react";
 import { NOT_IMAGE_COL } from "@/constants/ImageSrc";
+import { bufferJsonToBlob } from "@/utils/bufferJsonToBlob";
 
 interface DetailInfoProps {
   data?: Contest;
@@ -48,7 +49,8 @@ function DetailInfo({ data }: DetailInfoProps) {
   useEffect(() => {
     const loadImage = async () => {
       if (data.file_path) {
-        const base64 = await blobToBase64(data.file_path);
+        const blob = bufferJsonToBlob(data.file_path, "image/png");
+        const base64 = await blobToBase64(blob);
         setBase64Url(base64);
       }
     };
