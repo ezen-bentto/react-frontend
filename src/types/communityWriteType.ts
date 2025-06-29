@@ -130,5 +130,6 @@ export interface SubmitPayload {
 
 // 수정 payload
 export interface ModifyPayload extends SubmitPayload {
-    communityId: number;
+
+  communityId: number;
 }
