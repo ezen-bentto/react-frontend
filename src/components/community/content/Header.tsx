@@ -1,4 +1,4 @@
-import { EyeOutlined, HeartFilled, HeartOutlined } from "@ant-design/icons";
+import { HeartFilled, HeartOutlined } from "@ant-design/icons";
 import Badge from "@/components/shared/Badge";
 import type { HeaderProps } from "@/types/communityContentType";
 
