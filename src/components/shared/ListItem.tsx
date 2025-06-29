@@ -122,6 +122,10 @@ const ListItem = ({
     }
   };
 
+  // 커뮤니티 타입 여부에 따라 다른 날짜 계산 로직 적용
+  const isCommunityType = type === "community";
+  const daysLeft = endDate ? countDate(endDate, isCommunityType) : 0;
+
   return (
     <li className={combinedClass}>
       <Link to={linkSrc} className="flex-col w-full gap-2 p-4 flex-default">
@@ -154,13 +158,13 @@ const ListItem = ({
             )}
           </div>
 
-          {/* D-day 뱃지 로직 통합: endDate가 있고, 마감일이 지나지 않았을 때만 표시 */}
-          {endDate && countDate(endDate) > 0 && (
+          {/* D-day 뱃지 로직: 커뮤니티는 23:59:59까지 1일로 처리 */}
+          {endDate && daysLeft > 0 && (
             <Badge intent="orange" size="sm">
-              D-{countDate(endDate)}
+              D-{daysLeft}
             </Badge>
           )}
-          {endDate && countDate(endDate) <= 0 && (
+          {endDate && daysLeft <= 0 && (
             <Badge intent="default" size="sm">
               마감
             </Badge>
@@ -179,7 +183,7 @@ const ListItem = ({
             {type === "community" ? (
               <p
                 className="flex-1 text-base list-col-wrap line-clamp-1"
-                dangerouslySetInnerHTML={{ __html: description }}
+                dangerouslySetInnerHTML={{ __html: description.replace(/<img[^>]*>/g, "") }}
               />
             ) : (
               <p className="flex-1 text-base list-col-wrap">{description}</p>

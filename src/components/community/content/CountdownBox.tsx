@@ -2,7 +2,7 @@ import type { CountDownProps } from "@/types/communityContentType";
 import { ClockCircleOutlined } from "@ant-design/icons";
 
 const CountdownBox = ({ countdown }: CountDownProps) => {
-  const isExpired = countdown.includes("모집 종료");
+  const isExpired = countdown.includes("모집이 종료되었습니다") || countdown.includes("모집 종료");
 
   return (
     <div className="mb-6 p-4 bg-gradient-to-r from-orange-500 to-red-500 rounded-xl text-white">

@@ -9,12 +9,16 @@ export const useCountdown = (endDate?: string) => {
     const calculate = () => {
       const end = new Date(endDate);
       const now = new Date();
-      const diff = end.getTime() - now.getTime();
 
       if (isNaN(end.getTime())) {
         setCountdown("날짜 형식 오류");
         return;
       }
+
+      // 마감일을 23:59:59로 설정
+      end.setHours(23, 59, 59, 999);
+
+      const diff = end.getTime() - now.getTime();
 
       if (diff <= 0) {
         setCountdown("모집이 종료되었습니다.");
