@@ -8,7 +8,6 @@ import {
   getMyBookmarkedContests,
   getMyBookmarkedCommunities,
 } from "../../api/mypage/mypage";
-import { fetchContestPage } from "@/api/contest/contestApi";
 import { toggleScrap } from "@/api/scrap/toggle";
 import Avatar from "@/components/shared/Avatar";
 import Button from "@/components/shared/Button";
@@ -264,7 +263,11 @@ const PersonalMypage = () => {
         <div className="max-w-[1400px] mx-auto px-4">
           <div className="flex flex-col lg:flex-row justify-between items-center gap-6 lg:gap-0">
             <div className="flex flex-col lg:flex-row items-center gap-8">
-              <Avatar src={user?.profileImage} shape="circle" size="xl" />
+              <Avatar
+                src={user?.profileImage || "/images/default-avatar.png"}
+                shape="circle"
+                size="xl"
+              />
               <div className="flex flex-col gap-2 text-center lg:text-left">
                 <div className="flex items-center justify-center lg:justify-start gap-3">
                   <h2 className="text-3xl font-bold text-gray-900 dark:text-white">
