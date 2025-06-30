@@ -71,5 +71,5 @@ export interface InfoProps {
   startDate?: string;
   endDate?: string;
   recruitEndDate?: string;
-  countdownText: string;
+  //countdownText: string;
 }
