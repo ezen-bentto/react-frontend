@@ -148,6 +148,7 @@ const CompanyMypage = () => {
     fetchData();
   }, [activeTab]);
 
+  // handleScrapToggle 함수 로직을 낙관적 업데이트 방식으로 변경
   const handleScrapToggle = async (postId: number) => {
     if (!isLoggedIn) {
       alert("로그인이 필요한 기능입니다.");
@@ -155,29 +156,51 @@ const CompanyMypage = () => {
       return;
     }
 
-    try {
-      const response = await toggleScrap(postId);
-      setData(currentData => {
-        if (activeTab === "bookmarked-communities" && !response.data.isScrapped) {
-          return currentData.filter(post => post.id !== postId);
-        }
+    const targetPost = data.find(p => p.id === postId);
 
-        return currentData.map(post => {
-          if (post.id === postId) {
-            if ("likesCount" in post) {
-              return {
-                ...post,
-                scrapYn: response.data.isScrapped ? "Y" : "N",
-                likesCount: response.data.newLikesCount,
-              };
-            }
-          }
-          return post;
-        });
-      });
+    if (!targetPost || !("scrapYn" in targetPost)) {
+      console.error("스크랩할 수 없는 타입의 게시물입니다.");
+      return;
+    }
+
+    // "북마크한 커뮤니티" 탭에서 해제한 경우, 목록에서 바로 제거
+    if (activeTab === "bookmarked-communities" && targetPost.scrapYn === "Y") {
+      setData(currentData => currentData.filter(p => p.id !== postId));
+    }
+
+    // 낙관적 업데이트
+    setData(currentData =>
+      currentData.map(post => {
+        if (post.id === postId && "scrapYn" in post) {
+          const isCurrentlyScrapped = post.scrapYn === "Y";
+          const newScrapYn = isCurrentlyScrapped ? "N" : "Y";
+
+          // [수정] post.likesCount를 Number()로 감싸서 숫자형으로 변환
+          const currentLikes = Number(post.likesCount ?? 0);
+          const newLikesCount = isCurrentlyScrapped ? currentLikes - 1 : currentLikes + 1;
+
+          return {
+            ...post,
+            scrapYn: newScrapYn,
+            likesCount: newLikesCount,
+          };
+        }
+        return post;
+      })
+    );
+
+    // 실제 API 호출
+    try {
+      await toggleScrap(postId);
     } catch (error) {
       console.error("스크랩 처리 중 오류 발생:", error);
-      alert("요청 처리 중 오류가 발생했습니다.");
+      alert("요청 처리 중 오류가 발생했습니다. 원래 상태로 되돌립니다.");
+      setData(currentData =>
+        currentData.map(post => {
+          if (post.id === postId) return targetPost;
+          return post;
+        })
+      );
     }
   };
 
