@@ -8,7 +8,6 @@ import {
   getMyBookmarkedContests,
   getMyBookmarkedCommunities,
 } from "../../api/mypage/mypage";
-import { fetchContestPage } from "@/api/contest/contestApi";
 import { toggleScrap } from "@/api/scrap/toggle";
 import Avatar from "@/components/shared/Avatar";
 import Button from "@/components/shared/Button";
