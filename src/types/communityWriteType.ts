@@ -132,6 +132,3 @@ export interface SubmitPayload {
 export interface ModifyPayload extends SubmitPayload {
   communityId: number;
 }
-
-
-
