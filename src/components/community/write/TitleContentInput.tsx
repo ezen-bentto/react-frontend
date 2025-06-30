@@ -68,7 +68,7 @@ const TitleContentInput: React.FC<TitleContentInputProps> = ({
 
         // 1. Base64로 변환하여 즉시 미리보기
         const reader = new FileReader();
-        reader.onload = (e) => {
+        reader.onload = e => {
           const base64Data = e.target?.result as string;
 
           const quill = quillRef.current?.getEditor();
@@ -84,7 +84,7 @@ const TitleContentInput: React.FC<TitleContentInputProps> = ({
             if (!window.tempImageFiles) window.tempImageFiles = new Map();
             window.tempImageFiles.set(base64Data, {
               file: file,
-              fileName: file.name
+              fileName: file.name,
             });
           }
         };
@@ -92,13 +92,12 @@ const TitleContentInput: React.FC<TitleContentInputProps> = ({
 
         // 로딩 표시 제거
         document.body.removeChild(loadingToast);
-
       } catch (error) {
         console.error("이미지 처리 실패:", error);
         alert("이미지 처리에 실패했습니다.");
 
         // 로딩 표시 제거 (에러 시에도)
-        const existingToast = document.querySelector("div[style*=\"position: fixed\"]");
+        const existingToast = document.querySelector("div[style*='position: fixed']");
         if (existingToast) {
           document.body.removeChild(existingToast);
         }
@@ -107,30 +106,39 @@ const TitleContentInput: React.FC<TitleContentInputProps> = ({
   };
 
   // ReactQuill 모듈 설정
-  const modules = useMemo(() => ({
-    toolbar: {
-      container: [
-        [{ header: [1, 2, 3, false] }],
-        ["bold", "italic", "underline", "strike"],
-        [{ list: "ordered" }, { list: "bullet" }],
-        [{ color: [] }, { background: [] }],
-        [{ align: [] }],
-        ["link", "image"],
-        ["clean"],
-      ],
-      handlers: {
-        image: imageHandler, // 커스텀 이미지 핸들러
+  const modules = useMemo(
+    () => ({
+      toolbar: {
+        container: [
+          [{ header: [1, 2, 3, false] }],
+          ["bold", "italic", "underline", "strike"],
+          [{ list: "ordered" }, { list: "bullet" }],
+          [{ color: [] }, { background: [] }],
+          [{ align: [] }],
+          ["link", "image"],
+          ["clean"],
+        ],
+        handlers: {
+          image: imageHandler, // 커스텀 이미지 핸들러
+        },
       },
-    },
-  }), [communityId]);
+    }),
+    [communityId]
+  );
 
   const formats = [
     "header",
-    "bold", "italic", "underline", "strike",
-    "list", "bullet",
-    "color", "background",
+    "bold",
+    "italic",
+    "underline",
+    "strike",
+    "list",
+    "bullet",
+    "color",
+    "background",
     "align",
-    "link", "image",
+    "link",
+    "image",
   ];
 
   // 컴포넌트 언마운트 시 임시 데이터 정리

@@ -48,7 +48,7 @@ const ContestDetail = () => {
           <ListItem
             key={post.id}
             type="community"
-            linkSrc={`/community/${post.id}`}
+            linkSrc={`/community/content/${post.id}`}
             description={post.content}
             title={post.title}
             writer={`작성자 ${post.author_id}`}

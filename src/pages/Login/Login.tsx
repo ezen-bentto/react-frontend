@@ -121,7 +121,7 @@ const Login = () => {
           </button>
         </div>
 
-        <div className="flex h-10 items-center justify-center mb-4">
+        <div className="flex items-center justify-center mb-4">
           {errorMessage && (
             <Badge intent="orange" size="sm">
               {errorMessage}

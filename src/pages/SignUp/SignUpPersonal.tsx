@@ -47,7 +47,6 @@ const SignUpPersonal = () => {
         </p>
 
         <div className="flex flex-col gap-4">
-          {/* [수정] 다크모드 hover시 톤 다운된 색상 적용 */}
           <button
             type="button"
             onClick={() => handleSocialSignup("카카오")}
