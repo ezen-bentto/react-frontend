@@ -15,6 +15,7 @@ import axios from "axios";
  *        2025/06/23           이철욱               신규작성
  *        2025/06/28           이철욱               file 업로드, update api 수정
  *        2025/06/29           김혜미               reference_id 업데이트 API 추가
+ *        2025/06/30           홍수연               인증을 위해 헤더에 토큰 담아 보내도록 수정
  */
 
 export type UploadCategory = "contest" | "community" | "profile";
@@ -29,6 +30,7 @@ export interface imageProps {
 
 export const uploadImage = async (props: imageProps): Promise<string> => {
   const formData = buildFormData(props.file, props.fileName, props.id);
+  const token = localStorage.getItem("accessToken");
 
   try {
     let url = `${import.meta.env.VITE_API_URL}/api/file/${props.type}/image`;
@@ -39,6 +41,7 @@ export const uploadImage = async (props: imageProps): Promise<string> => {
     const response = await axios.post<{ fileUrl: string }>(url, formData, {
       headers: {
         "Content-Type": "multipart/form-data",
+        ...(token && { Authorization: `Bearer ${token}` }),
       },
     });
 
@@ -62,6 +65,7 @@ export const updateImageReference = async (
   fileName: string,
   newReferenceId: number
 ): Promise<void> => {
+  const token = localStorage.getItem("accessToken");
   try {
     const response = await axios.post(
       `${import.meta.env.VITE_API_URL}/api/file/update-reference`,
@@ -72,6 +76,7 @@ export const updateImageReference = async (
       {
         headers: {
           "Content-Type": "application/json",
+          ...(token && { Authorization: `Bearer ${token}` }),
         },
       }
     );
