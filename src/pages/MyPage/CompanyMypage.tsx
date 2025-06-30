@@ -14,6 +14,18 @@ import Button from "@/components/shared/Button";
 import ListItem from "@/components/shared/ListItem";
 import Badge from "@/components/shared/Badge";
 
+const getContestCategoryLabel = (categoryId: number): string => {
+  const categoryMap: Record<number, string> = {
+    1: "포스터/웹툰/콘텐츠",
+    2: "사진/영상/UCC",
+    3: "아이디어/기획",
+    4: "IT/학술/논문",
+    5: "네이밍/슬로건",
+    6: "스포츠/음악",
+    7: "미술/디자인/건축",
+  };
+  return categoryMap[categoryId] || "기타";
+};
 interface Post {
   id: number;
   title: string;
@@ -30,7 +42,21 @@ interface BookmarkedContest {
   title: string;
   organizer: string;
   endDate: string;
+  organizerTypeTag?: string;
+  participantsTag?: string;
+  categoryTag?: string;
 }
+
+interface DbContestData {
+  id: number;
+  title: string;
+  organizer: string;
+  endDate: string;
+  organizer_type: string;
+  participants: string;
+  category_id: number;
+}
+
 type MypageData = Post | BookmarkedContest | BookmarkedCommunity;
 
 const CompanyMypage = () => {
@@ -55,37 +81,43 @@ const CompanyMypage = () => {
       setLoading(true);
       try {
         if (activeTab === "bookmarked-contests") {
-          // 1. 백엔드에서 데이터를 가져옵니다.
-          //    이 시점의 crawledContestIds는 실제로는 ["3"] 같은 문자열 배열입니다.
-          const { crawledContestIds, dbContests } = await getMyBookmarkedContests();
-
-          // 2. API에서 받은 문자열 배열을 숫자 배열로 변환합니다.
-          //    이제 numericCrawledIds는 [3] 과 같은 숫자 배열이 되어 타입스크립트와 일치합니다.
+          // 1. 데이터 가져오기
+          const { crawledContestIds, dbContests: rawDbContests } = await getMyBookmarkedContests();
           const numericCrawledIds = crawledContestIds.map(id => Number(id));
 
+          // 2. 크롤링 데이터 가공
           let crawledContests: BookmarkedContest[] = [];
-
-          if (numericCrawledIds && numericCrawledIds.length > 0) {
+          if (numericCrawledIds.length > 0) {
             const allCrawledData = await fetchContestPage();
-
-            // 3. 이제 숫자 배열을 사용하여 숫자 ID를 직접 비교합니다.
-            const bookmarkedCrawledData = allCrawledData.filter(contest => {
-              // contest.id (숫자)와 numericCrawledIds (숫자 배열)를 비교합니다.
-              // 이제 타입이 일치하므로 에러가 발생하지 않습니다.
-              return numericCrawledIds.includes(contest.id);
-            });
-
+            const bookmarkedCrawledData = allCrawledData.filter(contest =>
+              numericCrawledIds.includes(contest.id)
+            );
             crawledContests = bookmarkedCrawledData.map(item => ({
-              id: item.id, // 이미 숫자이므로 Number()로 감쌀 필요 없음
+              id: item.id,
               title: item.title,
               organizer: item.organizer,
               endDate: item.end_date,
+              organizerTypeTag: item.organizer_type,
+              participantsTag: item.participants,
+              categoryTag: item.contest_tag?.split(",")[0].trim(),
             }));
           }
 
+          // 3. [수정] DB 데이터 가공 (category_id 매핑 추가)
+          const dbContests = (rawDbContests as DbContestData[]).map(item => ({
+            id: item.id,
+            title: item.title,
+            organizer: item.organizer,
+            endDate: item.endDate,
+            organizerTypeTag: item.organizer_type,
+            participantsTag: item.participants,
+            // category_id를 한글 라벨로 변환하여 categoryTag에 할당
+            categoryTag: getContestCategoryLabel(item.category_id),
+          }));
+
+          // 4. 가공된 두 데이터 합치고 정렬
           const allBookmarkedIds = [...numericCrawledIds, ...dbContests.map(c => c.id)];
           const combinedData = [...crawledContests, ...dbContests];
-
           const sortedData = allBookmarkedIds
             .map(id => combinedData.find(item => item.id === id))
             .filter((item): item is BookmarkedContest => !!item);
@@ -126,9 +158,11 @@ const CompanyMypage = () => {
               type="contest"
               linkSrc={`/contest/${item.id}`}
               title={item.title}
-              description={item.organizer}
               endDate={item.endDate}
               organizer={item.organizer}
+              organizerTypeTag={item.organizerTypeTag}
+              participantsTag={item.participantsTag}
+              categoryTag={item.categoryTag}
             />
           ))}
         </ul>
