@@ -1,5 +1,5 @@
 //react-frontend\src\pages\Contest\ContestList.tsx
-import { fetchContestList, fetchContestPage } from "@/api/contest/contestApi";
+import { fetchContestList, fetchDataDetail } from "@/api/contest/content";
 import Card from "@/components/shared/Card";
 import Fillter from "@/components/shared/Fillter";
 import Pagination from "@/components/shared/Pagination";
@@ -59,7 +59,7 @@ const ContestList = () => {
   useEffect(() => {
     async function fetchData() {
       setIsLoading(true);
-      const [crawledData, dbData] = await Promise.all([fetchContestPage(), fetchContestList()]);
+      const [crawledData, dbData] = await Promise.all([fetchDataDetail(), fetchContestList()]);
 
       // id number 변환
       const normalizedCrawledData = (crawledData || []).map(item => ({

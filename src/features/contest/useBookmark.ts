@@ -1,4 +1,4 @@
-import { fetchBookmarkCnt, fetchCheckBookmark, fetchIsBookmark } from "@/api/contest/list";
+import { fetchBookmarkCnt, fetchCheckBookmark, fetchIsBookmark } from "@/api/contest/bookmark";
 import { keepPreviousData, useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useRef } from "react";
 

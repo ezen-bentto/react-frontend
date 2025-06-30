@@ -1,4 +1,4 @@
-import { fetchContestPage } from "@/api/contest/contestApi";
+import { fetchDataDetail } from "@/api/contest/content";
 import type { ContestStore } from "@/types/contestType";
 
 import { create } from "zustand";
@@ -9,7 +9,7 @@ export const useContestStore = create<ContestStore>(set => ({
   latestContests: [],
 
   fetchContest: async () => {
-    const contests = await fetchContestPage();
+    const contests = await fetchDataDetail();
 
     const viewSorted = [...contests].sort((a, b) => b.views - a.views);
     const ascSorted = [...contests].sort((a, b) => parseInt(a.reg_date) - parseInt(b.reg_date));
