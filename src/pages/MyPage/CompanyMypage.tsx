@@ -9,6 +9,7 @@ import {
   getMyBookmarkedCommunities,
 } from "../../api/mypage/mypage";
 import { fetchContestPage } from "@/api/contest/contestApi";
+import { toggleScrap } from "@/api/scrap/toggle";
 import Avatar from "@/components/shared/Avatar";
 import Button from "@/components/shared/Button";
 import ListItem from "@/components/shared/ListItem";
@@ -33,6 +34,9 @@ interface Post {
   recruitEndDate?: string;
   categoryType?: string;
   communityType: string;
+  commentCount?: number;
+  likesCount?: number;
+  scrapYn?: "Y" | "N";
 }
 interface BookmarkedCommunity extends Post {
   authorNickname: string;
@@ -62,7 +66,7 @@ type MypageData = Post | BookmarkedContest | BookmarkedCommunity;
 const CompanyMypage = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const { user } = useAuth();
+  const { user, isLoggedIn } = useAuth();
 
   const queryParams = new URLSearchParams(location.search);
   const initialTab = queryParams.get("tab") || "bookmarked-contests";
@@ -103,7 +107,7 @@ const CompanyMypage = () => {
             }));
           }
 
-          // 3. [수정] DB 데이터 가공 (category_id 매핑 추가)
+          // 3. DB 데이터 가공 (category_id 매핑 추가)
           const dbContests = (rawDbContests as DbContestData[]).map(item => ({
             id: item.id,
             title: item.title,
@@ -143,6 +147,39 @@ const CompanyMypage = () => {
     };
     fetchData();
   }, [activeTab]);
+
+  const handleScrapToggle = async (postId: number) => {
+    if (!isLoggedIn) {
+      alert("로그인이 필요한 기능입니다.");
+      navigate("/login");
+      return;
+    }
+
+    try {
+      const response = await toggleScrap(postId);
+      setData(currentData => {
+        if (activeTab === "bookmarked-communities" && !response.data.isScrapped) {
+          return currentData.filter(post => post.id !== postId);
+        }
+
+        return currentData.map(post => {
+          if (post.id === postId) {
+            if ("likesCount" in post) {
+              return {
+                ...post,
+                scrapYn: response.data.isScrapped ? "Y" : "N",
+                likesCount: response.data.newLikesCount,
+              };
+            }
+          }
+          return post;
+        });
+      });
+    } catch (error) {
+      console.error("스크랩 처리 중 오류 발생:", error);
+      alert("요청 처리 중 오류가 발생했습니다.");
+    }
+  };
 
   const renderList = () => {
     if (loading) return <p className="text-center py-8 dark:text-white">로딩 중...</p>;
@@ -186,6 +223,10 @@ const CompanyMypage = () => {
               }
               communityType={item.communityType}
               categoryType={item.categoryType}
+              comment={item.commentCount}
+              likes={item.likesCount}
+              scrapYn={item.scrapYn}
+              onScrapClick={() => handleScrapToggle(item.id)}
             />
           ))}
         </ul>
@@ -235,22 +276,36 @@ const CompanyMypage = () => {
       <section className="py-8 px-4">
         <div className="max-w-[1400px] mx-auto">
           {/* 탭 버튼에 activeTab 상태에 따른 조건부 스타일링 적용 */}
-          <div className="flex mb-8 overflow-x-auto border-b-2 border-gray-200 dark:border-gray-700 scrollbar-hide">
+          <div className="flex mb-8 border-b-2 border-gray-200 dark:border-gray-700">
             <button
               onClick={() => handleTabChange("bookmarked-contests")}
-              className={`px-6 py-3 text-base font-medium whitespace-nowrap border-b-2 transition-colors ${activeTab === "bookmarked-contests" ? "border-blue-600 text-blue-600 dark:border-blue-400 dark:text-blue-400" : "border-transparent text-gray-500 hover:text-gray-800 dark:hover:text-gray-200"}`}
+              className={`flex-1 text-center px-3 py-3 text-base font-medium border-b-2 transition-colors ${
+                activeTab === "bookmarked-contests"
+                  ? "border-blue-600 text-blue-600 dark:border-blue-400 dark:text-blue-400"
+                  : "border-transparent text-gray-500 hover:text-gray-800 dark:hover:text-gray-200"
+              }`}
             >
-              북마크한 공모전
+              <span className="md:hidden">공모전</span>
+              <span className="hidden md:inline">북마크한 공모전</span>
             </button>
             <button
               onClick={() => handleTabChange("bookmarked-communities")}
-              className={`px-6 py-3 text-base font-medium whitespace-nowrap border-b-2 transition-colors ${activeTab === "bookmarked-communities" ? "border-blue-600 text-blue-600 dark:border-blue-400 dark:border-blue-400" : "border-transparent text-gray-500 hover:text-gray-800 dark:hover:text-gray-200"}`}
+              className={`flex-1 text-center px-3 py-3 text-base font-medium border-b-2 transition-colors ${
+                activeTab === "bookmarked-communities"
+                  ? "border-blue-600 text-blue-600 dark:border-blue-400 dark:text-blue-400"
+                  : "border-transparent text-gray-500 hover:text-gray-800 dark:hover:text-gray-200"
+              }`}
             >
-              북마크한 커뮤니티
+              <span className="md:hidden">커뮤니티</span>
+              <span className="hidden md:inline">북마크한 커뮤니티</span>
             </button>
             <button
               onClick={() => handleTabChange("my-posts")}
-              className={`px-6 py-3 text-base font-medium whitespace-nowrap border-b-2 transition-colors ${activeTab === "my-posts" ? "border-blue-600 text-blue-600 dark:border-blue-400 dark:border-blue-400" : "border-transparent text-gray-500 hover:text-gray-800 dark:hover:text-gray-200"}`}
+              className={`flex-1 text-center px-3 py-3 text-base font-medium border-b-2 transition-colors ${
+                activeTab === "my-posts"
+                  ? "border-blue-600 text-blue-600 dark:border-blue-400 dark:text-blue-400"
+                  : "border-transparent text-gray-500 hover:text-gray-800 dark:hover:text-gray-200"
+              }`}
             >
               내가 쓴 글
             </button>
