@@ -1,6 +1,14 @@
 import { CalendarOutlined, TeamOutlined, UserOutlined } from "@ant-design/icons";
 import CountdownBox from "./CountdownBox";
-import type { InfoProps } from "@/types/communityContentType";
+import { useCountdown } from "@/features/community/useCountdown";
+
+interface OptimizedInfoProps {
+  communityType: string;
+  ageGroup: string;
+  startDate?: string;
+  endDate?: string;
+  recruitEndDate?: string;
+}
 
 const Info = ({
   communityType,
@@ -8,8 +16,10 @@ const Info = ({
   startDate,
   endDate,
   recruitEndDate,
-  countdownText,
-}: InfoProps) => {
+}: OptimizedInfoProps) => {
+  // Info 컴포넌트 내부에서 카운트다운 관리
+  const countdownText = useCountdown(recruitEndDate);
+
   const ageGroupLabel: Record<string, string> = {
     "1": "대학생",
     "2": "직장인/일반인",
