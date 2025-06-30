@@ -39,6 +39,19 @@ import countDate from "@/utils/countDate";
  * @param scrapYn 스크랩 여부 (Y/N)
  */
 
+const getDivisionLabel = (division: number): string => {
+  const divisionMap: Record<number, string> = {
+    1: "포스터/웹툰/콘텐츠",
+    2: "사진/영상/UCC",
+    3: "아이디어/기획",
+    4: "IT/학술/논문",
+    5: "네이밍/슬로건",
+    6: "스포츠/음악",
+    7: "미술/디자인/건축",
+  };
+  return divisionMap[division] || "기타";
+};
+
 const getCategoryTypeLabel = (categoryType: string): string => {
   const categoryMap: Record<string, string> = {
     1: "포스터/웹툰/콘텐츠",
@@ -74,20 +87,25 @@ interface ListItemBaseProps extends ListItemVariants {
 // 2. Community 타입 전용 Props
 interface CommunityListItemProps extends ListItemBaseProps {
   type: "community";
-  description: string; // Community 타입은 description이 필수
+  description: string;
   writer?: string;
   comment?: number;
   likes?: number;
   communityType?: string;
   categoryType?: string;
+  division?: number;
+  region?: string;
 }
 
 // 3. Policy 타입 전용 Props
 interface PolicyListItemProps extends ListItemBaseProps {
   type: "policy";
-  description: string; // Policy 타입도 description이 필수
+  description: string;
   region?: string;
   category?: string;
+  comment?: number;
+  likes?: number;
+  writer?: string;
 }
 
 // 4. Contest 타입 전용 Props
@@ -97,6 +115,7 @@ interface ContestListItemProps extends ListItemBaseProps {
   organizerTypeTag?: string;
   participantsTag?: string;
   categoryTag?: string;
+  division?: number;
 }
 
 // 5. 위 타입들을 모두 포함하는 최종 Props 타입
@@ -158,6 +177,12 @@ const ListItem = (props: ListItemProps) => {
                 {props.categoryTag}
               </Badge>
             )}
+            {(props.type === "contest" || props.type === "community") &&
+              props.division !== undefined && (
+                <Badge size="sm" intent="primary">
+                  {getDivisionLabel(props.division)}
+                </Badge>
+              )}
           </div>
 
           {/* D-day 뱃지 로직 */}
