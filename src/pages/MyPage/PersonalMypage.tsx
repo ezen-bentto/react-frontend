@@ -8,11 +8,11 @@ import {
   getMyBookmarkedContests,
   getMyBookmarkedCommunities,
 } from "../../api/mypage/mypage";
-import { fetchContestPage } from "@/api/contest/contestApi";
 import Avatar from "@/components/shared/Avatar";
 import Button from "@/components/shared/Button";
 import ListItem from "@/components/shared/ListItem";
 import Badge from "@/components/shared/Badge";
+import { fetchDataDetail } from "@/api/contest/contestApi";
 
 const getContestCategoryLabel = (categoryId: number): string => {
   const categoryMap: Record<number, string> = {
@@ -88,7 +88,7 @@ const PersonalMypage = () => {
           // 2. 크롤링 데이터 가공
           let crawledContests: BookmarkedContest[] = [];
           if (numericCrawledIds.length > 0) {
-            const allCrawledData = await fetchContestPage();
+            const allCrawledData = await fetchDataDetail();
             const bookmarkedCrawledData = allCrawledData.filter(contest =>
               numericCrawledIds.includes(contest.id)
             );

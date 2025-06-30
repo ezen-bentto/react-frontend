@@ -6,11 +6,13 @@ import Title from "@/components/shared/Title";
 import type { CommunityListItem } from "@/types/contestDetailType";
 import { useDetail } from "@/features/contest/useDetail";
 import { useAuth } from "@/context/AuthContext";
+import { useContestDelete } from "@/features/contest/useDelete";
 
 const ContestDetail = () => {
   const { id } = useParams();
   const parsedId = id ? parseInt(id) : undefined;
   const { user } = useAuth();
+  const { mutate: contestDelete } = useContestDelete(parsedId!);
 
   const { data, isLoading, isError } = useDetail(parsedId);
 
@@ -28,8 +30,13 @@ const ContestDetail = () => {
             <span>
               <Link to={`/contest/${id}/edit`}>수정 |</Link>
             </span>
-            <span>
-              <Link to={`/contest/${id}/delete`}>삭제</Link>
+            <span
+              className="cursor-pointer"
+              onClick={() => {
+                contestDelete();
+              }}
+            >
+              삭제
             </span>
           </div>
         )}

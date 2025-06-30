@@ -1,4 +1,4 @@
-import { fetchContestDetail, fetchContestPage } from "@/api/contest/contestApi";
+import { fetchContestDetail, fetchDataDetail } from "@/api/contest/contestApi";
 import type { ContestDetail } from "@/types/contestType";
 import { useQuery } from "@tanstack/react-query";
 
@@ -11,7 +11,7 @@ export const useDetail = (contestId: number | undefined) => {
 
       const numId = Number(contestId);
       if (numId < 241) {
-        const res = await fetchContestPage();
+        const res = await fetchDataDetail();
         const target = res.find(item => item.id === numId);
         if (!target) throw new Error("Contest not found");
         return target;
