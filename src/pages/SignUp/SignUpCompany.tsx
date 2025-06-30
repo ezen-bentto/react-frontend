@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { signUpCompany, type CompanySignUpPayload } from "../../api/auth";
@@ -6,6 +6,7 @@ import Title from "@/components/shared/Title";
 import Button from "@/components/shared/Button";
 import Input from "@/components/shared/Input";
 import Badge from "@/components/shared/Badge";
+import AlertModal from "@/components/shared/AlertModal";
 
 // form의 상태를 위한 타입 정의
 interface SignUpForm {
@@ -27,6 +28,7 @@ const formatPhoneNumber = (digits: string) => {
 
 const SignUpCompany = () => {
   const navigate = useNavigate();
+  const modalRef = useRef<HTMLDialogElement>(null);
   const [form, setForm] = useState<SignUpForm>({
     email: "",
     password: "",
@@ -38,9 +40,20 @@ const SignUpCompany = () => {
   const [passwordValid, setPasswordValid] = useState<boolean | null>(null);
   const [errorMessage, setErrorMessage] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
+  const [agreedToTerms, setAgreedToTerms] = useState(false);
 
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   const passwordRegex = /^(?=.*[0-9])(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{8,}$/;
+
+  useEffect(() => {
+    if (errorMessage || successMessage) {
+      const timer = setTimeout(() => {
+        setErrorMessage("");
+        setSuccessMessage("");
+      }, 4000); // 4초
+      return () => clearTimeout(timer);
+    }
+  }, [errorMessage, successMessage]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -76,6 +89,11 @@ const SignUpCompany = () => {
     e.preventDefault();
     setErrorMessage("");
     setSuccessMessage("");
+
+    if (!agreedToTerms) {
+      setErrorMessage("이용약관에 동의해야 회원가입을 진행할 수 있습니다.");
+      return;
+    }
 
     if (!emailRegex.test(form.email)) {
       setErrorMessage("유효한 이메일 주소를 입력해주세요.");
@@ -121,15 +139,27 @@ const SignUpCompany = () => {
     }
   };
 
+  const handleTermsAreaClick = () => {
+    if (agreedToTerms) {
+      // 이미 동의한 상태이면, 클릭 시 동의를 해제합니다.
+      setAgreedToTerms(false);
+    } else {
+      // 동의하지 않은 상태이면, 클릭 시 모달을 엽니다.
+      modalRef.current?.showModal();
+    }
+  };
+
+  const handleAgreeInModal = () => {
+    setAgreedToTerms(true);
+    modalRef.current?.close();
+  };
+
   return (
     <div className="flex min-h-screen items-center justify-center px-4 py-8 pt-28">
       <div className="w-full max-w-md rounded-2xl border border-gray-200 p-8 shadow-xl dark:border-gray-700">
-        <Title titleText="기업 회원가입" className="mb-2 text-center text-3xl font-bold" />
-        <p className="mb-2 text-center text-gray-600 dark:text-gray-400">
-          기업 정보를 입력해주세요
-        </p>
+        <Title titleText="기업 회원가입" className="mb-6 text-center text-3xl font-bold" />
 
-        <div className="flex h-4 items-center justify-center">
+        <div className="flex h-4 items-center justify-center ">
           {errorMessage && (
             <Badge intent="orange" size="sm">
               {errorMessage}
@@ -219,6 +249,22 @@ const SignUpCompany = () => {
             />
           </div>
 
+          <div
+            className="flex items-center gap-2 mt-2 cursor-pointer"
+            onClick={handleTermsAreaClick}
+          >
+            <input
+              type="checkbox"
+              id="terms-checkbox"
+              checked={agreedToTerms}
+              readOnly
+              className="size-4 rounded border-gray-300 bg-gray-100 accent-blue-600 pointer-events-none"
+            />
+            <label className="text-sm text-gray-700 dark:text-gray-300">
+              이용약관에 동의합니다 (필수)
+            </label>
+          </div>
+
           <div className="mt-4">
             <Button type="submit" intent="sky" size="lg" className="w-full">
               회원가입
@@ -237,6 +283,27 @@ const SignUpCompany = () => {
           </p>
         </form>
       </div>
+      <AlertModal
+        ref={modalRef}
+        modalId="terms_modal"
+        title="이용약관"
+        actions={
+          <>
+            <button type="button" className="btn" onClick={() => modalRef.current?.close()}>
+              닫기
+            </button>
+            <button type="button" className="btn btn-primary" onClick={handleAgreeInModal}>
+              동의
+            </button>
+          </>
+        }
+      >
+        <div className="prose max-w-none dark:prose-invert">
+          <p>제1조 (목적) 이 약관은 ...</p>
+          <p>제2조 (정의) ...</p>
+          <p>이용약관의 전체 내용을 확인하였으며, 이에 동의합니다.</p>
+        </div>
+      </AlertModal>
     </div>
   );
 };

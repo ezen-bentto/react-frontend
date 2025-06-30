@@ -1,4 +1,7 @@
+import { useState, useEffect } from "react";
 import { avatarContainer, avatarImageWrapper, avatarImage } from "../style/avatar";
+
+const DEFAULT_AVATAR_URL = "/images/default-avatar.png";
 
 /**
  *
@@ -23,17 +26,42 @@ import { avatarContainer, avatarImageWrapper, avatarImage } from "../style/avata
  */
 
 interface AvatarProps {
-  src: string;
+  src: string | null | undefined;
   alt?: string;
   size?: "sm" | "md" | "lg" | "xl";
   shape?: "square" | "circle";
 }
 
 const Avatar = ({ src, alt = "avatar", size, shape }: AvatarProps) => {
+  const [imageError, setImageError] = useState(false);
+
+  // src prop이 변경될 때마다 에러 상태 초기화
+  useEffect(() => {
+    setImageError(false);
+  }, [src]);
+
+  //  src가 유효하고 에러가 없을 때만 src를 사용하고, 그 외에는 기본 URL 사용
+  // imageSrc의 타입이 항상 string임을 보장
+  const imageSrc = src && !imageError ? src : DEFAULT_AVATAR_URL;
+
+  // 이미지 로딩에 실패했을 때 호출될 함수
+  const handleError = () => {
+    // 이미 에러 상태이거나, 기본 이미지 로딩 실패 시 무한 루프 방지
+    if (!imageError) {
+      setImageError(true);
+    }
+  };
+
   return (
     <div className={avatarContainer()}>
       <div className={avatarImageWrapper({ size, shape })}>
-        <img src={src} alt={alt} className={avatarImage()} />
+        <img
+          src={imageSrc}
+          alt={alt}
+          className={avatarImage()}
+          // 이미지 로딩 실패 시 handleError 함수 호출
+          onError={handleError}
+        />
       </div>
     </div>
   );

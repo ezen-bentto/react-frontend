@@ -186,16 +186,20 @@ const ListItem = (props: ListItemProps) => {
           </div>
 
           {/* D-day 뱃지 로직 */}
-          {endDate && daysLeft > 0 && (
-            <Badge intent="orange" size="sm">
-              D-{daysLeft}
-            </Badge>
-          )}
-          {endDate && daysLeft <= 0 && (
-            <Badge intent="default" size="sm">
-              마감
-            </Badge>
-          )}
+          <div className="flex-shrink-0">
+            {" "}
+            {/* D-day 뱃지가 찌그러지지 않도록 flex-shrink-0 추가 */}
+            {endDate && daysLeft > 0 && (
+              <Badge intent="orange" size="sm">
+                D-{daysLeft}
+              </Badge>
+            )}
+            {endDate && daysLeft <= 0 && (
+              <Badge intent="default" size="sm">
+                마감
+              </Badge>
+            )}
+          </div>
         </div>
 
         {/* 제목 */}

@@ -1,5 +1,5 @@
 // src/components/shared/AlertModal.tsx
-import React from "react";
+import React, { forwardRef } from "react";
 import { modal, type ModalVariants } from "@/components/style/alertModal";
 
 /**
@@ -28,39 +28,30 @@ import { modal, type ModalVariants } from "@/components/style/alertModal";
  */
 
 interface AlertModalProps extends React.DialogHTMLAttributes<HTMLDialogElement>, ModalVariants {
-  className?: string;
+  modalId: string;
+  title: string;
   children: React.ReactNode;
+  actions?: React.ReactNode; // 버튼 등을 외부에서 주입받기 위한 prop
+  className?: string;
 }
 
-const AlertModal = ({ className, size, intent, children, ...props }: AlertModalProps) => {
-  const combinedClass = `${modal({ size, intent })} ${className ?? ""}`.trim();
+// forwardRef를 사용하여 부모 컴포넌트에서 dialog 엘리먼트를 직접 제어할 수 있도록 함
+const AlertModal = forwardRef<HTMLDialogElement, AlertModalProps>(
+  ({ modalId, title, children, actions, className, size, intent, ...props }, ref) => {
+    const combinedClass = `${modal({ size, intent })} ${className ?? ""}`.trim();
 
-  return (
-    <>
-      <button
-        className="btn text-brand-primary"
-        onClick={() => {
-          const modal = document.getElementById("my_modal_1");
-          if (modal instanceof HTMLDialogElement) {
-            modal.showModal();
-          }
-        }}
-      >
-        눌러봥
-      </button>
-      <dialog id="my_modal_1" className={combinedClass} {...props}>
-        <div className="modal-box text-2xl">
-          <h3 className="text-4xl font-bold">Hello!</h3>
-          <p className="py-4">{children}</p>
-          <div className="modal-action">
-            <form method="dialog">
-              <button className="btn">Close</button>
-            </form>
-          </div>
+    return (
+      <dialog id={modalId} className={combinedClass} ref={ref} {...props}>
+        <div className="modal-box">
+          <h3 className="text-2xl font-bold">{title}</h3>
+          <div className="py-4">{children}</div>
+          <div className="modal-action">{actions}</div>
         </div>
       </dialog>
-    </>
-  );
-};
+    );
+  }
+);
+
+AlertModal.displayName = "AlertModal"; // forwardRef 사용 시 displayName 설정 권장
 
 export default AlertModal;
