@@ -11,7 +11,6 @@ import PostDeleteResultModal from "@/components/community/modal/PostDeleteResult
 import CommentDeleteModal from "@/components/community/modal/CommentDeleteModal";
 import CommentResultModal from "@/components/community/modal/CommentResultModal";
 import { useCommunityData } from "@/features/community/useCommunityData";
-import { useCountdown } from "@/features/community/useCountdown";
 import { useEffect, useState } from "react";
 import { toggleScrap } from "@/api/scrap/toggle";
 import { registerComment } from "@/api/comment/register";
@@ -44,7 +43,7 @@ const CommunityContent = () => {
   const { community, comments, isLoading, error, reloadComments, reloadCommunity } =
     useCommunityData(communityId);
 
-  const countdown = useCountdown(community?.recruit_end_date);
+  //const countdown = useCountdown(community?.recruit_end_date);
   const [isDarkMode, setIsDarkMode] = useState(false);
   const [deleteModalState, setDeleteModalState] = useState({
     type: null as "confirm" | "success" | "error" | null,
@@ -155,7 +154,6 @@ const CommunityContent = () => {
             startDate={community.start_date}
             endDate={community.end_date}
             recruitEndDate={community.recruit_end_date}
-            countdownText={countdown}
           />
           <Details
             contentHtml={community.content || ""}
