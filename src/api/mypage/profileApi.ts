@@ -1,3 +1,4 @@
+//react-frontend\src\api\mypage\profileApi.ts
 import axiosInstance from "../axiosInstance";
 
 // 프로필 정보 업데이트를 위한 데이터 타입

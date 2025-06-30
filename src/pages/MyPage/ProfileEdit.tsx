@@ -95,7 +95,7 @@ const ProfileEdit = () => {
 
       if (updateResponse.success) {
         setMessageType("success");
-        setMessage("프로필이 성공적으로 수정되었습니다.마이페이지로 돌아갑니다.");
+        setMessage("프로필이 성공적으로 수정되었습니다.\n마이페이지로 돌아갑니다.");
 
         // 3. AuthContext의 유저 정보를 업데이트하여 앱 전체에 반영
         const { accessToken, refreshToken } = updateResponse.data;
@@ -155,7 +155,7 @@ const ProfileEdit = () => {
           <div className="flex h-6 items-center justify-center">
             {message && (
               <Badge intent={messageType === "error" ? "orange" : "default"} size="sm">
-                {message}
+                <span className="whitespace-pre-line text-center">{message}</span>
               </Badge>
             )}
           </div>

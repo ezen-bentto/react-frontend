@@ -28,6 +28,15 @@ interface DecodedToken {
   profileImage?: string;
 }
 
+// 상대 경로를 절대 경로 URL로 변환하는 헬퍼 함수
+const createFullImageUrl = (path: string | null | undefined): string | undefined => {
+  if (path && path.startsWith("/")) {
+    return `${import.meta.env.VITE_API_URL}${path}`;
+  }
+  // 이미 전체 주소이거나, null/undefined이면 그대로 반환
+  return path ?? undefined;
+};
+
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [user, setUser] = useState<AuthUser | null>(null);
@@ -42,7 +51,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
           nickname: decodedUser.nickname,
           userType: decodedUser.userType,
           email: decodedUser.email,
-          profileImage: decodedUser.profileImage,
+          profileImage: createFullImageUrl(decodedUser.profileImage),
         });
         setIsLoggedIn(true);
       } catch (error) {
@@ -62,7 +71,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         nickname: decodedUser.nickname,
         userType: decodedUser.userType,
         email: decodedUser.email,
-        profileImage: decodedUser.profileImage,
+        profileImage: createFullImageUrl(decodedUser.profileImage),
       });
       setIsLoggedIn(true);
     } catch (error) {
