@@ -1,5 +1,5 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { fetchContestEdit } from "@/api/contest/contestApi";
+import { fetchContestEdit } from "@/api/contest/content";
 import type { RequestContestData } from "@/types/contestType";
 
 export const useEditContestMutation = (contestId: number) => {

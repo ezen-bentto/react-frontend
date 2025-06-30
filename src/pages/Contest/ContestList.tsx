@@ -1,5 +1,5 @@
 //react-frontend\src\pages\Contest\ContestList.tsx
-import { fetchContestList, fetchDataDetail } from "@/api/contest/contestApi";
+import { fetchContestList, fetchDataDetail } from "@/api/contest/content";
 import Card from "@/components/shared/Card";
 import Fillter from "@/components/shared/Fillter";
 import Pagination from "@/components/shared/Pagination";

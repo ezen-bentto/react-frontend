@@ -1,4 +1,4 @@
-import { fetchContestDetail, fetchDataDetail } from "@/api/contest/contestApi";
+import { fetchContestDetail, fetchDataDetail } from "@/api/contest/content";
 import type { ContestDetail } from "@/types/contestType";
 import { useQuery } from "@tanstack/react-query";
 

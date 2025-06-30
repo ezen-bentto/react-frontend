@@ -1,5 +1,5 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { fetchContestDelete } from "@/api/contest/contestApi";
+import { fetchContestDelete } from "@/api/contest/content";
 import { useNavigate } from "react-router-dom";
 
 export const useContestDelete = (contestId: number) => {

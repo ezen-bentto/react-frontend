@@ -12,7 +12,7 @@ import Avatar from "@/components/shared/Avatar";
 import Button from "@/components/shared/Button";
 import ListItem from "@/components/shared/ListItem";
 import Badge from "@/components/shared/Badge";
-import { fetchDataDetail } from "@/api/contest/contestApi";
+import { fetchDataDetail } from "@/api/contest/content";
 
 const getContestCategoryLabel = (categoryId: number): string => {
   const categoryMap: Record<number, string> = {
@@ -244,13 +244,13 @@ const PersonalMypage = () => {
             </button>
             <button
               onClick={() => handleTabChange("bookmarked-communities")}
-              className={`px-6 py-3 text-base font-medium whitespace-nowrap border-b-2 transition-colors ${activeTab === "bookmarked-communities" ? "border-blue-600 text-blue-600 dark:border-blue-400 dark:border-blue-400" : "border-transparent text-gray-500 hover:text-gray-800 dark:hover:text-gray-200"}`}
+              className={`px-6 py-3 text-base font-medium whitespace-nowrap border-b-2 transition-colors ${activeTab === "bookmarked-communities" ? "border-blue-600 text-blue-600 dark:border-blue-400" : "border-transparent text-gray-500 hover:text-gray-800 dark:hover:text-gray-200"}`}
             >
               북마크한 커뮤니티
             </button>
             <button
               onClick={() => handleTabChange("my-posts")}
-              className={`px-6 py-3 text-base font-medium whitespace-nowrap border-b-2 transition-colors ${activeTab === "my-posts" ? "border-blue-600 text-blue-600 dark:border-blue-400 dark:border-blue-400" : "border-transparent text-gray-500 hover:text-gray-800 dark:hover:text-gray-200"}`}
+              className={`px-6 py-3 text-base font-medium whitespace-nowrap border-b-2 transition-colors ${activeTab === "my-posts" ? "border-blue-600 text-blue-600 dark:border-blue-400" : "border-transparent text-gray-500 hover:text-gray-800 dark:hover:text-gray-200"}`}
             >
               내가 쓴 글
             </button>

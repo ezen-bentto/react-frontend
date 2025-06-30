@@ -1,4 +1,4 @@
-import { fetchDataDetail } from "@/api/contest/contestApi";
+import { fetchDataDetail } from "@/api/contest/content";
 import type { ContestStore } from "@/types/contestType";
 
 import { create } from "zustand";

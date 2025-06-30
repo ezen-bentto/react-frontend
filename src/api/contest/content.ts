@@ -16,7 +16,6 @@ export const fetchContestDetail = async (id: number) => {
   const response = await axios.get<{ data: ContestWithCommunity }>(
     `${import.meta.env.VITE_API_URL}/api/contest/getDetail?id=${id}`
   );
-  console.info(response.data.data);
   return response.data.data;
 };
 
