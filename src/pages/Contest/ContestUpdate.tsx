@@ -24,7 +24,7 @@ const ContestUpdate = () => {
   const handleChange = (updated: Partial<ContestFormData>) =>
     setContestFormData(prev => ({ ...prev, ...updated }));
 
-  // ✅ useQuery로 받아온 데이터를 ContestFormData 형식으로 변환
+  // useQuery로 받아온 데이터를 ContestFormData 형식으로 변환
   useEffect(() => {
     if (!data) return;
 
@@ -35,8 +35,6 @@ const ContestUpdate = () => {
         const blobFile = bufferJsonToBlob(data.file_path, "image/png");
         file_path = blobToFile(blobFile, data.save_name);
       }
-
-      if (!file_path) return;
 
       const transformedData: ContestFormData = {
         ...data,
@@ -54,7 +52,7 @@ const ContestUpdate = () => {
 
   const handleSubmit = async () => {
     try {
-      // 1️⃣ 이미지가 새로 업로드 되었으면 따로 전송
+      // 이미지가 새로 업로드 되었으면 따로 전송
       if (isImageUpdated) {
         const blobImage = await fileToBlob(contestFormData.file_path!);
         const requsetData: imageProps = {
@@ -67,7 +65,7 @@ const ContestUpdate = () => {
         await uploadImage(requsetData);
       }
 
-      // 2️⃣ 게시글 정보만 수정
+      // 게시글 정보만 수정
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const { file_path, save_name, ...restData } = contestFormData;
       const transformed: RequestContestData = {

@@ -1,4 +1,4 @@
-import { fetchContestWrite } from "@/api/contest/contestApi";
+import { fetchContestWrite } from "@/api/contest/content";
 import { useNavigate } from "react-router-dom";
 import type { ContestFormData } from "@/types/contestType";
 import { useState } from "react";

@@ -58,23 +58,25 @@ const PolicySider = () => {
           640: { slidesPerView: 1 },
         }}
       >
-        {items &&
-          items.map(item => {
-            const linkHref = getPolicyLink(item.region, item.link);
-            return (
-              <SwiperSlide key={item.id}>
-                <ListItem
-                  type="policy"
-                  linkSrc={linkHref}
-                  description={item.description}
-                  title={item.title}
-                  intent={"default"}
-                  size={"md"}
-                  region={item.region}
-                />
-              </SwiperSlide>
-            );
-          })}
+        <ul>
+          {items &&
+            items.map(item => {
+              const linkHref = getPolicyLink(item.region, item.link);
+              return (
+                <SwiperSlide key={item.id}>
+                  <ListItem
+                    type="policy"
+                    linkSrc={linkHref}
+                    description={item.description}
+                    title={item.title}
+                    intent={"default"}
+                    size={"md"}
+                    region={item.region}
+                  />
+                </SwiperSlide>
+              );
+            })}
+        </ul>
       </Swiper>
     </div>
   );
