@@ -75,7 +75,7 @@ const Card = ({ id, dday, img, title, text, size, intent, className }: CardProps
     <Link to={`/contest/${id}`}>
       <div className={combinedClass}>
         <div className="p-4 flex justify-end absolute w-full z-2">
-          <Badge intent="default">D-{dday}</Badge>
+          <Badge intent="default">{Number(dday) > 0 ? `D-${dday}` : "마감"}</Badge>
         </div>
         <figure className="relative w-full aspect-[4/3]">
           {!isImageLoaded && (
