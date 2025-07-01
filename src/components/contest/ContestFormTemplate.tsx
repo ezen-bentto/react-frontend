@@ -176,7 +176,7 @@ const ContestFormTemplate = ({
       </div>
 
       <div className="flex justify-end gap-3 py-10">
-        <Button intent="primary" size="lg" type="button" onClickFnc={() => {}}>
+        <Button intent="primary" size="lg" type="button" onClickFnc={() => {window.history.back();}}>
           취소
         </Button>
         <Button intent="primary" size="lg" type="submit" onClickFnc={onSubmit}>
