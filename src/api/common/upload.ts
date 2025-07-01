@@ -38,11 +38,10 @@ export const uploadImage = async (props: imageProps): Promise<string> => {
     if (props.image_id) url += `/${props.image_id}`;
 
     const response = await axiosInstance.post(url, formData, {
-      headers: {
-      },
+      headers: {},
     });
 
-    return response.data.data.fileUrl;
+    return response.data.data;
   } catch (error) {
     console.error("이미지 업로드 실패:", error);
     throw error;
@@ -63,13 +62,10 @@ export const updateImageReference = async (
   newReferenceId: number
 ): Promise<void> => {
   try {
-    const response = await axiosInstance.post(
-      "/api/file/update-reference",
-      {
-        fileName,
-        newReferenceId,
-      }
-    );
+    const response = await axiosInstance.post("/api/file/update-reference", {
+      fileName,
+      newReferenceId,
+    });
     return response.data;
   } catch (error: unknown) {
     console.error("reference_id 업데이트 실패:", fileName, error);

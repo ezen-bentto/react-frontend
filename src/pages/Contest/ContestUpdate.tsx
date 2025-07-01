@@ -84,6 +84,7 @@ const ContestUpdate = () => {
       });
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (e) {
+      console.info(e);
       alert("수정 중 오류 발생");
     }
   };
