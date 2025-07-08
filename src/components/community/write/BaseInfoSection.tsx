@@ -67,12 +67,12 @@ const BaseInfoSection: React.FC<BaseInfoSectionProps> = ({
             icon: "📚",
             color: "from-green-400 to-blue-500",
           },
-          {
-            value: "3",
-            label: "자유",
-            icon: "💬",
-            color: "from-purple-400 to-pink-500",
-          },
+          // {
+          //   value: "3",
+          //   label: "자유",
+          //   icon: "💬",
+          //   color: "from-purple-400 to-pink-500",
+          // },
         ].map(option => (
           <label
             key={option.value}
@@ -101,7 +101,7 @@ const BaseInfoSection: React.FC<BaseInfoSectionProps> = ({
               <div className="text-sm text-gray-500 dark:text-gray-500 transition-colors duration-300">
                 {option.value === "1" && "공모전 팀원을 모집해보세요"}
                 {option.value === "2" && "함께 공부할 팀원을 찾아보세요"}
-                {option.value === "3" && "자유롭게 이야기를 나눠보세요"}
+                {/* {option.value === "3" && "자유롭게 이야기를 나눠보세요"} */}
               </div>
             </div>
             {selectedOption === option.value && (

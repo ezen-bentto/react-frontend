@@ -21,13 +21,13 @@ const typeOptions = [
     color: "from-green-400 to-blue-500",
     description: "함께 공부할 팀원을 찾아보세요",
   },
-  {
-    value: "3",
-    label: "자유",
-    icon: "💬",
-    color: "from-purple-400 to-pink-500",
-    description: "자유롭게 이야기를 나눠보세요",
-  },
+  // {
+  //   value: "3",
+  //   label: "자유",
+  //   icon: "💬",
+  //   color: "from-purple-400 to-pink-500",
+  //   description: "자유롭게 이야기를 나눠보세요",
+  // },
 ] as const;
 
 const TypeSelector: React.FC<TypeSelectorProps> = ({

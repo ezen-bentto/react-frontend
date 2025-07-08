@@ -69,7 +69,7 @@ const getCommunityTypeLabel = (communityType: string): string => {
   const communityTypeMap: Record<string, string> = {
     "1": "공모전",
     "2": "스터디",
-    "3": "자유",
+    // "3": "자유",
   };
   return communityTypeMap[communityType] || "공모전";
 };
