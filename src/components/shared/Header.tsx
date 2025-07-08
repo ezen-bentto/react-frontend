@@ -55,7 +55,7 @@ const headerMenus: HeaderMenu[] = [
     subMenus: [
       { name: "공모전", src: "/community/list?communityType=1" },
       { name: "스터디", src: "/community/list?communityType=2" },
-      { name: "자유", src: "/community/list?communityType=3" },
+      // { name: "자유", src: "/community/list?communityType=3" },
     ],
   },
 ];
@@ -156,9 +156,8 @@ export const Header = ({ opacityEffect = false }: HeaderProps) => {
               {/* 드롭다운 메뉴 */}
               {item.subMenus && (
                 <div
-                  className={`absolute top-full left-0 theme-bg border box-border shadow-xl min-w-[140px] z-[9999] py-1 ${
-                    activeDropdown === item.id ? "block" : "hidden"
-                  }`}
+                  className={`absolute top-full left-0 theme-bg border box-border shadow-xl min-w-[140px] z-[9999] py-1 ${activeDropdown === item.id ? "block" : "hidden"
+                    }`}
                   onMouseEnter={() => {
                     setActiveDropdown(item.id);
                   }}

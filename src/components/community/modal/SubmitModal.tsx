@@ -21,9 +21,6 @@ const SubmitModal: React.FC<SubmitModalProps> = ({ isEditMode, onConfirm }) => {
               ? "게시글이 성공적으로 수정되었습니다."
               : "새로운 게시글이 성공적으로 등록되었습니다."}
           </p>
-          <p className="text-sm text-gray-500 dark:text-gray-400 mb-6">
-            {isEditMode ? "잠시 후 상세 페이지로 이동합니다..." : "잠시 후 목록으로 이동합니다..."}
-          </p>
           <button
             className="w-full py-3 bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white rounded-xl transition-all duration-200 font-medium shadow-lg hover:shadow-xl"
             onClick={onConfirm}

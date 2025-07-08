@@ -160,6 +160,90 @@ const CommunityWrite = () => {
     }
   };
 
+  // 필수값 검증 함수
+  const validateForm = (): boolean => {
+    // 분야 검증 (공모전 타입인 경우)
+    if (selectedOption === "1" && !selectedCategory) {
+      alert("분야를 선택해주세요.");
+      return false;
+    }
+
+    // 공모전 검증 (공모전 타입인 경우)
+    if (selectedOption === "1" && !selectedContest) {
+      alert("공모전을 선택해주세요.");
+      return false;
+    }
+
+    // 팀 빌딩과 스터디 타입의 경우 추가 검증
+    if (selectedOption === "1" || selectedOption === "2") {
+      // 시작일 검증
+      if (!formData.startDate) {
+        alert("시작일을 입력해주세요.");
+        return false;
+      }
+
+      // 종료일 검증
+      if (!formData.endDate) {
+        alert("종료일을 입력해주세요.");
+        return false;
+      }
+
+      // 모집 종료일 검증
+      if (!formData.recruitEndDate) {
+        alert("모집 종료일을 입력해주세요.");
+        return false;
+      }
+
+      // 연령대 검증
+      if (!formData.ageGroup) {
+        alert("연령대를 선택해주세요.");
+        return false;
+      }
+
+      // 모집 역할 검증
+      for (let i = 0; i < formData.recruitments.length; i++) {
+        const recruitment = formData.recruitments[i];
+        if (!recruitment.role.trim()) {
+          alert(`${i + 1}번째 모집 역할을 입력해주세요.`);
+          return false;
+        }
+        if (!recruitment.count.trim() || Number(recruitment.count) <= 0) {
+          alert(`${i + 1}번째 모집 인원을 올바르게 입력해주세요.`);
+          return false;
+        }
+      }
+
+      // 날짜 논리 검증
+      const startDate = new Date(formData.startDate);
+      const endDate = new Date(formData.endDate);
+      const recruitEndDate = new Date(formData.recruitEndDate);
+
+      if (startDate >= endDate) {
+        alert("종료일은 시작일보다 늦어야 합니다.");
+        return false;
+      }
+
+      if (recruitEndDate > startDate) {
+        alert("모집 종료일은 시작일보다 빨라야 합니다.");
+        return false;
+      }
+    }
+
+    // 제목 검증
+    if (!formData.title.trim()) {
+      alert("제목을 입력해주세요.");
+      return false;
+    }
+
+    // 내용 검증
+    if (!formData.content.trim()) {
+      alert("내용을 입력해주세요.");
+      return false;
+    }
+
+    return true;
+  };
+
   // Base64 이미지들을 실제 서버에 Blob으로 업로드
   const processImagesBeforeSubmit = async (content: string): Promise<string> => {
     const tempImageFiles = window.tempImageFiles || new Map();
@@ -220,6 +304,11 @@ const CommunityWrite = () => {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+
+    // 필수값 검증
+    if (!validateForm()) {
+      return;
+    }
 
     try {
       // 1. content에서 Base64 이미지들을 실제 업로드로 교체
